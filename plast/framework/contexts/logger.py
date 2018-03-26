@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from framework.contexts.meta import Metadata as _meta
+from framework.contexts.meta import Meta as _meta
 
 import functools
 import logging

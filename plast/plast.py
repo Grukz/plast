@@ -3,11 +3,14 @@
 
 from framework.api import magic as _magic
 from framework.api import parser as _parser
+from framework.api.checker import Checker as _checker
 from framework.api.loader import Loader as _loader
 
 from framework.contexts import models as _models
 from framework.contexts import case as _case
 from framework.contexts.logger import Logger as _log
+
+from framework.core import engine as _engine
 
 import framework.processors.pre as _pre
 import framework.processors.post as _post
@@ -22,7 +25,7 @@ def argparser(parser, modules={}):
 
     parser.add_argument(
         "--format", choices=["JSON"], default="JSON",
-        help="output format for the matches file")
+        help="output format for detection(s)")
 
     parser.add_argument(
         "--logging", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "SUPPRESS"], default="INFO",
@@ -33,7 +36,7 @@ def argparser(parser, modules={}):
         help="force the overwriting of an existing output directory")
 
     parser.add_argument(
-        "--post", nargs="+", choices=_loader.render_processors(_post, _models.Post), action=_parser.Unique,
+        "--post", nargs="+", choices=_loader.render_processors(_post, _models.Post), default=_loader.render_processors(_post, _models.Post), action=_parser.Unique,
         help="select the postprocessor(s) that will handle the resulting data")
 
     parser.add_argument(
@@ -63,21 +66,25 @@ def main(container):
     if not container["arguments"]._subparser:
         return
 
+    if not _checker.number_rulesets():
+        _log.fault("No YARA rulesets found. Nothing to be done.")
+
     case = _case.Case(container["arguments"])
     case.create_arborescence()
 
-    with _magic.Hole(Exception, action=lambda:_log.fault("Fatal exception raised within preprocessor <{}>.".format(container["arguments"]._subparser), trace=True)):
-        Processor = _loader.load_processor(container["arguments"]._subparser, _models.Pre)
+    Preprocessor = container["modules"][container["arguments"]._subparser]
+    Preprocessor.init_case(case)
 
-        _log.debug("Started preprocessing session <{}>.".format(container["modules"][container["arguments"]._subparser]._name))
-        evidences = container["modules"][container["arguments"]._subparser].run(case)
-        _log.debug("Ended preprocessing session <{}>.".format(container["modules"][container["arguments"]._subparser]._name))
+    with _magic.Hole(Exception, action=lambda:_log.fault("Fatal exception raised within preprocessor <{}>.".format(Preprocessor._name), trace=True)):
+        _log.debug("Started preprocessing session <{}>.".format(Preprocessor._name))
+        evidences = Preprocessor.run()
+        _log.debug("Ended preprocessing session <{}>.".format(Preprocessor._name))
 
     if not evidences:
         _log.fault("No evidence(s) to process. Quitting.")
 
     case.parse_list(evidences)
-    # _engine.Engine(case).run()
+    _engine.Engine(case).run()
 
 if __name__ == "__main__":
     main(argparser(_parser.CustomParser()))

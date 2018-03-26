@@ -2,7 +2,7 @@
 
 class Pre:
     _name = None
-    _author = None
+    _authors = []
     _maintainers = []
     _version = None
 
@@ -12,17 +12,21 @@ class Pre:
     def set_args(self):
         pass
 
-    def run(self):
+    def init_case(self, case):
+        self.case = case
+
+    def run(self, case):
         return []
 
 class Post:
     _name = None
-    _author = None
+    _authors = []
     _maintainers = []
     _version = None
 
-    def __init__(self, subparser):
-        self.subparser = subparser
+    def __init__(self, case, data):
+        self.case = case
+        self.data = data
 
     def run(self):
-        return []
+        pass

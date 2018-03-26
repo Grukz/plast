@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from framework.contexts import errors as _errors
+from framework.contexts.meta import Meta as _meta
 
+import glob
+import os.path
 import types
 
 try:
@@ -14,19 +17,6 @@ except (
     _log.fault("Import error.", trace=True)
 
 class Checker:
-    @staticmethod
-    def verify_data(data):
-        try:
-            return json.loads(data)
-
-        except (
-            OverflowError,
-            TypeError,
-            ValueError,
-            Exception):
-
-            raise _errors.InvalidJSONObject
-
     @staticmethod
     def sanitize_data(data):
         try:
@@ -41,6 +31,10 @@ class Checker:
 
         except Exception:
             raise _errors.MalformatedData
+
+    @staticmethod
+    def number_rulesets(directory=os.path.join(_meta._root, "rulesets"), globbing_filter="*.yar"):
+        return len(glob.glob(os.path.join(directory, "**", globbing_filter), recursive=True))
 
     @staticmethod
     def check_package(package):

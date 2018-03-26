@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from framework.api.checker import Checker as _checker
+from framework.api.renderer import Renderer as _renderer
 
 from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log
@@ -110,7 +111,7 @@ class Case:
 
     def parse_list(self, data):
         try:
-            data = _checker.verify_data(data)
+            data = _renderer.from_json(data)
 
         except _errors.InvalidJSONObject:
             _log.fault("Invalid JSON data from preprocessor.", trace=True)

@@ -5,7 +5,9 @@ from framework.api.checker import Checker as _checker
 from framework.contexts import errors as _errors
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
+from framework.contexts.meta import Meta as _meta
 
+import glob
 import importlib
 import os.path
 import pkgutil
@@ -25,6 +27,11 @@ class Loader:
             _log.fault("Processor <{}.{}> not inheriting from the base class.".format(name, model.__name__), trace=True)
 
         return getattr(processor, model.__name__)
+
+    @staticmethod
+    def iterate_rulesets(directory=os.path.join(_meta._root, "rulesets"), globbing_filter="*.yar"):
+        for file in glob.iglob(os.path.join(directory, "**", globbing_filter), recursive=True):
+            yield os.path.splitext(os.path.basename(file))[0], file
 
     @staticmethod
     def iterate_processors(package, model):
