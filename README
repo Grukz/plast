@@ -1,0 +1,49 @@
+= Plast (PLateforme d'Analyse STatique)
+
+`plast` is a modular command-line threat hunting tool.
+
+== Getting Started
+
+Follow these steps to get a copy of the project up and running on a live system.
+
+_This tool must ALWAYS be used in a confined environment._
+
+=== Prerequisite(s)
+
+`plast` is entirely written in Python 3+ which makes it compatible with almost all GNU/Linux and macOS distributions. Nevertheless, some minimal dependencies are required.
+
+Follow the steps described below to install the project on the system.
+
+==== Debian (_apt_)
+
+Install the latest Python 3+ environment:
+
+----sh
+# apt install -y python3 python3-pip
+----
+
+Each preprocessor and postprocessor has its own dependencies, which may not be listing here.
+
+=== Installation
+
+Installing `plast` as a system-wide utility is as simple as one command:
+
+----sh
+$ ./setup.py install
+----
+
+To install a developpement environment, issue the following commands:
+
+----sh
+$ git clone $TARGET
+$ cd $TARGET
+$ python -m venv .env
+$ source .env/bin/activate
+$ pip install -r REQUIREMENTS
+----
+
+`$TARGET` represents the working directory where `plast` will be installed.
+
+== Versioning
+
+Refer to the `git` repository to get the latest version.

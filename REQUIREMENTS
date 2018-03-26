@@ -1,0 +1,4 @@
+colorlog==3.1.0
+python-magic==0.4.15
+simplejson==3.13.2
+yara-python==3.7.0

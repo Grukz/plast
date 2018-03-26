@@ -1,0 +1,15 @@
+.DS_Store
+*.pyc
+
+.vscode/
+.env/
+
+preprocessors/*
+!preprocessors/.empty
+
+postprocessors/*
+!postprocessors/.empty
+
+rulesets/*
+!rulesets/.empty
+!rulesets/*.yar
