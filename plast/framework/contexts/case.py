@@ -17,6 +17,7 @@ class Case:
 
         self.resources = {
             "case": self.arguments.output,
+            "matches": os.path.join(self.arguments.output, "matches.{}".format(self.arguments.format.lower())),
             "evidences": [],
             "temporary": []
         }

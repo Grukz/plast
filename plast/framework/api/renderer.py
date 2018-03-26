@@ -30,6 +30,9 @@ class Renderer:
         try:
             return json.dumps(data)
 
+        except UnicodeDecodeError:
+            raise _errors.EncodingError
+
         except (
             OverflowError,
             TypeError,

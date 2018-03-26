@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from framework.api import magic as _magic
 from framework.api.loader import Loader as _loader
 
 from framework.contexts.logger import Logger as _log
 from framework.contexts.meta import Meta as _meta
 from framework.contexts.types import Codes as _codes
+
+from framework.core import reader as _reader
+from framework.core import processor as _processor
 
 import io
 import multiprocessing
@@ -24,12 +28,13 @@ class Engine:
         self.case = case
         self.buffers = {}
 
-    def __compile_ruleset(self, ruleset):
+    def __compile_ruleset(self, name, ruleset):
         try:
             buffer = io.BytesIO()
             yara.compile(ruleset, includes=True).save(file=buffer)
-
             self.buffers[ruleset] = buffer
+
+            _log.debug("Precompilated ruleset <{}> in memory.".format(name))
 
         except (
             Exception,
@@ -37,41 +42,35 @@ class Engine:
 
             _log.exception("Failed to pre-compile ruleset <{}>.".format(ruleset))
 
-    # def __dispatch_jobs(self, file="matches.json"):
-    #     with multiprocessing.Manager() as manager:
-    #         queue = manager.Queue()
+    def __dispatch_jobs(self):
+        with multiprocessing.Manager() as manager:
+            queue = manager.Queue()
 
-    #         self.output_file = os.path.join(self.case.resources["case"], file)
+            reader = multiprocessing.Process(target=_reader.Reader(queue, {
+                "target": self.case.resources["matches"],
+                "format": self.case.arguments.format}).run)
 
-    #         reader = multiprocessing.Process(target=_reader.Reader(queue, self.output_file, self.case.arguments.format).run)
-    #         reader.daemon = True
-    #         reader.start()
+            reader.daemon = True
+            reader.start()
 
-    #         _log.debug("Started reader subprocess to process queue result(s).")
+            _log.debug("Started reader subprocess to process queue result(s).")
 
-    #         with _magic.Pool(processes=self.case.arguments.processes) as pool:
-    #             _log.debug("Initialized pool of <{}> concurrent process(es) to process evidence(s).".format(self.case.arguments.processes))
+            with _magic.Pool(processes=self.case.arguments.processes) as pool:
+                for evidence in self.case.resources["evidences"]:
+                    pool.starmap_async(
+                            _processor.Processor(queue).run, 
+                            [(evidence, self.buffers)], 
+                            error_callback=_log.exception)
 
-    #             for ruleset, yara_buffer in self.buffers.items():
-    #                 for evidence in self.case.resources["evidences"]:
-    #                     _log.debug("Mapping concurrent process to process evidence <{}> with ruleset <{}>.".format(evidence, ruleset))
-    #                     pool.map_async(
-    #                         _processor.Processor(queue, evidence, self.buffers).run, 
-    #                         [], 
-    #                         error_callback=_log.exception)
+                    _log.debug("Mapped concurrent job to process evidence <{}>.".format(evidence))
 
-    #         queue.put(_codes.DONE)
+            queue.put(_codes.DONE)
 
-    #         try:
-    #             reader.join()
-
-    #         except KeyboardInterrupt:
-    #             _log.warning("Waiting for concurrent process(es) to terminate before exiting.")
-    #             _log.fault("Aborted due to manual user interruption <SIGINT>.")
+            with _magic.Hole(KeyboardInterrupt, action=lambda:_log.fault("Aborted due to manual user interruption <SIGINT>.")):
+                reader.join()
 
     def run(self):
         for name, ruleset in _loader.iterate_rulesets():
-            _log.debug("Pre-compilating ruleset <{}> in memory.".format(name))
-            self.__compile_ruleset(ruleset)
+            self.__compile_ruleset(name, ruleset)
 
-        # self.__dispatch_jobs()
+        self.__dispatch_jobs()

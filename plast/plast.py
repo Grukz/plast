@@ -41,7 +41,7 @@ def argparser(parser, modules={}):
 
     parser.add_argument(
         "--processes", type=int, choices=range(1, 100), default=(multiprocessing.cpu_count() or 4), metavar="NUMBER",
-        help="override the number of concurrent process(es)")
+        help="override the number of concurrent processe(s)")
 
     for name, Processor in _loader.iterate_processors(_pre, _models.Pre):
         subparser = parser.subparsers.add_parser(name, description=Processor._description if hasattr(Processor, "_description") else None, add_help=False)

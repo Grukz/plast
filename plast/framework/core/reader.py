@@ -1,55 +1,57 @@
-# # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
-# from framework.contexts.logger import Logger as _log
-# from framework.contexts.types import Codes as _codes
+from framework.api.renderer import Renderer as _renderer
 
-# class Reader:
-#     def __init__(self, queue, output_file, output_format):
-#         self.queue = queue
-#         self.output_file = output_file
-#         self.output_format = output_format
+from framework.contexts.logger import Logger as _log
+from framework.contexts.types import Codes as _codes
 
-#         self.format_map = {
-#             "JSON": self.__json_append
-#         }
+class Reader:
+    def __init__(self, queue, target):
+        self.queue = queue
+        self.target = target
 
-#     def __json_append(self, data):
-#         try:
-#             self.out.write("{}\n".format(json.dumps(data)))
+        self.map = {
+            "JSON": self.__json_append
+        }
 
-#         except UnicodeDecodeError:
-#             _log.error("Current codec cannot decode data from <{}> to append to the output file.".format(data["target"]["absolute"]))
+    def __json_append(self, data):
+        try:
+            self.output.write("{}\n".format(_renderer.to_json(data)))
 
-#         except Exception:
-#             _log.exception("Exception raised while appending result data from <{}> to the output file.".format(data["target"]["absolute"]))
+        except _errors.EncodingError:
+            _log.error("Cannot decode data from <{}>.".format(data["target"]["absolute"]))
 
-#     def __open_output_file(self, mode="a", character_encoding="utf-8"):
-#         try:
-#             return open(self.output_file, mode=mode, encoding=character_encoding)
+        except InvalidJSONObject:
+            _log.exception("Exception raised while retrieving matching data from <{}>.".format(data["target"]["absolute"]))
 
-#         except (
-#             OSError,
-#             Exception):
+    def __open_output_file(self, mode="a", character_encoding="utf-8"):
+        try:
+            return open(self.target["target"], mode=mode, encoding=character_encoding)
 
-#             _log.fault("Failed to open the output file <{}> for writing.".format(self.output_file), trace=True)
+        except (
+            OSError,
+            Exception):
 
-#     def __read_queue(self):
-#         matches = 0
+            _log.fault("Failed to open <{}> for writing.".format(self.target["target"]), trace=True)
 
-#         while True:
-#             item = self.queue.get()
+    def __read_queue(self):
+        matches = 0
 
-#             if item == _types.DONE:
-#                 break
+        while True:
+            item = self.queue.get()
 
-#             self.format_map[self.output_format](item)
+            if item == _codes.DONE:
+                break
 
-#             matches += 1
-#             _log.debug("Matching signature from rule <{}> on host <{}>.".format(item["rule"], item["host"]))
+            self.map[self.target["format"]](item)
 
-#         return matches
+            matches += 1
+            _log.debug("Matching signature from rule <{}> on evidence <{}>.".format(item["rule"], item["target"]["absolute"]))
 
-#     def run(self):
-#         with self.__open_output_file() as self.out:
-#             matches = self.__read_queue()
-#             _log.warning("Total of <{}> matching pattern(s).".format(matches)) if matches else _log.info("No matching pattern(s) found.")
+        return matches
+
+    def run(self):
+        with self.__open_output_file() as self.output:
+            matches = self.__read_queue()
+
+        _log.warning("Total of <{}> matching pattern(s). See <{}> for more details.".format(matches, self.target["target"])) if matches else _log.info("No matching pattern(s) found.")

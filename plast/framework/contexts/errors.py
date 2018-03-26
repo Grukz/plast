@@ -6,6 +6,9 @@ class InvalidPackage(Exception):
 class InvalidJSONObject(Exception):
     pass
 
+class EncodingError(Exception):
+    pass
+
 class MalformatedData(Exception):
     pass
 

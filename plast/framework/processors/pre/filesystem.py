@@ -34,11 +34,14 @@ class Pre(_models.Pre):
 
         for item in self.case.arguments.input:
             if os.path.isfile(item):
+                _log.debug("Tracking evidence <{}>.".format(item))
                 evidences.append(file)
 
             elif os.path.isdir(item):
                 for file in self.__enumerate_files(item):
-                    evidences.append(file)
+                    if os.path.isfile(file):
+                        _log.debug("Tracking evidence <{}>.".format(file))
+                        evidences.append(file)
 
             else:
                 _log.warning("Unknown inode type for object <{}>.".format(item))
