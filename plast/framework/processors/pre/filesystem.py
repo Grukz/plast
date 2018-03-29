@@ -17,11 +17,11 @@ class Pre(_models.Pre):
     _version = "0.1"
 
     def set_args(self):
-        self.subparser.add_argument(
+        self.parser.add_argument(
             "--filter", default="*", metavar="FILTER", 
             help="custom globbing filter")
 
-        self.subparser.add_argument(
+        self.parser.add_argument(
             "-i", "--input", required=True, nargs="+", action=_parser.MultipleAbsolutePath, metavar="PATH", 
             help="input test file(s) or directory(ies)")
 

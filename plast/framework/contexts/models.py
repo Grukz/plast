@@ -6,8 +6,8 @@ class Pre:
     _maintainers = []
     _version = None
 
-    def __init__(self, subparser):
-        self.subparser = subparser
+    def __init__(self, parser):
+        self.parser = parser
 
     def set_args(self):
         pass
@@ -24,9 +24,20 @@ class Post:
     _maintainers = []
     _version = None
 
-    def __init__(self, case, data):
+    def __init__(self, case):
         self.case = case
-        self.data = data
+
+    def run(self):
+        pass
+
+class Callback:
+    _name = None
+    _authors = []
+    _maintainers = []
+    _version = None
+
+    def __init__(self, case):
+        self.case = case
 
     def run(self):
         pass

@@ -24,11 +24,16 @@ def argparser(parser, modules={}):
         help="path to the output directory to be created for the current case")
 
     parser.add_argument(
-        "--format", choices=["JSON"], default="JSON",
+        "--format", choices=["json"], default="json",
         help="output format for detection(s)")
 
     parser.add_argument(
-        "--logging", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL", "SUPPRESS"], default="INFO",
+        "--hash-algorithms", nargs="+", action=_parser.Unique, metavar="NAME",
+        choices=["md5", "sha1", "sha224", "sha256", "sha384", "sha512", "blake2b", "blake2s", "sha3_224", "sha3_256", "sha3_384", "sha3_512"], default=["md5", "sha1", "sha256"], 
+        help="output format for detection(s), see hashlib API reference for supported algorithm(s)")
+
+    parser.add_argument(
+        "--logging", choices=["debug", "info", "warning", "error", "critical", "suppress"], default="info",
         help="override the default console logging level")
 
     parser.add_argument(
@@ -61,7 +66,7 @@ def argparser(parser, modules={}):
     }
 
 def main(container):
-    _log.set_console_level(container["arguments"].logging)
+    _log.set_console_level(container["arguments"].logging.upper())
 
     if not container["arguments"]._subparser:
         return
@@ -87,4 +92,10 @@ def main(container):
     _engine.Engine(case).run()
 
 if __name__ == "__main__":
+    _log.debug("<TODO>Purge JSON rendering. Not that useful.</TODO>")
+    _log.debug("<TODO>Use a Pandas DataFrame to contain detections and to pass them to Post modules.</TODO>")
+    _log.debug("<TODO>Logging messages as decorators for  run() methods.</TODO>")
+    _log.debug("<TODO>Replace set_args() method in Pre modules by __init__().</TODO>")
+    _log.debug("<TODO>Callback class as a Post alternative to handle data on-the-fly.</TODO>")
+    _log.debug("<TODO>Check for detections before launching Post modules.</TODO>")
     main(argparser(_parser.CustomParser()))

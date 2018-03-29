@@ -16,13 +16,9 @@ except (
     _log.fault("Import error.", trace=True)
 
 class Processor:
-    def __init__(self, queue):
+    def __init__(self, queue, algorithms):
         self.queue = queue
-        self.algorithms = [
-            "md5",
-            "sha1",
-            "sha256"
-        ]
+        self.algorithms = algorithms
 
     def __parse_memory_buffers(self):
         for ruleset, buffer in self.buffers.items():

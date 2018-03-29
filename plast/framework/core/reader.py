@@ -11,7 +11,7 @@ class Reader:
         self.target = target
 
         self.map = {
-            "JSON": self.__json_append
+            "json": self.__json_append
         }
 
     def __json_append(self, data):

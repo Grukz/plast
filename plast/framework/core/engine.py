@@ -3,6 +3,7 @@
 from framework.api import magic as _magic
 from framework.api.loader import Loader as _loader
 
+from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
 from framework.contexts.meta import Meta as _meta
 from framework.contexts.types import Codes as _codes
@@ -58,9 +59,9 @@ class Engine:
             with _magic.Pool(processes=self.case.arguments.processes) as pool:
                 for evidence in self.case.resources["evidences"]:
                     pool.starmap_async(
-                            _processor.Processor(queue).run, 
-                            [(evidence, self.buffers)], 
-                            error_callback=_log.exception)
+                        _processor.Processor(queue, self.case.arguments.hash_algorithms).run, 
+                        [(evidence, self.buffers)], 
+                        error_callback=_log.exception)
 
                     _log.debug("Mapped concurrent job to process evidence <{}>.".format(evidence))
 
@@ -69,8 +70,17 @@ class Engine:
             with _magic.Hole(KeyboardInterrupt, action=lambda:_log.fault("Aborted due to manual user interruption <SIGINT>.")):
                 reader.join()
 
+    def __spawn_postprocessors(self):
+        for postprocessor in self.case.arguments.post:
+            Postprocessor = _loader.load_processor(postprocessor, _models.Post)
+
+            _log.debug("Started processing session <{}>.".format(Postprocessor._name))
+            Postprocessor(self.case).run()
+            _log.debug("Ended processing session <{}>.".format(Postprocessor._name))
+
     def run(self):
         for name, ruleset in _loader.iterate_rulesets():
             self.__compile_ruleset(name, ruleset)
 
         self.__dispatch_jobs()
+        self.__spawn_postprocessors()
