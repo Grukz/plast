@@ -5,7 +5,6 @@ from framework.api.loader import Loader as _loader
 
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
-from framework.contexts.meta import Meta as _meta
 from framework.contexts.types import Codes as _codes
 
 from framework.core import reader as _reader
@@ -13,7 +12,6 @@ from framework.core import processor as _processor
 
 import io
 import multiprocessing
-import os.path
 
 try:
     import yara

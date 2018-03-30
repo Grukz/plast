@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from framework.contexts import models as _models
-from framework.contexts.logger import Logger as _log
 
 import os.path
 
 class Post(_models.Post):
-    __author__ = "sk4la"
-    __maintainers__ = ["sk4la"]
     __description__ = "AsciiDoc postprocessor."
+    __author__ = "sk4la"
     __version__ = "0.1"
 
     def __init__(self, case):

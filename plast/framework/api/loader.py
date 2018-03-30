@@ -29,7 +29,7 @@ class Loader:
         return getattr(processor, model.__name__)
 
     @staticmethod
-    def iterate_rulesets(directory=os.path.join(_meta._root, "rulesets"), globbing_filter="*.yar"):
+    def iterate_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar"):
         for file in glob.iglob(os.path.join(directory, "**", globbing_filter), recursive=True):
             yield os.path.splitext(os.path.basename(file))[0], file
 

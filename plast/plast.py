@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from framework.contexts.meta import Meta as _meta
+_meta.set_package(__file__)
+
 from framework.api import magic as _magic
 from framework.api import parser as _parser
 from framework.api.checker import Checker as _checker

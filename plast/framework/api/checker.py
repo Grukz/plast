@@ -7,15 +7,6 @@ import glob
 import os.path
 import types
 
-try:
-    import simplejson as json
-
-except (
-    ImportError,
-    Exception):
-
-    _log.fault("Import error.", trace=True)
-
 class Checker:
     @staticmethod
     def sanitize_data(data):
@@ -33,7 +24,7 @@ class Checker:
             raise _errors.MalformatedData
 
     @staticmethod
-    def number_rulesets(directory=os.path.join(_meta._root, "rulesets"), globbing_filter="*.yar"):
+    def number_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar"):
         return len(glob.glob(os.path.join(directory, "**", globbing_filter), recursive=True))
 
     @staticmethod

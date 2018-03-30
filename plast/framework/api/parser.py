@@ -10,12 +10,12 @@ import os.path
 class CustomParser:
     def __init__(self):
         self.parser = argparse.ArgumentParser(
-            prog=_meta._name,
+            prog=_meta.__package__,
             description="This tool must ALWAYS be used in a confined environment.",
             add_help=False)
 
         self.set_help(self.parser)
-        self.set_version(self.parser, _meta._name, _meta._version)
+        self.set_version(self.parser, _meta.__package__, _meta.__version__)
 
         self.__add_subparsers()
 

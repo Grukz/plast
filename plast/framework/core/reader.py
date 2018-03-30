@@ -11,17 +11,17 @@ class Reader:
         self.target = target
 
         self.map = {
-            "json": self.__json_append
+            "json": self.__append_json
         }
 
-    def __json_append(self, data):
+    def __append_json(self, data):
         try:
             self.output.write("{}\n".format(_render.to_json(data)))
 
         except _errors.EncodingError:
             _log.error("Cannot decode data from <{}>.".format(data["target"]["absolute"]))
 
-        except InvalidJSONObject:
+        except InvalidObject:
             _log.exception("Exception raised while retrieving matching data from <{}>.".format(data["target"]["absolute"]))
 
     def __open_output_file(self, mode="a", character_encoding="utf-8"):

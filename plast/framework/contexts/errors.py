@@ -3,7 +3,7 @@
 class InvalidPackage(Exception):
     pass
 
-class InvalidJSONObject(Exception):
+class InvalidObject(Exception):
     pass
 
 class InvalidEvidenceList(Exception):

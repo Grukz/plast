@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from framework.api import parser as _parser
-from framework.api.renderer import Renderer as _renderer
 
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
@@ -10,9 +9,8 @@ import glob
 import os.path
 
 class Pre(_models.Pre):
-    __author__ = "sk4la"
-    __maintainers__ = ["sk4la"]
     __description__ = "Simple filesystem-based preprocessor."
+    __author__ = "sk4la"
     __version__ = "0.1"
 
     def __init__(self, parser):

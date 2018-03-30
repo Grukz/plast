@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 class Pre:
-    __version__ = None
     __description__ = None
     __author__ = None
-    __maintainers__ = []
+    __version__ = None
 
     def __init__(self, parser):
         pass
@@ -16,10 +15,9 @@ class Pre:
         return []
 
 class Post:
-    __version__ = None
     __description__ = None
     __author__ = None
-    __maintainers__ = []
+    __version__ = None
 
     def __init__(self, case):
         self.case = case
@@ -28,10 +26,9 @@ class Post:
         pass
 
 class Callback:
-    __version__ = None
     __description__ = None
     __author__ = None
-    __maintainers__ = []
+    __version__ = None
 
     def __init__(self, case):
         self.case = case

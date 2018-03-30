@@ -26,4 +26,4 @@ class Renderer:
             ValueError,
             Exception):
 
-            raise _errors.InvalidJSONObject
+            raise _errors.InvalidObject

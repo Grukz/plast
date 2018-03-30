@@ -50,7 +50,7 @@ class Logger:
                 "mode": "a",
                 "maxBytes": 1024 * 1024 * 10,
                 "backupCount": 10,
-                "filename": "/var/log/{0}/{0}.log".format(_meta._name)
+                "filename": "/var/log/{0}/{0}.log".format(_meta.__package__)
             },
             "console": {
                 "class": "logging.StreamHandler",
