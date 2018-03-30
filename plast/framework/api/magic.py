@@ -44,3 +44,15 @@ class Pool:
 
     def __worker_initializer(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)
+
+class InvocationWrapper:
+    def __init__(self, module):
+        self.module = module
+
+        _log.debug("Started <{}> session <{}>.".format(self.module.__class__.__name__, self.module.__name__))
+
+    def __enter__(self):
+        return
+
+    def __exit__(self, *args):
+        _log.debug("Ended <{}> session <{}>.".format(self.module.__class__.__name__, self.module.__name__))

@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
 class Pre:
-    _name = None
-    _authors = []
-    _maintainers = []
-    _version = None
+    __version__ = None
+    __description__ = None
+    __author__ = None
+    __maintainers__ = []
 
     def __init__(self, parser):
-        self.parser = parser
-
-    def set_args(self):
         pass
 
     def init_case(self, case):
@@ -19,10 +16,10 @@ class Pre:
         return []
 
 class Post:
-    _name = None
-    _authors = []
-    _maintainers = []
-    _version = None
+    __version__ = None
+    __description__ = None
+    __author__ = None
+    __maintainers__ = []
 
     def __init__(self, case):
         self.case = case
@@ -31,10 +28,10 @@ class Post:
         pass
 
 class Callback:
-    _name = None
-    _authors = []
-    _maintainers = []
-    _version = None
+    __version__ = None
+    __description__ = None
+    __author__ = None
+    __maintainers__ = []
 
     def __init__(self, case):
         self.case = case

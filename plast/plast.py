@@ -49,16 +49,16 @@ def argparser(parser, modules={}):
         help="override the number of concurrent processe(s)")
 
     for name, Processor in _loader.iterate_processors(_pre, _models.Pre):
-        subparser = parser.subparsers.add_parser(name, description=Processor._description if hasattr(Processor, "_description") else None, add_help=False)
+        subparser = parser.subparsers.add_parser(name, description=Processor.__description__ if hasattr(Processor, "__description__") else None, add_help=False)
 
         modules[name] = Processor(subparser)
-        modules[name].set_args()
+        modules[name].__name__ = name
 
         with _magic.Hole(argparse.ArgumentError):
             parser.set_help(subparser)
 
-            if hasattr(modules[name], "_name") and hasattr(modules[name], "_version"):
-                parser.set_version(subparser, modules[name]._name, modules[name]._version)
+            if hasattr(modules[name], "__version__"):
+                parser.set_version(subparser, modules[name].__name__, modules[name].__version__)
 
     return {
         "modules": modules,
@@ -80,10 +80,8 @@ def main(container):
     Preprocessor = container["modules"][container["arguments"]._subparser]
     Preprocessor.init_case(case)
 
-    with _magic.Hole(Exception, action=lambda:_log.fault("Fatal exception raised within preprocessor <{}>.".format(Preprocessor._name), trace=True)):
-        _log.debug("Started preprocessing session <{}>.".format(Preprocessor._name))
+    with _magic.Hole(Exception, action=lambda:_log.fault("Fatal exception raised within preprocessor <{}>.".format(Preprocessor.__class__.__name__), trace=True)), _magic.InvocationWrapper(Preprocessor):
         evidences = Preprocessor.run()
-        _log.debug("Ended preprocessing session <{}>.".format(Preprocessor._name))
 
     if not evidences:
         _log.fault("No evidence(s) to process. Quitting.")
@@ -92,10 +90,7 @@ def main(container):
     _engine.Engine(case).run()
 
 if __name__ == "__main__":
-    _log.debug("<TODO>Purge JSON rendering. Not that useful.</TODO>")
     _log.debug("<TODO>Use a Pandas DataFrame to contain detections and to pass them to Post modules.</TODO>")
-    _log.debug("<TODO>Logging messages as decorators for  run() methods.</TODO>")
-    _log.debug("<TODO>Replace set_args() method in Pre modules by __init__().</TODO>")
-    _log.debug("<TODO>Callback class as a Post alternative to handle data on-the-fly.</TODO>")
     _log.debug("<TODO>Check for detections before launching Post modules.</TODO>")
+    _log.debug("<TODO>Callback class as a Post alternative to handle data on-the-fly.</TODO>")
     main(argparser(_parser.CustomParser()))

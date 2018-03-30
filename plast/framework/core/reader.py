@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from framework.api.renderer import Renderer as _renderer
+from framework.api.renderer import Renderer as _render
 
 from framework.contexts.logger import Logger as _log
 from framework.contexts.types import Codes as _codes
@@ -16,7 +16,7 @@ class Reader:
 
     def __json_append(self, data):
         try:
-            self.output.write("{}\n".format(_renderer.to_json(data)))
+            self.output.write("{}\n".format(_render.to_json(data)))
 
         except _errors.EncodingError:
             _log.error("Cannot decode data from <{}>.".format(data["target"]["absolute"]))

@@ -10,18 +10,17 @@ import glob
 import os.path
 
 class Pre(_models.Pre):
-    _name = os.path.splitext(os.path.basename(__file__))[0]
-    _description = "Simple filesystem-based preprocessor."
-    _authors = ["sk4la"]
-    _maintainers = ["sk4la"]
-    _version = "0.1"
+    __author__ = "sk4la"
+    __maintainers__ = ["sk4la"]
+    __description__ = "Simple filesystem-based preprocessor."
+    __version__ = "0.1"
 
-    def set_args(self):
-        self.parser.add_argument(
+    def __init__(self, parser):
+        parser.add_argument(
             "--filter", default="*", metavar="FILTER", 
             help="custom globbing filter")
 
-        self.parser.add_argument(
+        parser.add_argument(
             "-i", "--input", required=True, nargs="+", action=_parser.MultipleAbsolutePath, metavar="PATH", 
             help="input test file(s) or directory(ies)")
 
@@ -49,4 +48,4 @@ class Pre(_models.Pre):
         return evidences
 
     def run(self):
-        return _renderer.to_json(self.__track_evidences())
+        return self.__track_evidences()

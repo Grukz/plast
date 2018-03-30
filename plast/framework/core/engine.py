@@ -72,11 +72,12 @@ class Engine:
 
     def __spawn_postprocessors(self):
         for postprocessor in self.case.arguments.post:
-            Postprocessor = _loader.load_processor(postprocessor, _models.Post)
+            Postprocessor = _loader.load_processor(postprocessor, _models.Post)(self.case)
+            Postprocessor.__name__ = postprocessor
 
-            _log.debug("Started processing session <{}>.".format(Postprocessor._name))
-            Postprocessor(self.case).run()
-            _log.debug("Ended processing session <{}>.".format(Postprocessor._name))
+            _log.debug("Started <{}> session <{}>.".format(Postprocessor.__class__.__name__, Postprocessor.__name__))
+            Postprocessor.run()
+            _log.debug("Ended <{}> session <{}>.".format(Postprocessor.__class__.__name__, Postprocessor.__name__))
 
     def run(self):
         for name, ruleset in _loader.iterate_rulesets():

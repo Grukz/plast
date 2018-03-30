@@ -48,3 +48,10 @@ class Checker:
 
         if not issubclass(getattr(object, model.__name__), model):
             raise _errors.ProcessorNotInherited
+
+    @staticmethod
+    def verify_list(data):
+        if not isinstance(data, list):
+            raise _errors.InvalidEvidenceList
+
+        return data
