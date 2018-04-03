@@ -57,7 +57,7 @@ class Engine:
             with _magic.Pool(processes=self.case.arguments.processes) as pool:
                 for evidence in self.case.resources["evidences"]:
                     pool.starmap_async(
-                        _processor.Processor(queue, self.case.arguments.hash_algorithms).run, 
+                        _processor.Processor(self.case.arguments.hash_algorithms, self.case.arguments.callbacks, queue).run, 
                         [(evidence, self.buffers)], 
                         error_callback=_log.exception)
 
@@ -73,9 +73,8 @@ class Engine:
             Postprocessor = _loader.load_processor(postprocessor, _models.Post)(self.case)
             Postprocessor.__name__ = postprocessor
 
-            _log.debug("Started <{}> session <{}>.".format(Postprocessor.__class__.__name__, Postprocessor.__name__))
-            Postprocessor.run()
-            _log.debug("Ended <{}> session <{}>.".format(Postprocessor.__class__.__name__, Postprocessor.__name__))
+            with _magic.InvocationWrapper(Postprocessor):
+                Postprocessor.run()
 
     def run(self):
         for name, ruleset in _loader.iterate_rulesets():

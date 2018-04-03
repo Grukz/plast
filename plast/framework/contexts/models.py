@@ -8,9 +8,6 @@ class Pre:
     def __init__(self, parser):
         pass
 
-    def init_case(self, case):
-        self.case = case
-
     def run(self, case):
         return []
 
@@ -30,8 +27,8 @@ class Callback:
     __author__ = None
     __version__ = None
 
-    def __init__(self, case):
-        self.case = case
+    def __init__(self, data):
+        self.data = data
 
     def run(self):
         pass
