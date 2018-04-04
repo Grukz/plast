@@ -32,11 +32,11 @@ class Pool:
         return self.pool
 
     def __exit__(self, *args):
-        with Hole(KeyboardInterrupt, action=self.__tear_down):
+        with Hole(KeyboardInterrupt, action=self._tear_down):
             self.pool.close()
             self.pool.join()
 
-    def __tear_down(self):
+    def _tear_down(self):
         _log.warning("Waiting for concurrent process(es) to terminate before exiting.")
 
         self.pool.terminate()

@@ -24,9 +24,9 @@ class Post(_models.Post):
         if hasattr(self, "out"):
             self.out.close()
 
-    def __generate_report(self):
+    def _generate_report(self):
         _log.debug("AsciiDoc report anchored to <{}>.".format(self.case.resources["report"]))
 
     def run(self):
-        if not hasattr(self, "out"):
-            self.__generate_report()
+        if hasattr(self, "out"):
+            self._generate_report()

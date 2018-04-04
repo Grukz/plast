@@ -14,20 +14,20 @@ class CustomParser:
             description="This tool must ALWAYS be used in a confined environment.",
             add_help=False)
 
-        self.set_help(self.parser)
-        self.set_version(self.parser, _meta.__package__, _meta.__version__)
+        self.register_help(self.parser)
+        self.register_version(self.parser, _meta.__package__, _meta.__version__)
 
-        self.__add_subparsers()
+        self._add_subparsers()
 
-    def __add_subparsers(self, dest="_subparser"):
+    def _add_subparsers(self, dest="_subparser"):
         self.subparsers = self.parser.add_subparsers(dest=dest)
 
-    def set_help(self, parser):
+    def register_help(self, parser):
         parser.add_argument(
             "--help", action="help",
             help="display the help menu")
 
-    def set_version(self, parser, name, version):
+    def register_version(self, parser, name, version):
         parser.add_argument(
             "--version", action="version", version="{} {}".format(name, version),
             help="display the version number")

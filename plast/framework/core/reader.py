@@ -6,15 +6,17 @@ from framework.contexts.logger import Logger as _log
 from framework.contexts.types import Codes as _codes
 
 class Reader:
-    def __init__(self, queue, target):
+    def __init__(self, queue, results, target):
         self.queue = queue
+        self.results = results
+        self.results["matches"] = 0
         self.target = target
 
         self.map = {
-            "json": self.__append_json
+            "json": self._append_json
         }
 
-    def __append_json(self, data):
+    def _append_json(self, data):
         try:
             self.output.write("{}\n".format(_render.to_json(data)))
 
@@ -24,7 +26,7 @@ class Reader:
         except InvalidObject:
             _log.exception("Exception raised while retrieving matching data from <{}>.".format(data["target"]["absolute"]))
 
-    def __open_output_file(self, mode="a", character_encoding="utf-8"):
+    def _open_output_file(self, mode="a", character_encoding="utf-8"):
         try:
             return open(self.target["target"], mode=mode, encoding=character_encoding)
 
@@ -34,9 +36,7 @@ class Reader:
 
             _log.fault("Failed to open <{}> for writing.".format(self.target["target"]), trace=True)
 
-    def __read_queue(self):
-        matches = 0
-
+    def _read_queue(self):
         while True:
             item = self.queue.get()
 
@@ -45,13 +45,11 @@ class Reader:
 
             self.map[self.target["format"]](item)
 
-            matches += 1
+            self.results["matches"] += 1
             _log.debug("Matching signature from rule <{}> on evidence <{}>.".format(item["rule"], item["target"]["absolute"]))
 
-        return matches
-
     def run(self):
-        with self.__open_output_file() as self.output:
-            matches = self.__read_queue()
+        with self._open_output_file() as self.output:
+            self._read_queue()
 
-        _log.warning("Total of <{}> matching pattern(s). See <{}> for more details.".format(matches, self.target["target"])) if matches else _log.info("No matching pattern(s) found.")
+        _log.warning("Total of <{}> matching pattern(s). See <{}> for more details.".format(self.results["matches"], self.target["target"])) if self.results["matches"] else _log.info("No matching pattern(s) found.")

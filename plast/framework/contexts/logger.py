@@ -11,7 +11,7 @@ import sys
 class Logger:
     _lock = multiprocessing.Lock()
 
-    def __synchronize(destination):
+    def _synchronize(destination):
         @functools.wraps(destination)
         def synchronize(*args, **kwargs):
             Logger._lock.acquire()
@@ -78,45 +78,45 @@ class Logger:
     console = logging.getLogger("console")
 
     @staticmethod
-    def __set_console_state(state):
+    def _set_console_state(state):
         Logger.console.disabled = not state
 
     @staticmethod
     def set_console_level(level):
-        Logger.__set_console_state(False) if level == "SUPPRESS" else Logger.console.setLevel(getattr(logging, level))
+        Logger._set_console_state(False) if level == "SUPPRESS" else Logger.console.setLevel(getattr(logging, level))
 
     @staticmethod
-    @__synchronize
+    @_synchronize
     def debug(message):
         Logger.core.debug(message)
         Logger.console.debug(message)
 
     @staticmethod
-    @__synchronize
+    @_synchronize
     def info(message):
         Logger.core.info(message)
         Logger.console.info(message)
 
     @staticmethod
-    @__synchronize
+    @_synchronize
     def warning(message):
         Logger.core.warning(message)
         Logger.console.warning(message)
 
     @staticmethod
-    @__synchronize
+    @_synchronize
     def error(message):
         Logger.core.error(message)
         Logger.console.error(message)
 
     @staticmethod
-    @__synchronize
+    @_synchronize
     def critical(message):
         Logger.core.critical(message)
         Logger.console.critical(message)
 
     @staticmethod
-    @__synchronize
+    @_synchronize
     def exception(message):
         Logger.core.exception(message)
         Logger.console.exception(message)

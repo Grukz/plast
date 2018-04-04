@@ -27,7 +27,7 @@ class Engine:
         self.case = case
         self.buffers = {}
 
-    def __compile_ruleset(self, name, ruleset):
+    def _compile_ruleset(self, name, ruleset):
         try:
             buffer = io.BytesIO()
             yara.compile(ruleset, includes=True).save(file=buffer)
@@ -41,11 +41,12 @@ class Engine:
 
             _log.exception("Failed to pre-compile ruleset <{}>.".format(ruleset))
 
-    def __dispatch_jobs(self):
+    def _dispatch_jobs(self):
         with multiprocessing.Manager() as manager:
             queue = manager.Queue()
+            results = manager.dict()
 
-            reader = multiprocessing.Process(target=_reader.Reader(queue, {
+            reader = multiprocessing.Process(target=_reader.Reader(queue, results, {
                 "target": self.case.resources["matches"],
                 "format": self.case.arguments.format}).run)
 
@@ -68,7 +69,9 @@ class Engine:
             with _magic.Hole(KeyboardInterrupt, action=lambda:_log.fault("Aborted due to manual user interruption <SIGINT>.")):
                 reader.join()
 
-    def __spawn_postprocessors(self):
+            return results.copy()
+
+    def _spawn_postprocessors(self):
         for postprocessor in self.case.arguments.post:
             Postprocessor = _loader.load_processor(postprocessor, _models.Post)(self.case)
             Postprocessor.__name__ = postprocessor
@@ -78,7 +81,10 @@ class Engine:
 
     def run(self):
         for name, ruleset in _loader.iterate_rulesets():
-            self.__compile_ruleset(name, ruleset)
+            self._compile_ruleset(name, ruleset)
 
-        self.__dispatch_jobs()
-        self.__spawn_postprocessors()
+        if not self._dispatch_jobs()["matches"]:
+            _log.debug("Skipping <{}> module(s) invocation.".format(_models.Post.__name__))
+            return
+
+        self._spawn_postprocessors()

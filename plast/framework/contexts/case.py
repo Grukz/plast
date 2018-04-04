@@ -24,9 +24,9 @@ class Case:
         _log.debug("Initialized new case <{}> anchored to <{}>.".format(self.name, self.resources["case"]))
 
     def __del__(self):
-        self.__tear_down()
+        self._tear_down()
 
-    def __tear_down(self):
+    def _tear_down(self):
         for artifact in self.resources["temporary"]:
             try:
                 shutil.rmtree(artifact)
@@ -41,7 +41,7 @@ class Case:
 
                 _log.exception("Failed to remove temporary artifact <{}>.".format(artifact))
 
-    def __create_local_directory(self, directory, mask=0o700):
+    def _create_local_directory(self, directory, mask=0o700):
         try:
             os.makedirs(directory, mode=mask)
             _log.debug("Created local directory <{}>.".format(directory))
@@ -55,7 +55,7 @@ class Case:
 
             _log.fault("Failed to create local directory <{}>.".format(directory), trace=True)
 
-    def __prompt(self, message, rounds=3, harsh_escape=True):
+    def _prompt(self, message, rounds=3, harsh_escape=True):
         for _ in range(rounds):
             try:
                 answer = _checker.sanitize_data(input(message))
@@ -76,18 +76,18 @@ class Case:
         if harsh_escape:
             _log.fault("No valid answer provided.")
 
-    def __generate_nonce(self, rounds=16):
+    def _generate_nonce(self, rounds=16):
         return "".join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(rounds))
 
     def require_temporary_directory(self, seed=None):
-        seed = self.__generate_nonce()
+        seed = self._generate_nonce()
 
         while os.path.isdir(os.path.join(self.case.resources["case"], seed)):
-            seed = self.__generate_nonce()
+            seed = self._generate_nonce()
 
         directory = os.path.join(self.case.resources["case"], seed)
 
-        self.__create_local_directory(directory)
+        self._create_local_directory(directory)
         self.resources["temporary"].append(directory)
 
         return directory
@@ -95,7 +95,7 @@ class Case:
     def create_arborescence(self):
         if os.path.exists(self.resources["case"]):
             if not self.arguments.overwrite:
-                self.__prompt("Overwrite existing object <{}> ? [y/N] ".format(self.resources["case"]))
+                self._prompt("Overwrite existing object <{}> ? [y/N] ".format(self.resources["case"]))
 
             try:
                 shutil.rmtree(self.resources["case"])
@@ -107,7 +107,7 @@ class Case:
 
                 _log.fault("Failed to overwrite existing object <{}>.".format(self.resources["case"]), trace=True)
 
-        self.__create_local_directory(self.resources["case"])
+        self._create_local_directory(self.resources["case"])
 
     def parse_list(self, data):
         try:

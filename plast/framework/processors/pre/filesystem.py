@@ -22,11 +22,11 @@ class Pre(_models.Pre):
             "-i", "--input", required=True, nargs="+", action=_parser.MultipleAbsolutePath, metavar="PATH", 
             help="input test file(s) or directory(ies)")
 
-    def __enumerate_files(self, directory):
+    def _enumerate_files(self, directory):
         for file in glob.iglob(os.path.join(directory, "**", self.case.arguments.filter), recursive=True):
             yield file
 
-    def __track_evidences(self):
+    def _track_evidences(self):
         evidences = []
 
         for item in self.case.arguments.input:
@@ -35,7 +35,7 @@ class Pre(_models.Pre):
                 evidences.append(file)
 
             elif os.path.isdir(item):
-                for file in self.__enumerate_files(item):
+                for file in self._enumerate_files(item):
                     if os.path.isfile(file):
                         _log.debug("Tracking evidence <{}>.".format(file))
                         evidences.append(file)
@@ -46,4 +46,4 @@ class Pre(_models.Pre):
         return evidences
 
     def run(self):
-        return self.__track_evidences()
+        return self._track_evidences()

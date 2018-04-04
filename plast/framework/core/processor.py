@@ -26,12 +26,12 @@ class Processor:
         self.queue = queue
         self.callbacks = callbacks
 
-    def __parse_memory_buffers(self):
+    def _parse_memory_buffers(self):
         for ruleset, buffer in self.buffers.items():
             buffer.seek(0)
             self.buffers[ruleset] = yara.load(file=buffer)
 
-    def __compute_hash(self, evidence, algorithm="sha256", buffer_size=65536):
+    def _compute_hash(self, evidence, algorithm="sha256", buffer_size=65536):
         with open(evidence, "rb") as file:
             cipher = getattr(hashlib, algorithm)()
 
@@ -45,20 +45,20 @@ class Processor:
                 
         return cipher.hexdigest()
 
-    def __invoke_callbacks(self, data):
+    def _invoke_callbacks(self, data):
         for name in self.callbacks:
             _loader.load_processor(name, _models.Callback)(data).run()
             _log.debug("Invoked callback <{}>.".format(name))
 
-    def __process_evidence(self):
+    def _process_evidence(self):
         for _, buffer in self.buffers.items():
             for match in buffer.match(self.evidence):
                 hashes = {}
 
                 for algorithm in self.algorithms:
-                    hashes[algorithm] = self.__compute_hash(self.evidence, algorithm=algorithm)
+                    hashes[algorithm] = self._compute_hash(self.evidence, algorithm=algorithm)
 
-                for action in [self.queue.put, self.__invoke_callbacks]:
+                for action in [self.queue.put, self._invoke_callbacks]:
                     action({
                         "rule": match.rule,
                         "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
@@ -80,5 +80,5 @@ class Processor:
         self.evidence = evidence
         self.buffers = buffers
 
-        self.__parse_memory_buffers()
-        self.__process_evidence()
+        self._parse_memory_buffers()
+        self._process_evidence()
