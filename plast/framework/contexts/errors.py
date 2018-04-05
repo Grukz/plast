@@ -6,9 +6,6 @@ class InvalidPackage(Exception):
 class InvalidObject(Exception):
     pass
 
-class InvalidEvidenceList(Exception):
-    pass
-
 class EncodingError(Exception):
     pass
 

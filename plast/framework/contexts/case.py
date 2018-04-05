@@ -41,20 +41,6 @@ class Case:
 
                 _log.exception("Failed to remove temporary artifact <{}>.".format(artifact))
 
-    def _create_local_directory(self, directory, mask=0o700):
-        try:
-            os.makedirs(directory, mode=mask)
-            _log.debug("Created local directory <{}>.".format(directory))
-
-        except FileExistsError:
-            _log.fault("Failed to create local directory due to existing object <{}>.".format(directory), trace=True)
-
-        except (
-            OSError,
-            Exception):
-
-            _log.fault("Failed to create local directory <{}>.".format(directory), trace=True)
-
     def _prompt(self, message, rounds=3, harsh_escape=True):
         for _ in range(rounds):
             try:
@@ -78,6 +64,20 @@ class Case:
 
     def _generate_nonce(self, rounds=16):
         return "".join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(rounds))
+
+    def _create_local_directory(self, directory, mask=0o700):
+        try:
+            os.makedirs(directory, mode=mask)
+            _log.debug("Created local directory <{}>.".format(directory))
+
+        except FileExistsError:
+            _log.fault("Failed to create local directory due to existing object <{}>.".format(directory), trace=True)
+
+        except (
+            OSError,
+            Exception):
+
+            _log.fault("Failed to create local directory <{}>.".format(directory), trace=True)
 
     def require_temporary_directory(self, seed=None):
         seed = self._generate_nonce()
@@ -109,18 +109,8 @@ class Case:
 
         self._create_local_directory(self.resources["case"])
 
-    def parse_list(self, data):
-        try:
-            data = _checker.verify_list(data)
-
-        except _errors.InvalidEvidenceList:
-            _log.fault("Preprocessor must provide a list of evidence(s).", trace=True)
-
-        for item in data:
-            if os.path.isfile(item):
-                self.resources["evidences"].append(item)
-
-            else:
-                _log.debug("Evidence <{}> not found.".format(item))
+    def parse_list(self, generator):
+        for evidence in generator:
+            self.resources["evidences"].append(evidence) if os.path.isfile(evidence) else _log.debug("Evidence <{}> not found.".format(evidence))
 
         _log.info("Currently tracking <{}> evidence(s).".format(len(self.resources["evidences"]))) if self.resources["evidences"] else _log.fault("No evidence(s) to process. Exiting.")

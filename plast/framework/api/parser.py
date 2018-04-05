@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from framework.contexts.logger import Logger as _log
 from framework.contexts.meta import Meta as _meta
 
 import argparse
-import copy
 import os.path
 
 class CustomParser:

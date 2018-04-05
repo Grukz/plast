@@ -3,6 +3,7 @@
 from framework.contexts.logger import Logger as _log
 
 import multiprocessing
+import os.path
 import signal
 
 class Hole:
@@ -45,7 +46,7 @@ class Pool:
     def __worker_initializer(self):
         signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-class InvocationWrapper:
+class Invocator:
     def __init__(self, module):
         self.module = module
 
@@ -56,3 +57,11 @@ class InvocationWrapper:
 
     def __exit__(self, *args):
         _log.debug("Ended <{}> session <{}>.".format(self.module.__class__.__name__, self.module.__name__))
+
+def _iterate(iterator):
+    for item in iterator:
+        if not os.path.isfile(item):
+            _log.error("File not found <{}>.".format(item))
+            continue
+
+        yield item

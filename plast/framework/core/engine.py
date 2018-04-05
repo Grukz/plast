@@ -76,7 +76,7 @@ class Engine:
             Postprocessor = _loader.load_processor(postprocessor, _models.Post)(self.case)
             Postprocessor.__name__ = postprocessor
 
-            with _magic.InvocationWrapper(Postprocessor):
+            with _magic.Invocator(Postprocessor):
                 Postprocessor.run()
 
     def run(self):

@@ -89,16 +89,17 @@ def main(container):
     Preprocessor = container["modules"][container["arguments"]._subparser]
     Preprocessor.case = case
 
-    with _magic.Hole(Exception, action=lambda:_log.fault("Fatal exception raised within preprocessor <{}>.".format(Preprocessor.__class__.__name__), trace=True)), _magic.InvocationWrapper(Preprocessor):
+    with _magic.Hole(Exception, action=lambda:_log.fault("Fatal exception raised within preprocessor <{}>.".format(Preprocessor.__class__.__name__), trace=True)), _magic.Invocator(Preprocessor):
         evidences = Preprocessor.run()
 
     if not evidences:
         _log.fault("No evidence(s) to process. Quitting.")
 
-    case.parse_list(evidences)
+    case.parse_list(_magic._iterate(evidences))
+    del Preprocessor
+
     _engine.Engine(case).run()
 
 if __name__ == "__main__":
-    _log.debug("<TODO>Normalize data format between modules.</TODO>")
     _log.debug("<TODO>Spawn pool processes for dynamically-loaded Post module(s).</TODO>")
     main(_argparser(_parser.CustomParser()))
