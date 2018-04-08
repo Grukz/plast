@@ -1,4 +1,4 @@
-= plast
+= plast - Threat Hunting Tool & Framework
 
 `plast` is a modular command-line threat hunting tool & framework.
 
@@ -33,7 +33,7 @@ Installing `plast` as a system-wide utility is as simple as:
 
 [source,sh]
 ----
-make
+make install
 ----
 
 To install a developpement environment, issue the following commands:
