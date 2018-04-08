@@ -1,4 +1,4 @@
-= Plast 
+= plast
 
 `plast` is a modular command-line threat hunting tool & framework.
 
@@ -8,7 +8,7 @@
 
 Follow these steps to get a copy of the project up and running on a live system.
 
-__This tool must ALWAYS be used in a confined environment.__
+*This tool must ALWAYS be used in a confined environment.*
 
 === Prerequisite(s)
 
@@ -51,23 +51,23 @@ pip install --upgrade pip && pip install -r REQUIREMENTS
 
 == Contributing
 
-TODO.
+`TODO`
 
 === Custom modules
 
-TODO.
+`TODO`
 
 ==== Preprocessing
 
-TODO.
+`TODO`
 
 ==== Postprocessing
 
-TODO.
+`TODO`
 
 ==== Callback
 
-TODO.
+`TODO`
 
 == Versioning
 
