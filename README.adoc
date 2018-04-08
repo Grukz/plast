@@ -8,27 +8,27 @@ Input types are defined as `Pre` modules. On rule match, `plast` invokes the sel
 
 [ditaa]
 ----
-/----------\       +---------------+                                                     .
-| Evidence |------>| Preprocessing | `Pre` module                                        .
-\----------/       +-------+-------+                                                     .
-   *.zip                   |                                                             .
-   *.tar                   \                                                [...]        .
-   *.pst   Decomposed input \               `Callback` module(s)       Dynamic analysis  .
-   [...]                     \                 /-----------\          /---------------\  .
-                             v                 | Callbacks +--------->| Custom action |  .
-                          +------+    Match    +-----------+          +---------------+  .
-           *IoC matching* | YARA +------------>| Callbacks +--------->| Custom action |  .
-                          +--+---+             +-----------+          +---------------+  .
-                             |                                                           .
-                             |               +----------------+       +---------------+  .
-                             \-------------->| Postprocessing +------>| Custom output |  .
-                                 Match(es)   +----------------+       +---------------+  .
-                                             | Postprocessing +------>| Custom output |  .
-                                             \----------------/       \---------------/  .
-                                              `Post` module(s)              *.adoc       .
-                                                                            *.pdf        .
-                                                                            *.json       .
-                                                                            [...]        .
+/----------\       +---------------+                                                    
+| Evidence |------>| Preprocessing | `Pre` module                                       
+\----------/       +-------+-------+                                                    
+   *.zip                   |                                                            
+   *.tar                   \                                                [...]       
+   *.pst   Decomposed input \               `Callback` module(s)       Dynamic analysis 
+   [...]                     \                 /-----------\          /---------------\ 
+                             v                 | Callbacks +--------->| Custom action | 
+                          +------+    Match    +-----------+          +---------------+ 
+           *IoC matching* | YARA +------------>| Callbacks +--------->| Custom action | 
+                          +--+---+             +-----------+          +---------------+ 
+                             |                                                          
+                             |               +----------------+       +---------------+ 
+                             \-------------->| Postprocessing +------>| Custom output | 
+                                 Match(es)   +----------------+       +---------------+ 
+                                             | Postprocessing +------>| Custom output | 
+                                             \----------------/       \---------------/ 
+                                              `Post` module(s)              *.adoc      
+                                                                            *.pdf       
+                                                                            *.json      
+                                                                            [...]       
 ----
 
 == Getting Started
