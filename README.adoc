@@ -1,4 +1,4 @@
-= plast 
+= Plast 
 
 `plast` is a modular command-line threat hunting tool & framework.
 
