@@ -1,8 +1,8 @@
 rule hello
 {
-	strings:
-		$ascii_string = "hello"
+    strings:
+        $ascii_string = "hello"
 
-	condition:
-		$ascii_string
+    condition:
+        $ascii_string
 }
