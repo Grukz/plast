@@ -1,8 +1,35 @@
-= `plast`, modular command-line threat hunting tool & framework. 
+= plast 
 
-`plast` is a modular command-line threat hunting tool.
+`plast` is a modular command-line threat hunting tool & framework.
 
-It uses `yara` under the hood to perform
+`plast` uses https://github.com/VirusTotal/yara[`yara`] under the hood through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IoC] matching on multiple types of input. 
+
+Input types are defined as `Pre` modules. On rule match, `plast` invokes the selected `Callback` module(s) to immediatelyprocess the current match. It can also invoke `Post` module(s) at the end to perform custom task(s) based on the matching item(s) like formatting or reporting for example. Possibilities are endless.
+
+[ditaa]
+----
+/----------\       +---------------+                                                     .
+| Evidence |------>| Preprocessing | `Pre` module                                        .
+\----------/       +-------+-------+                                                     .
+   *.zip                   |                                                             .
+   *.tar                   \                                                [...]        .
+   *.pst   Decomposed input \               `Callback` module(s)       Dynamic analysis  .
+   [...]                     \                 /-----------\          /---------------\  .
+                             v                 | Callbacks +--------->| Custom action |  .
+                          +------+    Match    +-----------+          +---------------+  .
+           *IoC matching* | YARA +------------>| Callbacks +--------->| Custom action |  .
+                          +--+---+             +-----------+          +---------------+  .
+                             |                                                           .
+                             |               +----------------+       +---------------+  .
+                             \-------------->| Postprocessing +------>| Custom output |  .
+                                 Match(es)   +----------------+       +---------------+  .
+                                             | Postprocessing +------>| Custom output |  .
+                                             \----------------/       \---------------/  .
+                                              `Post` module(s)              *.adoc       .
+                                                                            *.pdf        .
+                                                                            *.json       .
+                                                                            [...]        .
+----
 
 == Getting Started
 
