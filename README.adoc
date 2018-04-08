@@ -20,18 +20,18 @@ Install the latest Python 3+ environment:
 
 [source,sh]
 ----
-apt install -y python3 python3-pip
+apt install -y make python3 python3-pip
 ----
 
-Each preprocessor and postprocessor has its own dependencies, which may not be listing here.
+"``Pre`, `Post` and `Callback` module(s) may have their own dependencies which may not be listed here.`"
 
 === Installation
 
-Installing `plast` as a system-wide utility is as simple as one command:
+Installing `plast` as a system-wide utility is as simple as:
 
 [source,sh]
 ----
-./setup.py install
+./make
 ----
 
 To install a developpement environment, issue the following commands:
@@ -49,4 +49,4 @@ pip install --upgrade pip && pip install -r REQUIREMENTS
 
 == Versioning
 
-Refer to the `git` repository to get the latest version.
+Refer to the `git` repository to retrieve the latest version.
