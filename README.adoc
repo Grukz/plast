@@ -23,7 +23,7 @@ Install the latest Python 3+ environment:
 apt install -y make python3 python3-pip
 ----
 
-"``Pre`, `Post` and `Callback` module(s) may have their own dependencies which may not be listed here.`"
+`Pre`, `Post` and `Callback` module(s) may have their own dependencies which may not be listed here.
 
 === Installation
 
@@ -31,7 +31,7 @@ Installing `plast` as a system-wide utility is as simple as:
 
 [source,sh]
 ----
-./make
+make
 ----
 
 To install a developpement environment, issue the following commands:
