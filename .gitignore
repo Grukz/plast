@@ -12,4 +12,3 @@ postprocessors/*
 
 rulesets/*
 !rulesets/.empty
-!rulesets/*.yar
