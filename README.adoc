@@ -35,7 +35,7 @@ Input types are defined as `Pre` modules. On rule match, `plast` invokes the sel
 
 Follow these steps to get a copy of the project up and running on a live system.
 
-"`This tool must ALWAYS be used in a confined environment.`"
+__This tool must ALWAYS be used in a confined environment.__
 
 === Prerequisite(s)
 
