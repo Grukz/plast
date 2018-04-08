@@ -1,26 +1,28 @@
-= plast
+= `plast`, modular command-line threat hunting tool & framework. 
 
 `plast` is a modular command-line threat hunting tool.
+
+It uses `yara` under the hood to perform
 
 == Getting Started
 
 Follow these steps to get a copy of the project up and running on a live system.
 
-_This tool must ALWAYS be used in a confined environment._
+"`This tool must ALWAYS be used in a confined environment.`"
 
 === Prerequisite(s)
 
-`plast` is entirely written in Python 3+ which makes it compatible with almost all GNU/Linux and macOS distributions. Nevertheless, some minimal dependencies are required.
+`plast` is entirely written in `python3` which makes it compatible with almost all GNU/Linux and macOS distributions. Nevertheless, some minimal dependencies are required.
 
 Follow the steps described below to install the project on the system.
 
 ==== Debian-based system
 
-Install the latest Python 3+ environment:
+Install the latest `python3` environment:
 
 [source,sh]
 ----
-apt install -y make python3 python3-pip
+apt install -y make python3 python3-pip python3-venv
 ----
 
 `Pre`, `Post` and `Callback` module(s) may have their own dependencies which may not be listed here.
