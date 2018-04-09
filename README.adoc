@@ -3,8 +3,9 @@ Nelson "sk4la" Cornet <https://github.com/sk4la>
 :caution-caption: :fire:
 :uri-org: https://github.com/sk4la
 :uri-repo: {uri-org}/plast
-:uri-license: {uri-repo}/master/LICENSE
-:uri-python: https://www.python.org/
+:uri-raw: https://raw.githubusercontent.com/sk4la/plast
+:uri-license: {uri-raw}/master/LICENSE
+:uri-python: https://www.python.org
 :uri-yara: https://github.com/VirusTotal/yara
 
 image:https://img.shields.io/badge/python-3.7-blue.svg[link={uri-python}] image:https://img.shields.io/badge/license-MIT-green.svg[link={uri-license}]
