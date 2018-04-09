@@ -57,7 +57,7 @@ It might be necessary to `chmod u+x Makefile` to be able to execute the `make` c
 
 To install a basic developpement environment, issue the following commands:
 
-[source,sh]
+[source,sh,subs="attributes"]
 ----
 git clone {uri-repo}.git plast
 cd plast
