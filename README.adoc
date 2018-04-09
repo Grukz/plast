@@ -1,8 +1,8 @@
-= plast - Threat Hunting Tool & Framework
+= plast - Threat Hunting Tool & Framework [![Python 3.7](https://img.shields.io/badge/python-3.7-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://raw.githubusercontent.com/sk4la/plast/master/LICENSE)
 
 `plast` is a modular command-line threat hunting tool & framework.
 
-`plast` uses https://github.com/VirusTotal/yara[`yara`] under the hood through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IoC] matching on multiple types of input.
+`plast` uses https://github.com/VirusTotal/yara[YARA] under the hood through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IOC] matching on multiple types of input.
 
 == Getting Started
 
@@ -18,14 +18,14 @@ Follow the steps described below to install the project on the system.
 
 ==== Debian-based system
 
-Install the latest `python3` environment:
+Install the `make` package and the latest `python3` environment:
 
 [source,sh]
 ----
 apt install -y make python3 python3-pip python3-venv
 ----
 
-`Pre`, `Post` and `Callback` module(s) may have their own dependencies which may not be listed here.
+`Pre`, `Post` and `Callback` modules have their own dependencies which may not be listed here.
 
 === Installation
 
@@ -36,7 +36,9 @@ Installing `plast` as a system-wide utility is as simple as:
 make install
 ----
 
-To install a developpement environment, issue the following commands:
+It might be necessary to `chmod u+x Makefile` to be able to execute the `make` command.
+
+To install a basic developpement environment, issue the following commands:
 
 [source,sh]
 ----
@@ -48,6 +50,42 @@ pip install --upgrade pip && pip install -r REQUIREMENTS
 ----
 
 `$TARGET` represents the working directory where `plast` will be installed.
+
+== Usage
+
+=== Manual
+
+Use the following command to display the `plast` help menu:
+
+[source,sh]
+----
+plast [...] --help
+----
+
+Each `Pre` module also has a custom help menu that can be called like this:
+
+[source,sh]
+----
+plast [...] filesystem --help
+----
+
+=== Basic examples
+
+The following command will recursively look for every file in the `./case` directory, process them and pass into every registered `Callback` and `Post` module.
+
+[source,sh]
+----
+plast -o ./out filesystem -i ./case
+----
+
+You can easily choose which modules will be invocated during processing by setting the `--callbacks` and `--post` options:
+
+[source,sh]
+----
+plast -o ./out --callbacks=example --post=example filesystem -i ./case
+----
+
+`Callback` and `Post` modules are defined by their basename without extension (ex: `asciidoc` for `asciidoc.py`)
 
 == Contributing
 
