@@ -1,18 +1,27 @@
-= plast - Threat Hunting Tool & Framework image:https://img.shields.io/badge/python-3.7-yellow.svg[link="https://www.python.org/"] image:https://img.shields.io/badge/license-MIT-red.svg[link="https://raw.githubusercontent.com/sk4la/plast/master/LICENSE"]
+= plast — Threat Hunting Tool & Framework
 
-`plast` is a modular command-line threat hunting tool & framework.
+image:https://img.shields.io/badge/python-3.7-blue.svg[link="https://www.python.org/"] image:https://img.shields.io/badge/license-MIT-green.svg[link="https://raw.githubusercontent.com/sk4la/plast/master/LICENSE"]
 
-`plast` uses https://github.com/VirusTotal/yara[YARA] under the hood through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IOC] matching on multiple types of input.
+`plast` is an open-source modular command-line threat hunting tool & framework. It comes with several modules that allow to process multiple data formats, trigger automatic actions upon detection and produce customized output.
+
+Under the hood, `plast` uses https://github.com/VirusTotal/yara[YARA] through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IOC] detection on multiple types of input.
+
+The main goal of the `plast` project is to provide an efficient & effortless way to detect indicators of compomission during incident-response operations.
+
+If provides a comprehensive framework that easily allows processing of multiple data types. It also embeds all modules in one single tool, allowing `plast` to be used on the field as a standalone utility.
+
+`plast` is entirely written in `python3` which makes it compatible with almost all GNU/Linux and macOS distributions. Nevertheless, some minimal dependencies are required.
 
 == Getting Started
 
 Follow these steps to get a copy of the project up and running on a live system.
 
+[CAUTION]
+====
 *This tool must ALWAYS be used in a confined environment.*
+====
 
 === Prerequisite(s)
-
-`plast` is entirely written in `python3` which makes it compatible with almost all GNU/Linux and macOS distributions. Nevertheless, some minimal dependencies are required.
 
 Follow the steps described below to install the project on the system.
 
@@ -42,14 +51,12 @@ To install a basic developpement environment, issue the following commands:
 
 [source,sh]
 ----
-git clone . $TARGET
-cd $TARGET
+git clone https://github.com/sk4la/plast.git plast
+cd plast
 python3 -m venv .env
 source .env/bin/activate
 pip install --upgrade pip && pip install -r REQUIREMENTS
 ----
-
-`$TARGET` represents the working directory where `plast` will be installed.
 
 == Usage
 
@@ -110,3 +117,9 @@ plast -o ./out --callbacks=example --post=example filesystem -i ./case
 == Versioning
 
 Refer to the `git` repository to retrieve the latest version.
+
+== Copyright & Licensing
+
+Copyright (c) 2018 Nelson "sk4la" Cornet. Free use of this software is granted under the terms of the MIT License.
+
+See the https://raw.githubusercontent.com/sk4la/plast/master/LICENSE[LICENSE] file for details.
