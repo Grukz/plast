@@ -1,10 +1,17 @@
 = plast — Threat Hunting Tool & Framework
+Nelson "sk4la" Cornet <https://github.com/sk4la>
+:caution-caption: :fire:
+:uri-org: https://github.com/sk4la
+:uri-repo: {uri-org}/plast
+:uri-license: {uri-repo}/master/LICENSE
+:uri-python: https://www.python.org/
+:uri-yara: https://github.com/VirusTotal/yara
 
-image:https://img.shields.io/badge/python-3.7-blue.svg[link="https://www.python.org/"] image:https://img.shields.io/badge/license-MIT-green.svg[link="https://raw.githubusercontent.com/sk4la/plast/master/LICENSE"]
+image:https://img.shields.io/badge/python-3.7-blue.svg[link={uri-python}] image:https://img.shields.io/badge/license-MIT-green.svg[link={uri-license}]
 
 `plast` is an open-source modular command-line threat hunting tool & framework. It comes with several modules that allow to process multiple data formats, trigger automatic actions upon detection and produce customized output.
 
-Under the hood, `plast` uses https://github.com/VirusTotal/yara[YARA] through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IOC] detection on multiple types of input.
+Under the hood, `plast` uses {uri-yara}[YARA] through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IOC] detection on multiple types of input.
 
 The main goal of the `plast` project is to provide an efficient & effortless way to detect indicators of compomission during incident-response operations.
 
@@ -18,7 +25,7 @@ Follow these steps to get a copy of the project up and running on a live system.
 
 [CAUTION]
 ====
-*This tool must ALWAYS be used in a confined environment.*
+This tool must ALWAYS be used in a confined environment.
 ====
 
 === Prerequisite(s)
@@ -51,7 +58,7 @@ To install a basic developpement environment, issue the following commands:
 
 [source,sh]
 ----
-git clone https://github.com/sk4la/plast.git plast
+git clone {uri-repo}.git plast
 cd plast
 python3 -m venv .env
 source .env/bin/activate
@@ -120,6 +127,6 @@ Refer to the `git` repository to retrieve the latest version.
 
 == Copyright & Licensing
 
-Copyright (c) 2018 Nelson "sk4la" Cornet. Free use of this software is granted under the terms of the MIT License.
+Copyright (c) 2018 Nelson "sk4la" Cornet. Free use of this software is granted under the terms of the MIT license.
 
-See the https://raw.githubusercontent.com/sk4la/plast/master/LICENSE[LICENSE] file for details.
+See the {uri-license}[LICENSE] file for details.
