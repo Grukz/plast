@@ -1,4 +1,4 @@
-= plast - Threat Hunting Tool & Framework [![Python 3.7](https://img.shields.io/badge/python-3.7-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-MIT-red.svg)](https://raw.githubusercontent.com/sk4la/plast/master/LICENSE)
+= plast - Threat Hunting Tool & Framework image:https://img.shields.io/badge/python-3.7-yellow.svg[link="https://www.python.org/"] image:https://img.shields.io/badge/license-MIT-red.svg[link="https://raw.githubusercontent.com/sk4la/plast/master/LICENSE"]
 
 `plast` is a modular command-line threat hunting tool & framework.
 
