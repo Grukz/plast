@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 class Pre:
+    """Base preprocessor class."""
+
     __description__ = None
     __author__ = None
     __version__ = None
@@ -12,6 +14,8 @@ class Pre:
         return []
 
 class Post:
+    """Base postprocessor class."""
+
     __description__ = None
     __author__ = None
     __version__ = None
@@ -23,6 +27,8 @@ class Post:
         pass
 
 class Callback:
+    """Base callback class."""
+
     __description__ = None
     __author__ = None
     __version__ = None

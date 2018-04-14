@@ -24,6 +24,19 @@ import itertools
 import multiprocessing
 
 def _argparser(parser, modules={}):
+    """
+    Command-line argument parsing function.
+
+    Parameter(s)
+    ------------
+    parser [namespace] argparse.Parser instance
+    modules [dict] dictionary containing the loaded modules
+
+    Return value(s)
+    ---------------
+    [dict] dictionary containing the loaded module(s) and the processed command-line arguments
+    """
+
     parser.add_argument(
         "-o", "--output", required=True, action=_parser.SingleAbsolutePath, metavar="PATH",
         help="path to the output directory to be created for the current case")
@@ -75,6 +88,14 @@ def _argparser(parser, modules={}):
     }
 
 def main(container):
+    """
+    Main entry point for the program.
+
+    Parameter(s)
+    ------------
+    container [dict] dictionary containing the loaded module(s) and the processed command-line arguments
+    """
+
     _log.set_console_level(container["arguments"].logging.upper())
 
     if not container["arguments"]._subparser:
@@ -95,7 +116,7 @@ def main(container):
     if not evidences:
         _log.fault("No evidence(s) to process. Quitting.")
 
-    case.parse_list(_magic._iterate(evidences))
+    case.parse_list(_magic._iterate_files(evidences))
     del Preprocessor
 
     _engine.Engine(case).run()

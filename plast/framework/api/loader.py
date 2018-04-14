@@ -13,8 +13,23 @@ import os.path
 import pkgutil
 
 class Loader:
+    """Assists modules load."""
+
     @staticmethod
     def load_processor(name, model):
+        """
+        Dynamically loads a registered module.
+
+        Parameter(s)
+        ------------
+        name [str] name of the module to load
+        model [namespace] reference module class handle
+
+        Return value(s)
+        ---------------
+        [namespace] module class handle
+        """
+
         processor = importlib.import_module("framework.processors.{}.{}".format(model.__name__.lower(), name))
 
         try:
@@ -30,16 +45,55 @@ class Loader:
 
     @staticmethod
     def iterate_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar"):
+        """
+        Iterates through the available YARA ruleset(s).
+
+        Parameter(s)
+        ------------
+        directory [str] absolute path to the rulesets directory (defaults to the project's `rulesets` directory)
+        globbing_filter [str] globbing filter to apply for the search (defaults to ".yar")
+
+        Return value(s)
+        ---------------
+        [tup] basename and absolute path to the current ruleset
+        """
+
         for file in glob.iglob(os.path.join(directory, "**", globbing_filter), recursive=True):
             yield os.path.splitext(os.path.basename(file))[0], file
 
     @staticmethod
     def iterate_processors(package, model):
+        """
+        Iterates through the available module(s).
+
+        Parameter(s)
+        ------------
+        package [namespace] package handle to import module(s) from
+        model [namespace] reference module class handle
+
+        Return value(s)
+        ---------------
+        [tup] name of the current module and its handle
+        """
+
         for _, name, __ in pkgutil.iter_modules(package.__path__):
             yield name, Loader.load_processor(name, model)
 
     @staticmethod
     def render_processors(package, model):
+        """
+        Renders available module(s) names as a list.
+
+        Parameter(s)
+        ------------
+        package [namespace] package handle to import module(s) from
+        model [namespace] reference module class handle
+
+        Return value(s)
+        ---------------
+        [list] available module(s) in `package`
+        """
+
         try:
             _checker.check_package(package)
 

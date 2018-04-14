@@ -17,3 +17,6 @@ class ProcessorNotFound(Exception):
 
 class ProcessorNotInherited(Exception):
     pass
+
+class InvalidMIMEType(Exception):
+    pass

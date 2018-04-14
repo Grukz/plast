@@ -14,6 +14,15 @@ class Pre(_models.Pre):
     __version__ = "0.1"
 
     def __init__(self, parser):
+        """
+        Initialization method that sets the different command-line argument(s).
+
+        Parameter(s)
+        ------------
+        self [namespace] current class instance
+        parser [namespace] argparse.Parser.subparser instance
+        """
+
         parser.add_argument(
             "--filter", default="*", metavar="FILTER", 
             help="custom globbing filter")
@@ -23,10 +32,35 @@ class Pre(_models.Pre):
             help="input test file(s) or directory(ies)")
 
     def _enumerate_files(self, directory):
+        """
+        Iterates through the files in a directory.
+
+        Parameter(s)
+        ------------
+        self [namespace] current class instance
+        directory [str] path to the directory to walk through
+
+        Return value(s)
+        ---------------
+        [str] path to the matching file(s)
+        """
+
         for file in glob.iglob(os.path.join(directory, "**", self.case.arguments.filter), recursive=True):
             yield file
 
     def _track_evidences(self):
+        """
+        Iterates through file(s) and directory(ies) to track valid evidence(s).
+
+        Parameter(s)
+        ------------
+        self [namespace] current class instance
+
+        Return value(s)
+        ---------------
+        [list] list containing the absolute path(s) of the evidence(s) to process
+        """
+
         evidences = []
 
         for item in self.case.arguments.input:
@@ -46,4 +80,16 @@ class Pre(_models.Pre):
         return evidences
 
     def run(self):
+        """
+        Main entry point for the module.
+
+        Parameter(s)
+        ------------
+        self [namespace] current class instance
+
+        Return value(s)
+        ---------------
+        [list] list containing the absolute path(s) of the evidence(s) to process
+        """
+
         return self._track_evidences()

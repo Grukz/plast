@@ -10,6 +10,7 @@ from framework.contexts.types import Codes as _codes
 from framework.core import reader as _reader
 from framework.core import processor as _processor
 
+import ctypes
 import io
 import multiprocessing
 
@@ -23,11 +24,32 @@ except (
     _log.fault("Import error.", trace=True)
 
 class Engine:
+    """Dispatches the processing to asynchronous jobs."""
+
     def __init__(self, case):
+        """
+        Initialization method that sets the different command-line argument(s).
+
+        Parameter(s)
+        ------------
+        self [namespace] current class instance
+        case [namespace] filled contexts.Case instance
+        """
+
         self.case = case
         self.buffers = {}
 
     def _compile_ruleset(self, name, ruleset):
+        """
+        Compiles and saves the YARA rule(s) to the dictionary to be passed to the asynchronous jobs.
+
+        Parameter(s)
+        ------------
+        self [namespace] current class instance
+        name [str] name of the ruleset file to compile the rule(s) from
+        ruleset [str] absolute path to the ruleset file to compile the rule(s) from
+        """
+
         try:
             buffer = io.BytesIO()
             yara.compile(ruleset, includes=True).save(file=buffer)
@@ -42,9 +64,21 @@ class Engine:
             _log.exception("Failed to pre-compile ruleset <{}>.".format(ruleset))
 
     def _dispatch_jobs(self):
+        """
+        Dispatches the processing tasks to the subprocesses.
+
+        Parameter(s)
+        ------------
+        self [namespace] current class instance
+
+        Return value(s)
+        ---------------
+        [int] number of match(es)
+        """
+
         with multiprocessing.Manager() as manager:
             queue = manager.Queue()
-            results = manager.dict()
+            results = (multiprocessing.Lock(), multiprocessing.Value(ctypes.c_int, 0))
 
             reader = multiprocessing.Process(target=_reader.Reader(queue, results, {
                 "target": self.case.resources["matches"],
@@ -69,9 +103,17 @@ class Engine:
             with _magic.Hole(KeyboardInterrupt, action=lambda:_log.fault("Aborted due to manual user interruption <SIGINT>.")):
                 reader.join()
 
-            return results.copy()
+            return results[1].value
 
-    def _spawn_postprocessors(self):
+    def _invoke_postprocessors(self):
+        """
+        Invoke the selected models.Post module(s).
+
+        Parameter(s)
+        ------------
+        self [namespace] current class instance
+        """
+
         for postprocessor in self.case.arguments.post:
             Postprocessor = _loader.load_processor(postprocessor, _models.Post)(self.case)
             Postprocessor.__name__ = postprocessor
@@ -80,11 +122,19 @@ class Engine:
                 Postprocessor.run()
 
     def run(self):
+        """
+        Main entry point for the class.
+
+        Parameter(s)
+        ------------
+        self [namespace] current class instance
+        """
+
         for name, ruleset in _loader.iterate_rulesets():
             self._compile_ruleset(name, ruleset)
 
-        if not self._dispatch_jobs()["matches"]:
+        if not self._dispatch_jobs():
             _log.debug("Skipping <{}> module(s) invocation.".format(_models.Post.__name__))
             return
 
-        self._spawn_postprocessors()
+        self._invoke_postprocessors()

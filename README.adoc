@@ -1,4 +1,4 @@
-= plast — Threat Hunting Tool & Framework
+= plast – Threat Hunting Tool & Framework
 Nelson "sk4la" Cornet <https://github.com/sk4la>
 :caution-caption: :fire:
 :uri-org: https://github.com/sk4la
@@ -24,10 +24,7 @@ If provides a comprehensive framework that easily allows processing of multiple 
 
 Follow these steps to get a copy of the project up and running on a live system.
 
-[CAUTION]
-====
-This tool must ALWAYS be used in a confined environment.
-====
+CAUTION: his tool must ALWAYS be used in a confined environment.
 
 === Prerequisite(s)
 
@@ -35,14 +32,22 @@ Follow the steps described below to install the project on the system.
 
 ==== Debian-based system
 
-Install the `make` package and the latest `python3` environment:
+Install the required package(s):
 
 [source,sh]
 ----
-apt install -y make python3 python3-pip python3-venv
+apt install -y make libpst
+apt install -y python3 python3-pip python3-venv
 ----
 
-`Pre`, `Post` and `Callback` modules have their own dependencies which may not be listed here.
+CAUTION: `Pre`, `Post` and `Callback` modules have their own dependencies which may not be listed here.
+
+And the latest `python3` environment:
+
+[source,sh]
+----
+apt install -y python3 python3-pip python3-venv
+----
 
 === Installation
 
