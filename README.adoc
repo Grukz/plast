@@ -107,15 +107,60 @@ plast -o out --callbacks=example --post=example filesystem -i case
 
 == Contributing
 
-`TODO`
+The `plast` project can only be useful if there are modules helping to process custom data formats.
+
+Following this goal, the framework allows to easily integrate new module(s) by creating custom class(es) and simply placing them in the `framework/processors/...` directory. That's it.
 
 === Custom modules
 
-`TODO`
+The core process is handled by three main classes defined in the `framework.contexts.models` module. This module defines:
+* The `Pre` reference class;
+* The `Post` reference class;
+* And the `Callback` reference class.
+
+*A module must be a subclass of one of these reference classes.*
 
 ==== Preprocessing
 
-`TODO`
+Preprocessing is handled by the `framework.contexts.models.Pre` reference class. To create a preprocessing module, one needs to create a module containing a subclass of `framework.contexts.models.Pre` named `Pre`.
+
+Following is a basic example of a preprocessing module that yields the path `infected.pdf`:
+
+[source,python]
+----
+from framework.contexts import models as _models
+
+class Pre(_models.Pre):
+    def run(self):
+        return ["/tmp/infected.pdf"]
+----
+
+`Pre` modules must have a `run` method that returns a list of file(s) to analyze.
+
+Each `Pre` module corresponds to a positional argument in `plast`. One can add command-line argument(s) in the module by overriding the `__init__` method like this:
+
+[source,python]
+----
+from framework.contexts import models as _models
+
+class Pre(_models.Pre):
+    def __init__(self, parser):
+        parser.add_argument(
+            "-j", "--jobs",
+            type=int, 
+            default=4, 
+            help="number of concurrent job(s)")
+        
+        parser.add_argument(
+            "--debug", 
+            default="False", 
+            help="run in debug mode")
+
+    def run(self):
+        return ["/tmp/infected.pdf"]
+----
+
+The syntax is based on the `argparse` module syntax.
 
 ==== Postprocessing
 
