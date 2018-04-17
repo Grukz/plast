@@ -15,12 +15,15 @@ class Pre(_models.Pre):
 
     def __init__(self, parser):
         """
-        Initialization method that sets the different command-line argument(s).
+        .. py:function:: __init__(self, parser)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        parser [namespace] argparse.Parser.subparser instance
+        Initialization method for the class.
+
+        :param self: current class instance
+        :type self: class
+
+        :param parser: :code:`argparse.Parser.subparser` instance
+        :type parser: list
         """
 
         parser.add_argument(
@@ -33,16 +36,18 @@ class Pre(_models.Pre):
 
     def _enumerate_files(self, directory):
         """
+        .. py:function:: _enumerate_files(self, directory)
+
         Iterates through the files in a directory.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        directory [str] path to the directory to walk through
+        :param self: current class instance
+        :type self: class
 
-        Return value(s)
-        ---------------
-        [str] path to the matching file(s)
+        :param directory: path to the directory to walk through
+        :type directory: str
+
+        :return: path to the matching file(s)
+        :rtype: str
         """
 
         for file in glob.iglob(os.path.join(directory, "**", self.case.arguments.filter), recursive=True):
@@ -50,15 +55,15 @@ class Pre(_models.Pre):
 
     def _track_evidences(self):
         """
+        .. py:function:: _track_evidences(self)
+
         Iterates through file(s) and directory(ies) to track valid evidence(s).
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
 
-        Return value(s)
-        ---------------
-        [list] list containing the absolute path(s) of the evidence(s) to process
+        :return: list containing the absolute path(s) of the evidence(s) to process
+        :rtype: list
         """
 
         evidences = []
@@ -81,15 +86,15 @@ class Pre(_models.Pre):
 
     def run(self):
         """
+        .. py:function:: run(self)
+
         Main entry point for the module.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
 
-        Return value(s)
-        ---------------
-        [list] list containing the absolute path(s) of the evidence(s) to process
+        :return: list containing the absolute path(s) of the evidence(s) to process
+        :rtype: list
         """
 
         return self._track_evidences()

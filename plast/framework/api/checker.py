@@ -14,15 +14,17 @@ class Checker:
     @staticmethod
     def sanitize_data(data):
         """
-        Strips non white-listed characters from `data`.
+        .. py:function:: sanitize_data(data)
 
-        Parameter(s)
-        ------------
-        data [str] input data to sanitize
+        Strips non white-listed characters in :code:`data`.
 
-        Return value(s)
-        ---------------
-        [str] sanitized representation of `data`
+        :param data: input data to sanitize
+        :type data: str
+
+        :return: sanitized representation of :code:`data`
+        :rtype: str
+
+        :raises MalformatedData: if :code:`data` cannot be decoded correctly
         """
 
         try:
@@ -41,16 +43,18 @@ class Checker:
     @staticmethod
     def number_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar"):
         """
-        Returns the total number of YARA ruleset(s) in `directory`.
+        .. py:function:: number_rulesets([directory=os.path.join(_meta.__root__, "rulesets")], [globbing_filter="*.yar"])
 
-        Parameter(s)
-        ------------
-        directory [str] absolute path to the rulesets directory (defaults to the project's `rulesets` directory)
-        globbing_filter [str] globbing filter to apply for the search (defaults to ".yar")
+        Returns the total number of YARA ruleset(s).
 
-        Return value(s)
-        ---------------
-        [int] number of YARA ruleset(s) in `directory`
+        :param directory: absolute path to the rulesets directory
+        :type directory: str
+
+        :param globbing_filter: globbing filter to apply for the search
+        :type globbing_filter: str
+
+        :return: number of YARA ruleset(s) in :code:`directory`
+        :rtype: int
         """
 
         return len(glob.glob(os.path.join(directory, "**", globbing_filter), recursive=True))
@@ -58,11 +62,14 @@ class Checker:
     @staticmethod
     def check_package(package):
         """
-        Checks wether `package` is a valid Python package.
+        .. py:function:: check_package(package)
 
-        Parameter(s)
-        ------------
-        package [namespace] handle to a Python package
+        Checks wether package is a valid Python package.
+
+        :param package: handle to a Python package
+        :type package: class
+
+        :raises InvalidPackage: if the package is not a valid Python package
         """
 
         if not isinstance(package, types.ModuleType):
@@ -71,12 +78,15 @@ class Checker:
     @staticmethod
     def check_processor(object, model):
         """
-        Checks wether `object` is a valid module.
+        .. py:function:: check_processor(object, model)
 
-        Parameter(s)
-        ------------
-        object [namespace] module class handle
-        model [namespace] reference module class handle
+        Checks wether :code:`object` is a valid module.
+
+        :param object: module class handle
+        :type object: class
+
+        :param model: reference module class handle
+        :type model: class
         """
 
         if not hasattr(object, model.__name__):
@@ -88,12 +98,15 @@ class Checker:
     @staticmethod
     def check_mime_type(target, types=[]):
         """
-        Checks wether the MIME-type of `target` is in `types`.
+        .. py:function:: check_mime_type(target, [types=[]])
 
-        Parameter(s)
-        ------------
-        target [str] absolute path to the file to check
-        types [list] list of authorized MIME-types (defaults to [])
+        Checks wether the MIME-type of :code:`target` is included in :code:`types`.
+
+        :param target: absolute path to the file to check
+        :type target: str
+
+        :param types: list of authorized MIME-types
+        :type types: list
         """
 
         if not magic.from_file(target, mime=True) in types:

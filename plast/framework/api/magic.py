@@ -14,13 +14,18 @@ class Hole:
 
     def __init__(self, target, action=None):
         """
+        .. py:function:: __init__(self, target, action=None)
+
         Initialization method for the class.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        target [namespace] exception type to swallow, must inherit from the default `Exception` class
-        action [namespace] callback to call when swallowing an exception
+        :param self: current class instance
+        :type self: class
+
+        :param target: exception type to swallow, must inherit from the Python :code:`Exception` class
+        :type target: class
+
+        :param action: callback function to trigger when swallowing an exception
+        :type action: class
         """
 
         self.target = target
@@ -28,28 +33,33 @@ class Hole:
 
     def __enter__(self):
         """
+        .. py:function:: __enter__(self)
+
         Callback method called when the context manager is invoked.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
         """
 
         pass
 
     def __exit__(self, exception, *args):
         """
+        .. py:function:: __exit__(self, exception, *args)
+
         Exit method raised when leaving the context manager.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        exception [namespace] exception raised
-        *args [list] list of argument(s)
+        :param self: current class instance
+        :type self: class
 
-        Return value(s)
-        ---------------
-        [bool] `True` if an exception was swallowed, else `False`
+        :param exception: exception raised
+        :type exception: class
+
+        :param *args: list of argument(s)
+        :type *args: class
+
+        :return: :code:`True` if an exception was swallowed, else :code:`False`
+        :rtype: bool
         """
 
         if exception and issubclass(exception, self.target):
@@ -60,46 +70,52 @@ class Hole:
         return False
 
 class Pool:
-    """Wrapper around `multiprocessing.Pool` that automatically sets the `SIGINT` signal handler and cleans up on error."""
+    """Wrapper around :code:`multiprocessing.Pool` that automatically sets the :code:`SIGINT` signal handler and cleans up on error."""
 
     def __init__(self, processes=(multiprocessing.cpu_count() or 4)):
         """
+        .. py:function:: __init__(self, processes=(multiprocessing.cpu_count() or 4))
+
         Initialization method for the class.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        processes [int] number of concurrent process(es) to spawn
+        :param self: current class instance
+        :type self: class
+
+        :param exception: number of concurrent process(es) to spawn
+        :type exception: int
         """
 
         self.processes = processes
-        self.pool = multiprocessing.Pool(processes=self.processes, initializer=self.__worker_initializer)
+        self.pool = multiprocessing.Pool(processes=self.processes, initializer=self._worker_initializer)
 
         _log.debug("Initialized pool of <{}> concurrent process(es).".format(self.processes))
 
     def __enter__(self):
         """
+        .. py:function:: __enter__(self)
+
         Callback method called when the context manager is invoked.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
 
-        Return value(s)
-        ---------------
-        [namespace] instance of `multiprocessing.Pool`
+        :return: instance of :code:`multiprocessing.Pool`
+        :rtype: class
         """
 
         return self.pool
 
     def __exit__(self, *args):
         """
+        .. py:function:: __exit__(self, *args)
+
         Exit method raised when leaving the context manager.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        *args [list] list of argument(s)
+        :param self: current class instance
+        :type self: class
+
+        :param *args: list of argument(s)
+        :type *args: class
         """
 
         with Hole(KeyboardInterrupt, action=self._tear_down):
@@ -108,11 +124,12 @@ class Pool:
 
     def _tear_down(self):
         """
+        .. py:function:: _tear_down(self)
+
         Cleanup method called on error.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
         """
 
         _log.warning("Waiting for concurrent process(es) to terminate before exiting.")
@@ -120,13 +137,14 @@ class Pool:
         self.pool.terminate()
         self.pool.join()
 
-    def __worker_initializer(self):
+    def _worker_initializer(self):
         """
-        Initializing method that sets the `SIGINT` handler for every concurrent process spawned by `multiprocessing.Pool`.
+        .. py:function:: _worker_initializer(self)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        Initializing method that sets the :code:`SIGINT` handler for every concurrent process spawned by :code:`multiprocessing.Pool`.
+
+        :param self: current class instance
+        :type self: class
         """
 
         signal.signal(signal.SIGINT, signal.SIG_IGN)
@@ -136,12 +154,15 @@ class Invocator:
 
     def __init__(self, module):
         """
+        .. py:function:: __init__(self, module)
+
         Initialization method for the class.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        module [namespace] class inherited from the `models` reference classes
+        :param self: current class instance
+        :type self: class
+
+        :param module: class inherited from the :code:`models` reference classes
+        :type module: class
         """
 
         self.module = module
@@ -150,39 +171,42 @@ class Invocator:
 
     def __enter__(self):
         """
+        .. py:function:: __enter__(self)
+
         Callback method called when the context manager is invoked.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
         """
 
         pass
 
     def __exit__(self, *args):
         """
+        .. py:function:: __exit__(self, *args)
+
         Exit method raised when leaving the context manager.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        *args [list] list of argument(s)
-        """
+        :param self: current class instance
+        :type self: class
 
+        :param *args: list of argument(s)
+        :type *args: class
+        """
 
         _log.debug("Ended <{}> session <{}>.".format(self.module.__class__.__name__, self.module.__name__))
 
 def _iterate_files(iterator):
     """
+    .. py:function:: _iterate_files(iterator)
+
     Iterates over file(s) and yields the corresponding path if existing.
 
-    Parameter(s)
-    ------------
-    iterator [list] list of file(s) path(s)
-
-    Return value(s)
-    ---------------
-    [str] path to the existing file(s)
+    :param iterator: list of file(s) path(s)
+    :type iterator: list
+    
+    :return: path to the existing file(s)
+    :rtype: str
     """
 
     for item in iterator:
@@ -194,15 +218,15 @@ def _iterate_files(iterator):
 
 def _iterate_matches(target):
     """
+    .. py:function:: _iterate_matches(target)
+
     Iterates over match(es) and yields a Python dictionary representation of each.
 
-    Parameter(s)
-    ------------
-    target [str] path to the file containing the match(es)
-
-    Return value(s)
-    ---------------
-    [dict] Python dictionary representation of the match
+    :param target: path to the file containing the match(es)
+    :type target: str
+    
+    :return: dictionary representation of the match
+    :rtype: dict
     """
 
     with open(target) as matches:

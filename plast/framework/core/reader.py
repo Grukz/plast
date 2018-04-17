@@ -10,14 +10,21 @@ class Reader:
 
     def __init__(self, queue, results, target):
         """
-        Initialization method that sets the different command-line argument(s).
+        .. py:function:: __init__(self, queue, results, target)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        queue [namespace] multiprocessing.Queue instance
-        results [namespace] multiprocessing.Value instance
-        target [dict] dictionary containing the absolute path to the output file and the data format to use
+        Initialization method for the class.
+
+        :param self: current class instance
+        :type self: class
+
+        :param queue: :code:`multiprocessing.Manager.Queue` instance
+        :type queue: class
+        
+        :param results: :code:`multiprocessing.Value` instance
+        :type results: class
+
+        :param target: dictionary containing the absolute path to the output file and the data format to use
+        :type target: dict
         """
 
         self.queue = queue
@@ -30,12 +37,15 @@ class Reader:
 
     def _append_json(self, data):
         """
+        .. py:function:: _append_json(self, data)
+
         Encodes the match data using the given format and appends the match data to the output file.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        data [dict] dictionary containing the match data
+        :param self: current class instance
+        :type self: class
+
+        :param data: dictionary containing the match data
+        :type data: dict
         """
 
         try:
@@ -49,17 +59,21 @@ class Reader:
 
     def _open_output_file(self, mode="a", character_encoding="utf-8"):
         """
+        .. py:function:: _open_output_file(self, mode="a", character_encoding="utf-8")
+
         Opens the output file stream.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        mode [str] file opening mode to use (defaults to "append")
-        character_encoding [str] character encoding to use (defaults to UTF-8)
+        :param self: current class instance
+        :type self: class
 
-        Return value(s)
-        ---------------
-        [namespace] descriptor for the newly opened file stream
+        :param mode: file opening mode to use
+        :type mode: str
+        
+        :param character_encoding: character encoding to use
+        :type character_encoding: str
+
+        :return: descriptor for the newly opened file stream
+        :rtype: class
         """
 
         try:
@@ -73,11 +87,12 @@ class Reader:
 
     def _read_queue(self):
         """
-        Main loop that processes the match(es) from the multiprocessing.Queue instance.
+        .. py:function:: _read_queue(self)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        Main loop that processes the match(es) from the :code:`multiprocessing.Queue` instance.
+
+        :param self: current class instance
+        :type self: class
         """
 
         while True:
@@ -95,11 +110,12 @@ class Reader:
 
     def run(self):
         """
+        .. py:function:: run(self)
+
         Main entry point for the class.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
         """
 
         with self._open_output_file() as self.output:

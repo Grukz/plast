@@ -17,15 +17,18 @@ class Renderer:
     @staticmethod
     def from_json(data):
         """
+        .. py:function:: from_json(data)
+
         Renders JSON-encoded data as a Python dictionary.
 
-        Parameter(s)
-        ------------
-        data [str] JSON-encoded data to render
+        :param data: JSON-encoded data to render
+        :type data: str
 
-        Return value(s)
-        ---------------
-        [dict] dictionary translation of <data>
+        :return: dictionary translation of :code:`data`
+        :rtype: dict
+
+        :raises EncodingError: if :code:`data` cannot be decoded
+        :raises InvalidObject: if :code:`data` is malformated
         """
 
         try:
@@ -45,15 +48,18 @@ class Renderer:
     @staticmethod
     def to_json(data):
         """
+        .. py:function:: from_json(data)
+
         Renders a Python dictionary as JSON-encoded data.
 
-        Parameter(s)
-        ------------
-        data [dict] data to render
+        :param data: data to render
+        :type data: dict
 
-        Return value(s)
-        ---------------
-        [dict] JSON-encoded translation of <data>
+        :return: JSON-encoded translation of :code:`data`
+        :rtype: str
+
+        :raises EncodingError: if :code:`data` cannot be encoded
+        :raises InvalidObject: if :code:`data` is malformated
         """
 
         try:

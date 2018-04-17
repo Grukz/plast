@@ -10,11 +10,12 @@ class CustomParser:
 
     def __init__(self):
         """
-        Initialization method.
+        .. py:function:: __init__(self)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        Initialization method for the class.
+
+        :param self: current class instance
+        :type self: class
         """
 
         self.parser = argparse.ArgumentParser(
@@ -29,24 +30,30 @@ class CustomParser:
 
     def _add_subparsers(self, dest="_subparser"):
         """
-        Instanciates an argparse.Parser.subparser object.
+        .. py:function:: _add_subparsers(self, dest="_subparser")
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        dest [str] name of the argument representation of the selected subparser (defaults to "_subparser")
+        Instanciates an :code:`argparse.Parser.subparser` object.
+
+        :param self: current class instance
+        :type self: class
+
+        :param dest: name of the argument which will be the representation of the selected subparser
+        :type dest: str
         """
 
         self.subparsers = self.parser.add_subparsers(dest=dest)
 
     def register_help(self, parser):
         """
-        Adds a help menu in <parser>.
+        .. py:function:: register_help(self, parser)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        parser [namespace] argparse.Parser or argparse.Parser.subparser instance
+        Adds a help menu in :code:`parser`.
+
+        :param self: current class instance
+        :type self: class
+
+        :param parser: :code:`argparse.Parser` or :code:`argparse.Parser.subparser` instance
+        :type parser: class
         """
 
         parser.add_argument(
@@ -55,14 +62,21 @@ class CustomParser:
 
     def register_version(self, parser, name, version):
         """
-        Adds a version option in <parser>.
+        .. py:function:: register_version(self, parser, name, version)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        parser [namespace] argparse.Parser or argparse.Parser.subparser instance
-        name [str] name of the target
-        version [str] version number of the target
+        Adds a version option in :code:`parser`.
+
+        :param self: current class instance
+        :type self: class
+
+        :param parser: :code:`argparse.Parser` or :code:`argparse.Parser.subparser` instance
+        :type parser: class
+
+        :param name: name of the target
+        :type name: str
+
+        :param version: version number of the target
+        :type version: str
         """
 
         parser.add_argument(
@@ -71,93 +85,126 @@ class CustomParser:
 
     def print_help(self):
         """
-        Trigger the `print_help` method from the current parser.
+        .. py:function:: print_help(self)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        Trigger the :code:`print_help` method from the current parser.
+
+        :param self: current class instance
+        :type self: class
         """
 
         self.parser.print_help()
 
     def add_argument(self, *args, **kwargs):
         """
+        .. py:function:: add_argument(self, *args, **kwargs)
+
         Registers a command-line argument in the main parser.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        *args [list] list of value(s)
-        **kwargs [dict] dictionary containing key/value association(s)
+        :param self: current class instance
+        :type self: class
+
+        :param *args: list of value(s)
+        :type *args: list
+
+        :param **kwargs: dictionary containing key/value association(s)
+        :type **kwargs: dict
         """
 
         self.parser.add_argument(*args, **kwargs)
 
     def parse_args(self):
         """
-        Triggers the `parse_args` method from the main parser.
+        .. py:function:: parse_args(self)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        Triggers the :code:`parse_args` method from the main parser.
 
-        Return value(s)
-        ---------------
-        [namespace] `argparse.Parser` instance containing the processed command-line arguments
+        :param self: current class instance
+        :type self: class
+
+        :return: :code:`argparse.Parser` instance containing the processed command-line arguments
+        :rtype: class
         """
 
         return self.parser.parse_args()
 
 class SingleAbsolutePath(argparse.Action):
-    """Custom `argparse` action that calls the `os.path.abspath` method on the target."""
+    """Custom :code:`argparse` action that calls the :code:`os.path.abspath` method on the target."""
 
     def __call__(self, parser, namespace, values, option=None):
         """
+        .. py:function:: __call__(self, parser, namespace, values, option=None)
+
         Callback method called when the action is invoked.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        parser [namespace] argparse.Parser or argparse.Parser.subparser instance
-        namespace [namespace] object that will be returned by the `parse_args` method
-        values [list] associated command-line arguments
-        option [str] option string that was used to invoke this action (defaults to None)
+        :param self: current class instance
+        :type self: class
+
+        :param parser: :code:`argparse.Parser` or :code:`argparse.Parser.subparser` instance
+        :type parser: class
+
+        :param namespace: object that will be returned by the :code:`parse_args` method
+        :type namespace: class
+
+        :param values: associated command-line arguments
+        :type values: list
+
+        :param option: option string that was used to invoke this action
+        :type option: str
         """
 
         setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
 
 class MultipleAbsolutePath(argparse._AppendAction):
-    """Custom `argparse` action that calls the `os.path.abspath` method on every item."""
+    """Custom :code:`argparse` action that calls the :code:`os.path.abspath` method on every item."""
 
     def __call__(self, parser, namespace, values, option=None):
         """
+        .. py:function:: __call__(self, parser, namespace, values, option=None)
+
         Callback method called when the action is invoked.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        parser [namespace] argparse.Parser or argparse.Parser.subparser instance
-        namespace [namespace] object that will be returned by the `parse_args` method
-        values [list] associated command-line arguments
-        option [str] option string that was used to invoke this action (defaults to None)
+        :param self: current class instance
+        :type self: class
+
+        :param parser: :code:`argparse.Parser` or :code:`argparse.Parser.subparser` instance
+        :type parser: class
+
+        :param namespace: object that will be returned by the :code:`parse_args` method
+        :type namespace: class
+
+        :param values: associated command-line arguments
+        :type values: list
+
+        :param option: option string that was used to invoke this action
+        :type option: str
         """
 
         setattr(namespace, self.dest, [os.path.abspath(os.path.expanduser(item)) for item in values])
 
 class Unique(argparse.Action):
-    """Custom `argparse` action that removes duplicate(s)."""
+    """Custom :code:`argparse` action that removes duplicate(s)."""
 
     def __call__(self, parser, namespace, values, option=None):
         """
+        .. py:function:: __call__(self, parser, namespace, values, option=None)
+
         Callback method called when the action is invoked.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        parser [namespace] argparse.Parser or argparse.Parser.subparser instance
-        namespace [namespace] object that will be returned by the `parse_args` method
-        values [list] associated command-line arguments
-        option [str] option string that was used to invoke this action (defaults to None)
+        :param self: current class instance
+        :type self: class
+
+        :param parser: :code:`argparse.Parser` or :code:`argparse.Parser.subparser` instance
+        :type parser: class
+
+        :param namespace: object that will be returned by the :code:`parse_args` method
+        :type namespace: class
+
+        :param values: associated command-line arguments
+        :type values: list
+
+        :param option: option string that was used to invoke this action
+        :type option: str
         """
 
         setattr(namespace, self.dest, set(values))

@@ -18,16 +18,21 @@ class Loader:
     @staticmethod
     def load_processor(name, model):
         """
+        .. py:function:: load_processor(name, model)
+
         Dynamically loads a registered module.
 
-        Parameter(s)
-        ------------
-        name [str] name of the module to load
-        model [namespace] reference module class handle
+        :param name: name of the module to load
+        :type name: str
 
-        Return value(s)
-        ---------------
-        [namespace] module class handle
+        :param model: reference class handle
+        :type model: class
+
+        :return: module class handle
+        :rtype: class
+
+        :raises ProcessorNotFound: if the subclass cannot be found in the module
+        :raises ProcessorNotInherited: if the module is not inheriting from the corresponding reference class
         """
 
         processor = importlib.import_module("framework.processors.{}.{}".format(model.__name__.lower(), name))
@@ -46,16 +51,18 @@ class Loader:
     @staticmethod
     def iterate_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar"):
         """
+        .. py:function:: iterate_rulesets([directory=os.path.join(_meta.__root__, "rulesets")], [globbing_filter="*.yar"])
+
         Iterates through the available YARA ruleset(s).
 
-        Parameter(s)
-        ------------
-        directory [str] absolute path to the rulesets directory (defaults to the project's `rulesets` directory)
-        globbing_filter [str] globbing filter to apply for the search (defaults to ".yar")
+        :param directory: absolute path to the rulesets directory
+        :type directory: str
 
-        Return value(s)
-        ---------------
-        [tup] basename and absolute path to the current ruleset
+        :param globbing_filter: globbing filter to apply for the search
+        :type globbing_filter: str
+
+        :return: basename and absolute path to the current ruleset
+        :rtype: tuple
         """
 
         for file in glob.iglob(os.path.join(directory, "**", globbing_filter), recursive=True):
@@ -64,16 +71,18 @@ class Loader:
     @staticmethod
     def iterate_processors(package, model):
         """
-        Iterates through the available module(s).
+        .. py:function:: iterate_processors(package, model)
 
-        Parameter(s)
-        ------------
-        package [namespace] package handle to import module(s) from
-        model [namespace] reference module class handle
+        Iterates through the available YARA ruleset(s).
 
-        Return value(s)
-        ---------------
-        [tup] name of the current module and its handle
+        :param package: package handle to import module(s) from
+        :type package: class
+
+        :param model: reference module class handle
+        :type model: class
+
+        :return: name of the current module and its handle
+        :rtype: tuple
         """
 
         for _, name, __ in pkgutil.iter_modules(package.__path__):
@@ -82,16 +91,18 @@ class Loader:
     @staticmethod
     def render_processors(package, model):
         """
+        .. py:function:: render_processors(package, model)
+
         Renders available module(s) names as a list.
 
-        Parameter(s)
-        ------------
-        package [namespace] package handle to import module(s) from
-        model [namespace] reference module class handle
+        :param package: package handle to import module(s) from
+        :type package: class
 
-        Return value(s)
-        ---------------
-        [list] available module(s) in `package`
+        :param model: reference module class handle
+        :type model: class
+
+        :return: available module(s) in :code:`package`
+        :rtype: list
         """
 
         try:

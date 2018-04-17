@@ -1,5 +1,5 @@
 <TODO>Spawn pool-based processes for dynamically-loaded models.Post module(s).</TODO>
 <TODO>Complete the API documentation in README.adoc.</TODO>
-<TODO>Document the code.</TODO>
+<TODO>Document the code using Sphinx syntax.</TODO>
 <TODO>Parser for .raw files.</TODO>
 <TODO>Finish the asciidoc Post module.</TODO>

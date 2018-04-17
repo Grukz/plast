@@ -12,11 +12,12 @@ class Meta:
 
     def set_package(target):
         """
+        .. py:function:: set_package(target)
+
         Sets the package name from the target's absolute path.
 
-        Parameter(s)
-        ------------
-        target [str] absolute path to the base module of the program.
+        :param target: absolute path to the base module of the program
+        :type target: str
         """
 
         Meta.__package__ = pathlib.PurePath(target).stem

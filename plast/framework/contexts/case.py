@@ -14,12 +14,15 @@ class Case:
 
     def __init__(self, arguments):
         """
-        Initialization method that sets the different command-line argument(s).
+        .. py:function:: __init__(self, arguments)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        arguments [namespace] argparse.Parser instance containing the processed command-line arguments
+        Initialization method for the class.
+
+        :param self: current class instance
+        :type self: class
+
+        :param arguments: :code:`argparse.Parser` instance containing the processed command-line arguments
+        :type arguments: list
         """
 
         self.arguments = arguments
@@ -36,22 +39,24 @@ class Case:
 
     def __del__(self):
         """
+        .. py:function:: __del__(self)
+
         Destruction method that calls the teardown function(s).
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
         """
 
         self._tear_down()
 
     def _tear_down(self):
         """
-        Gets rid of the temporary artifact(s).
+        .. py:function:: _tear_down(self)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        Cleanup method called on class destruction that gets rid of the temporary artifact(s).
+
+        :param self: current class instance
+        :type self: class
         """
 
         for artifact in self.resources["temporary"]:
@@ -70,14 +75,21 @@ class Case:
 
     def _prompt(self, message, rounds=3, harsh_escape=True):
         """
+        .. py:function:: _prompt(self, message, rounds=3, harsh_escape=True)
+
         Prompts the user with a yes/no question and wait for a valid answer.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        message [str] question to print
-        rounds [int] number of times to repeat the question (defaults to 3)
-        harsh_escape [bool] exit the program if <rounds> has been reached (defaults to True)
+        :param self: current class instance
+        :type self: class
+
+        :param message: question to print
+        :type message: str
+
+        :param rounds: number of times to repeat the question
+        :type rounds: int
+
+        :param harsh_escape: exit the program if :code:`rounds` has been reached
+        :type harsh_escape: bool
         """
 
         for _ in range(rounds):
@@ -102,29 +114,39 @@ class Case:
 
     def _generate_nonce(self, rounds=16):
         """
-        Generate a random string.
+        .. py:function:: _generate_nonce(self, rounds=16)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        rounds [int] number of characters to generate (defaults to 16)
+        Generates a random string.
 
-        Return value(s)
-        ---------------
-        [str] random string of <rounds> characters
+        :param self: current class instance
+        :type self: class
+
+        :param rounds: number of characters to generate
+        :type rounds: int
+
+        :return: random string of :code:`rounds` character(s)
+        :rtype: str
         """
 
         return "".join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(rounds))
 
     def _create_local_directory(self, directory, mask=0o700):
         """
+        .. py:function:: _create_local_directory(self, directory, mask=0o700)
+
         Creates a directory on the filesystem.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        directory [str] absolute path to the directory to create
-        mask [oct] permissions bit mask to apply for the newly created directory(ies) (defaults to 0o700)
+        :param self: current class instance
+        :type self: class
+
+        :param directory: absolute path to the directory to create
+        :type directory: str
+
+        :param mask: permissions bit mask to apply for the newly created :code:`directory` and its parents if necessary
+        :type mask: oct
+
+        :return: random string of :code:`rounds` characters
+        :rtype: str
         """
 
         try:
@@ -142,11 +164,12 @@ class Case:
 
     def create_arborescence(self):
         """
+        .. py:function:: create_arborescence(self)
+
         Creates the base arborescence for the current case.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
         """
 
         if os.path.exists(self.resources["case"]):
@@ -167,12 +190,15 @@ class Case:
 
     def parse_list(self, iterator):
         """
+        .. py:function:: parse_list(self, iterator)
+
         Parses the input list of evidence(s) to intergrate the valid one(s) for analysis.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        iterator [iter] iterator pointing to the evidence(s) to integrate
+        :param self: current class instance
+        :type self: class
+
+        :param iterator: iterator pointing to the evidence(s) to integrate
+        :type iterator: list
         """
 
         for evidence in iterator:

@@ -25,16 +25,18 @@ import multiprocessing
 
 def _argparser(parser, modules={}):
     """
+    .. py:function:: _argparser(parser, modules={})
+
     Command-line argument parsing function.
 
-    Parameter(s)
-    ------------
-    parser [namespace] argparse.Parser instance
-    modules [dict] dictionary containing the loaded modules
+    :param parser: :code:`argparse.Parser` instance
+    :type parser: class
 
-    Return value(s)
-    ---------------
-    [dict] dictionary containing the loaded module(s) and the processed command-line arguments
+    :param modules: dictionary containing the loaded modules
+    :type modules: dict
+
+    :param parser: dictionary containing the loaded module(s) and the processed command-line arguments
+    :rtype: dict 
     """
 
     parser.add_argument(
@@ -89,11 +91,12 @@ def _argparser(parser, modules={}):
 
 def main(container):
     """
+    .. py:function:: main(container)
+
     Main entry point for the program.
 
-    Parameter(s)
-    ------------
-    container [dict] dictionary containing the loaded module(s) and the processed command-line arguments
+    :param self: dictionary containing the loaded module(s) and the processed command-line arguments
+    :type self: dict
     """
 
     _log.set_console_level(container["arguments"].logging.upper())

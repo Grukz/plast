@@ -28,12 +28,15 @@ class Engine:
 
     def __init__(self, case):
         """
-        Initialization method that sets the different command-line argument(s).
+        .. py:function:: __init__(self, case)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        case [namespace] filled contexts.Case instance
+        Initialization method for the class.
+
+        :param self: current class instance
+        :type self: class
+
+        :param case: filled :code:`contexts.Case` instance
+        :type case: class
         """
 
         self.case = case
@@ -41,13 +44,18 @@ class Engine:
 
     def _compile_ruleset(self, name, ruleset):
         """
+        .. py:function:: _compile_ruleset(self, name, ruleset)
+
         Compiles and saves the YARA rule(s) to the dictionary to be passed to the asynchronous jobs.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        name [str] name of the ruleset file to compile the rule(s) from
-        ruleset [str] absolute path to the ruleset file to compile the rule(s) from
+        :param self: current class instance
+        :type self: class
+
+        :param name: name of the ruleset file to compile the rule(s) from
+        :type name: str
+
+        :param ruleset: absolute path to the ruleset file to compile the rule(s) from
+        :type ruleset: str
         """
 
         try:
@@ -65,15 +73,15 @@ class Engine:
 
     def _dispatch_jobs(self):
         """
+        .. py:function:: _dispatch_jobs(self)
+
         Dispatches the processing tasks to the subprocesses.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
 
-        Return value(s)
-        ---------------
-        [int] number of match(es)
+        :return: number of match(es)
+        :rtype: int
         """
 
         with multiprocessing.Manager() as manager:
@@ -107,11 +115,12 @@ class Engine:
 
     def _invoke_postprocessors(self):
         """
-        Invoke the selected models.Post module(s).
+        .. py:function:: _invoke_postprocessors(self)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        Invoke the selected :code:`models.Post` module(s).
+
+        :param self: current class instance
+        :type self: class
         """
 
         for postprocessor in self.case.arguments.post:
@@ -123,11 +132,12 @@ class Engine:
 
     def run(self):
         """
+        .. py:function:: run(self)
+
         Main entry point for the class.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
         """
 
         for name, ruleset in _loader.iterate_rulesets():

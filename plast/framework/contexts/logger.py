@@ -9,21 +9,21 @@ import multiprocessing
 import sys
 
 class Logger:
-    """Main logger class for the program."""
+    """Main logger class."""
 
     _lock = multiprocessing.Lock()
 
     def _synchronize(destination):
         """
+        .. py:function:: _synchronize(destination)
+
         Synchronizes the file writing operations through multiprocessing.Lock.
 
-        Parameter(s)
-        ------------
-        destination [namespace] function to wrap
+        :param destination: function to wrap
+        :type destination: class
 
-        Return value(s)
-        ---------------
-        [namespace] wrapper function
+        :return: wrapper function
+        :rtype: class
         """
 
         @functools.wraps(destination)
@@ -93,11 +93,12 @@ class Logger:
     @staticmethod
     def _set_console_state(state):
         """
+        .. py:function:: _set_console_state(state)
+
         Enables or disables the console stream.
 
-        Parameter(s)
-        ------------
-        state [bool] boolean representing the future state of the console stream
+        :param state: boolean representing the future state of the console stream
+        :type state: bool
         """
 
         Logger.console.disabled = not state
@@ -105,11 +106,12 @@ class Logger:
     @staticmethod
     def set_console_level(level):
         """
+        .. py:function:: set_console_level(level)
+
         Sets the console logging level.
 
-        Parameter(s)
-        ------------
-        level [str] name of the level to set the logging policy to
+        :param level: name of the level to set the logging policy to
+        :type level: str
         """
 
         Logger._set_console_state(False) if level == "SUPPRESS" else Logger.console.setLevel(getattr(logging, level))
@@ -118,11 +120,12 @@ class Logger:
     @_synchronize
     def debug(message):
         """
+        .. py:function:: debug(message)
+
         Prints a debug message.
 
-        Parameter(s)
-        ------------
-        message [str] data to print
+        :param message: data to print
+        :type message: str
         """
 
         Logger.core.debug(message)
@@ -132,11 +135,12 @@ class Logger:
     @_synchronize
     def info(message):
         """
+        .. py:function:: info(message)
+
         Prints an information message.
 
-        Parameter(s)
-        ------------
-        message [str] data to print
+        :param message: data to print
+        :type message: str
         """
 
         Logger.core.info(message)
@@ -146,11 +150,12 @@ class Logger:
     @_synchronize
     def warning(message):
         """
+        .. py:function:: warning(message)
+
         Prints a warning message.
 
-        Parameter(s)
-        ------------
-        message [str] data to print
+        :param message: data to print
+        :type message: str
         """
 
         Logger.core.warning(message)
@@ -160,11 +165,12 @@ class Logger:
     @_synchronize
     def error(message):
         """
+        .. py:function:: error(message)
+
         Prints an error message.
 
-        Parameter(s)
-        ------------
-        message [str] data to print
+        :param message: data to print
+        :type message: str
         """
 
         Logger.core.error(message)
@@ -174,11 +180,12 @@ class Logger:
     @_synchronize
     def critical(message):
         """
+        .. py:function:: critical(message)
+
         Prints a critical error message.
 
-        Parameter(s)
-        ------------
-        message [str] data to print
+        :param message: data to print
+        :type message: str
         """
 
         Logger.core.critical(message)
@@ -188,11 +195,12 @@ class Logger:
     @_synchronize
     def exception(message):
         """
+        .. py:function:: exception(message)
+
         Prints the last exception traceback along with an error message.
 
-        Parameter(s)
-        ------------
-        message [str] data to print
+        :param message: data to print
+        :type message: str
         """
 
         Logger.core.exception(message)
@@ -201,12 +209,15 @@ class Logger:
     @staticmethod
     def fault(message, trace=False):
         """
+        .. py:function:: fault(message, trace=False)
+
         Prints the last exception traceback along with an error message then exits the program.
 
-        Parameter(s)
-        ------------
-        message [str] data to print
-        trace [bool] enable traceback of the last exception raised
+        :param message: data to print
+        :type message: str
+
+        :param trace: enable traceback of the last exception raised
+        :type trace: bool
         """
 
         Logger._set_console_state(True)

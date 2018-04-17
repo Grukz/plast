@@ -25,14 +25,21 @@ class Processor:
 
     def __init__(self, algorithms, callbacks, queue):
         """
-        Initialization method that sets the different command-line argument(s).
+        .. py:function:: __init__(self, algorithms, callbacks, queue)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        algorithms [list] list containing the name of the hash algorithm(s) to use
-        callbacks [list] list containing the name of the models.Callback modules to invoke
-        queue [namespace] multiprocessing.Queue instance
+        Initialization method for the class.
+
+        :param self: current class instance
+        :type self: class
+
+        :param algorithms: list containing the name of the hash algorithm(s) to use
+        :type algorithms: list
+
+        :param callbacks: list containing the name of the :code:`models.Callback` modules to invoke
+        :type callbacks: list
+        
+        :param queue: :code:`multiprocessing.Manager.Queue` instance
+        :type queue: class
         """
 
         self.algorithms = algorithms
@@ -41,11 +48,12 @@ class Processor:
 
     def _parse_memory_buffers(self):
         """
+        .. py:function:: _parse_memory_buffers(self)
+
         Parses memory buffers to retrieve the content of the YARA rules to apply.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
         """
 
         for ruleset, buffer in self.buffers.items():
@@ -54,18 +62,24 @@ class Processor:
 
     def _compute_hash(self, evidence, algorithm="sha256", buffer_size=65536):
         """
+        .. py:function:: _compute_hash(self, evidence, algorithm="sha256", buffer_size=65536)
+
         Computes the hash from the evidence's data.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        evidence [str] absolute path to the evidence to compute the hash from
-        algorithm [str] name of the hash algorithm to compute (defaults to SHA256)
-        buffer_size [int] size of the buffer
+        :param self: current class instance
+        :type self: class
 
-        Return value(s)
-        ---------------
-        [str] hexadecimal digest of the given file
+        :param evidence: absolute path to the evidence to compute the hash from
+        :type evidence: str
+
+        :param algorithm: lowercase name of the hash algorithm to compute
+        :type algorithm: str
+
+        :param buffer_size: size of the buffer
+        :type buffer_size: int
+
+        :return: hexadecimal digest of the given file
+        :rtype: str
         """
 
         with open(evidence, "rb") as file:
@@ -83,12 +97,15 @@ class Processor:
 
     def _invoke_callbacks(self, data):
         """
-        Invokes the selected models.Callback module(s) with the matching data.
+        .. py:function:: _invoke_callbacks(self, data)
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
-        data [dict] dictionary containing the match data
+        Invokes the selected :code:`models.Callback module(s)` with the matching data.
+
+        :param self: current class instance
+        :type self: class
+
+        :param data: dictionary containing the match data
+        :type data: dict
         """
 
         for name in self.callbacks:
@@ -97,11 +114,12 @@ class Processor:
 
     def _process_evidence(self):
         """
+        .. py:function:: _process_evidence(self)
+
         Main loop that processes the evidence(s) and formats the match(es).
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
         """
 
         for _, buffer in self.buffers.items():
@@ -131,11 +149,18 @@ class Processor:
 
     def run(self, evidence, buffers):
         """
+        .. py:function:: run(self, evidence, buffers)
+
         Main entry point for the class.
 
-        Parameter(s)
-        ------------
-        self [namespace] current class instance
+        :param self: current class instance
+        :type self: class
+
+        :param evidence: absolute path to the evidence file to process
+        :type evidence: str
+
+        :param buffers: dictionary containing the precompiled YARA rule(s)
+        :type buffers: dict
         """
 
         self.evidence = evidence

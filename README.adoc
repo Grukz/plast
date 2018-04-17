@@ -14,7 +14,7 @@ image:https://img.shields.io/badge/python-3.7-blue.svg[link={uri-python}] image:
 
 Under the hood, `plast` uses {uri-yara}[YARA] through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IOC] detection on multiple types of input.
 
-The main goal of the `plast` project is to provide an efficient & effortless way to detect indicators of compomission during incident-response operations.
+The main goal of the `plast` project is to provide an efficient & effortless way to detect indicators of compromission during incident-response operations.
 
 If provides a comprehensive framework that easily allows processing of multiple data types. It also embeds all modules in one single tool, allowing `plast` to be used on the field as a standalone utility.
 
@@ -23,8 +23,6 @@ If provides a comprehensive framework that easily allows processing of multiple 
 == Getting Started
 
 Follow these steps to get a copy of the project up and running on a live system.
-
-CAUTION: his tool must ALWAYS be used in a confined environment.
 
 === Prerequisite(s)
 
@@ -91,18 +89,18 @@ plast [...] filesystem --help
 
 === Basic examples
 
-The following command will recursively look for every file in the `./case` directory, process them and pass into every registered `Callback` and `Post` module.
+The following command will recursively look for every file in the `case` directory, process them and pass into every registered `Callback` and `Post` module.
 
 [source,sh]
 ----
-plast -o ./out filesystem -i ./case
+plast -o out filesystem -i case
 ----
 
 You can easily choose which modules will be invocated during processing by setting the `--callbacks` and `--post` options:
 
 [source,sh]
 ----
-plast -o ./out --callbacks=example --post=example filesystem -i ./case
+plast -o out --callbacks=example --post=example filesystem -i case
 ----
 
 `Callback` and `Post` modules are defined by their basename without extension (ex: `asciidoc` for `asciidoc.py`)
