@@ -38,7 +38,7 @@ class Pre(_models.Pre):
         """
         .. py:function:: _enumerate_files(self, directory)
 
-        Iterates through the files in a directory.
+        Recursively iterates through the file(s) in a directory.
 
         :param self: current class instance
         :type self: class
@@ -61,28 +61,21 @@ class Pre(_models.Pre):
 
         :param self: current class instance
         :type self: class
-
-        :return: list containing the absolute path(s) of the evidence(s) to process
-        :rtype: list
         """
 
         evidences = []
 
         for item in self.case.arguments.input:
             if os.path.isfile(item):
-                _log.debug("Tracking evidence <{}>.".format(item))
-                evidences.append(file)
+                self.case.track_file(file)
 
             elif os.path.isdir(item):
                 for file in self._enumerate_files(item):
                     if os.path.isfile(file):
-                        _log.debug("Tracking evidence <{}>.".format(file))
-                        evidences.append(file)
+                        self.case.track_file(file)
 
             else:
                 _log.warning("Unknown inode type for object <{}>.".format(item))
-
-        return evidences
 
     def run(self):
         """
@@ -92,9 +85,6 @@ class Pre(_models.Pre):
 
         :param self: current class instance
         :type self: class
-
-        :return: list containing the absolute path(s) of the evidence(s) to process
-        :rtype: list
         """
 
-        return self._track_evidences()
+        self._track_evidences()

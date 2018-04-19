@@ -8,7 +8,7 @@ from framework.contexts.logger import Logger as _log
 from framework.contexts.types import Codes as _codes
 
 from framework.core import reader as _reader
-from framework.core import processor as _processor
+from framework.core import processors as _processors
 
 import ctypes
 import io
@@ -46,7 +46,7 @@ class Engine:
         """
         .. py:function:: _compile_ruleset(self, name, ruleset)
 
-        Compiles and saves the YARA rule(s) to the dictionary to be passed to the asynchronous jobs.
+        Compiles and saves YARA rule(s) to the dictionary to be passed to the asynchronous job(s).
 
         :param self: current class instance
         :type self: class
@@ -75,7 +75,7 @@ class Engine:
         """
         .. py:function:: _dispatch_jobs(self)
 
-        Dispatches the processing tasks to the subprocesses.
+        Dispatches the processing task(s) to the subprocess(es).
 
         :param self: current class instance
         :type self: class
@@ -98,9 +98,9 @@ class Engine:
             _log.debug("Started reader subprocess to process queue result(s).")
 
             with _magic.Pool(processes=self.case.arguments.processes) as pool:
-                for evidence in self.case.resources["evidences"]:
+                for evidence in self.case.resources["evidences"]["files"]:
                     pool.starmap_async(
-                        _processor.Processor(self.case.arguments.hash_algorithms, self.case.arguments.callbacks, queue).run, 
+                        _processors.File(self.case.arguments.hash_algorithms, self.case.arguments.callbacks, queue).run, 
                         [(evidence, self.buffers)], 
                         error_callback=_log.exception)
 
@@ -144,7 +144,7 @@ class Engine:
             self._compile_ruleset(name, ruleset)
 
         if not self._dispatch_jobs():
-            _log.debug("Skipping <{}> module(s) invocation.".format(_models.Post.__name__))
+            _log.warning("Skipping <{}> module(s) invocation.".format(_models.Post.__name__))
             return
 
         self._invoke_postprocessors()

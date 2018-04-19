@@ -12,7 +12,7 @@ image:https://img.shields.io/badge/python-3.7-blue.svg[link={uri-python}] image:
 
 `plast` is an open-source modular command-line threat hunting tool & framework. It comes with several modules that allow to process multiple data formats, trigger automatic actions upon detection and produce customized output.
 
-Under the hood, `plast` uses {uri-yara}[YARA] through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IOC] detection on multiple types of input.
+Under the hood, `plast` uses {uri-yara}[YARA] through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IoC] detection on multiple types of input.
 
 The main goal of the `plast` project is to provide an efficient & effortless way to detect indicators of compromission during incident-response operations.
 

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from framework.api.renderer import Renderer as _render
+from framework.api.renderer import Renderer as _renderer
 
 from framework.contexts.logger import Logger as _log
 from framework.contexts.types import Codes as _codes
 
 class Reader:
-    """Processes the content from the multiprocessing.Queue instance."""
+    """Processes the content from the :code:`multiprocessing.Queue` instance."""
 
     def __init__(self, queue, results, target):
         """
@@ -49,7 +49,7 @@ class Reader:
         """
 
         try:
-            self.output.write("{}\n".format(_render.to_json(data)))
+            self.output.write("{}\n".format(_renderer.to_json(data)))
 
         except _errors.EncodingError:
             _log.error("Cannot decode data from <{}>.".format(data["target"]["absolute"]))
@@ -61,7 +61,7 @@ class Reader:
         """
         .. py:function:: _open_output_file(self, mode="a", character_encoding="utf-8")
 
-        Opens the output file stream.
+        Opens the output stream.
 
         :param self: current class instance
         :type self: class

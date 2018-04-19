@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from framework.api.renderer import Renderer as _render
+from framework.api.renderer import Renderer as _renderer
 
 from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log
@@ -196,20 +196,20 @@ class Invocator:
 
         _log.debug("Ended <{}> session <{}>.".format(self.module.__class__.__name__, self.module.__name__))
 
-def _iterate_files(iterator):
+def _iterate_files(files):
     """
-    .. py:function:: _iterate_files(iterator)
+    .. py:function:: _iterate_files(files)
 
     Iterates over file(s) and yields the corresponding path if existing.
 
-    :param iterator: list of file(s) path(s)
-    :type iterator: list
+    :param files: list of file(s) path(s)
+    :type files: list
     
     :return: path to the existing file(s)
     :rtype: str
     """
 
-    for item in iterator:
+    for item in files:
         if not os.path.isfile(item):
             _log.error("File not found <{}>.".format(item))
             continue
@@ -232,7 +232,7 @@ def _iterate_matches(target):
     with open(target) as matches:
         for match in matches:
             try:
-                yield _render.from_json(match)
+                yield _renderer.from_json(match)
 
             except (
                 _errors.EncodingError,

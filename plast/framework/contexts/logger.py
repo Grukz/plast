@@ -17,7 +17,7 @@ class Logger:
         """
         .. py:function:: _synchronize(destination)
 
-        Synchronizes the file writing operations through multiprocessing.Lock.
+        Synchronizes the file writing operations through :code:`multiprocessing.Lock`.
 
         :param destination: function to wrap
         :type destination: class

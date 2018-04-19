@@ -20,7 +20,6 @@ import framework.processors.pre as _pre
 import framework.processors.post as _post
 
 import argparse
-import itertools
 import multiprocessing
 
 def _argparser(parser, modules={}):
@@ -32,10 +31,10 @@ def _argparser(parser, modules={}):
     :param parser: :code:`argparse.Parser` instance
     :type parser: class
 
-    :param modules: dictionary containing the loaded modules
+    :param modules: dictionary containing loaded modules
     :type modules: dict
 
-    :param parser: dictionary containing the loaded module(s) and the processed command-line arguments
+    :param parser: dictionary containing loaded module(s) and the processed command-line argument(s)
     :rtype: dict 
     """
 
@@ -95,7 +94,7 @@ def main(container):
 
     Main entry point for the program.
 
-    :param self: dictionary containing the loaded module(s) and the processed command-line arguments
+    :param self: dictionary containing loaded module(s) and processed command-line argument(s)
     :type self: dict
     """
 
@@ -114,13 +113,14 @@ def main(container):
     Preprocessor.case = case
 
     with _magic.Hole(Exception, action=lambda:_log.fault("Fatal exception raised within preprocessor <{}>.".format(Preprocessor.__class__.__name__), trace=True)), _magic.Invocator(Preprocessor):
-        evidences = Preprocessor.run()
+        Preprocessor.run()
 
-    if not evidences:
+    del Preprocessor
+
+    if not case.resources["evidences"]["files"] or case.resources["evidences"]["streams"] or case.resources["evidences"]["processes"]:
         _log.fault("No evidence(s) to process. Quitting.")
 
-    case.parse_list(_magic._iterate_files(evidences))
-    del Preprocessor
+    _log.info("Currently tracking <{}> file(s), <{}> data stream(s) and <{}> live process(es).".format(len(case.resources["evidences"]["files"]), len(case.resources["evidences"]["streams"]), len(case.resources["evidences"]["processes"])))
 
     _engine.Engine(case).run()
 

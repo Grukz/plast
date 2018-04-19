@@ -3,7 +3,6 @@
 from framework.api.checker import Checker as _checker
 
 from framework.contexts import errors as _errors
-from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
 from framework.contexts.meta import Meta as _meta
 
@@ -31,8 +30,8 @@ class Loader:
         :return: module class handle
         :rtype: class
 
-        :raises ProcessorNotFound: if the subclass cannot be found in the module
-        :raises ProcessorNotInherited: if the module is not inheriting from the corresponding reference class
+        :raises ProcessorNotFound: if no subclass of one of the reference models can be found in :code:`name`
+        :raises ProcessorNotInherited: if the class found in :code:`name` does not inherit from the reference class :code:`model`
         """
 
         processor = importlib.import_module("framework.processors.{}.{}".format(model.__name__.lower(), name))
@@ -51,7 +50,7 @@ class Loader:
     @staticmethod
     def iterate_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar"):
         """
-        .. py:function:: iterate_rulesets([directory=os.path.join(_meta.__root__, "rulesets")], [globbing_filter="*.yar"])
+        .. py:function:: iterate_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar")
 
         Iterates through the available YARA ruleset(s).
 
@@ -93,7 +92,7 @@ class Loader:
         """
         .. py:function:: render_processors(package, model)
 
-        Renders available module(s) names as a list.
+        Renders available module(s) name(s) as a list.
 
         :param package: package handle to import module(s) from
         :type package: class

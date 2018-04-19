@@ -6,6 +6,7 @@ from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log
 
 import os
+import psutil
 import shutil
 import sys
 
@@ -31,7 +32,11 @@ class Case:
         self.resources = {
             "case": self.arguments.output,
             "matches": os.path.join(self.arguments.output, "matches.{}".format(self.arguments.format.lower())),
-            "evidences": [],
+            "evidences": {
+                "files": [],
+                "streams": {},
+                "processes": {}
+            },
             "temporary": []
         }
 
@@ -188,20 +193,129 @@ class Case:
 
         self._create_local_directory(self.resources["case"])
 
-    def parse_list(self, iterator):
+    def require_temporary_directory(self, seed=None):
         """
-        .. py:function:: parse_list(self, iterator)
+        .. py:function:: require_temporary_directory(self, seed=None)
 
-        Parses the input list of evidence(s) to intergrate the valid one(s) for analysis.
+        Creates a temporary directory in the case directory that will be deleted after processing is over.
 
         :param self: current class instance
         :type self: class
 
-        :param iterator: iterator pointing to the evidence(s) to integrate
-        :type iterator: list
+        :param seed: random string
+        :type seed: str
+
+        :return: absolute path to the newly created temporary directory
+        :rtype: str
         """
 
-        for evidence in iterator:
-            self.resources["evidences"].append(evidence) if os.path.isfile(evidence) else _log.debug("Evidence <{}> not found.".format(evidence))
+        seed = self._generate_nonce()
 
-        _log.info("Currently tracking <{}> evidence(s).".format(len(self.resources["evidences"]))) if self.resources["evidences"] else _log.fault("No evidence(s) to process. Exiting.")
+        while os.path.isdir(os.path.join(self.case.resources["case"], seed)):
+            seed = self._generate_nonce()
+
+        directory = os.path.join(self.case.resources["case"], seed)
+
+        self._create_local_directory(directory)
+        self.resources["temporary"].append(directory)
+
+        return directory
+
+    def track_file(self, evidence):
+        """
+        .. py:function:: track_file(self, evidence)
+
+        Checks and registers an evidence file for processing.
+
+        :param self: current class instance
+        :type self: class
+
+        :param evidence: absolute path to the evidence file
+        :type evidence: str
+        """
+
+        if os.path.isfile(evidence):
+            self.resources["evidences"]["files"].append(evidence)
+            _log.debug("Tracking file <{}>.".format(evidence))
+
+        else:
+            _log.warning("Evidence <{}> not found or invalid.".format(evidence))
+
+    def track_files(self, evidences):
+        """
+        .. py:function:: track_files(self, evidences)
+
+        Checks and registers multiple evidence files for processing.
+
+        :param self: current class instance
+        :type self: class
+
+        :param evidence: list of absolute path(s) to the evidence file(s)
+        :type evidence: list
+        """
+
+        for evidence in _magic._iterate_files(evidences):
+            self.track_file(evidence)
+
+    def track_stream(self, name, data):
+        """
+        .. py:function:: track_stream(self, name, data)
+
+        Checks and registers a raw data stream for processing.
+
+        :param self: current class instance
+        :type self: class
+
+        :param name: designation of the stream
+        :type name: str
+
+        :param data: raw data stream to process
+        :type data: str
+        """
+
+        self.resources["evidences"]["streams"][name] = data
+        _log.debug("Tracking stream <{}>.".format(name))
+
+    def track_process(self, pid, reference=[process.info for process in psutil.process_iter(attrs=["name", "pid"])]):
+        """
+        .. py:function:: track_process(self, pid, reference=[process.info for process in psutil.process_iter(attrs=["name", "pid"])])
+
+        Checks wether a process exists on the local machine and registers it for processing.
+
+        :param self: current class instance
+        :type self: class
+
+        :param pid: process identifier
+        :type pid: int
+
+        :param reference: list of dictionaries containing processes key/value associations
+        :type reference: list
+        """
+
+        if not isinstance(pid, int):
+            _log.error("Invalid PID format <{}>.".format(pid))
+            return
+
+        for process in reference:
+            if process["pid"] == pid:
+                self.resources["evidences"]["processes"].update(process)
+                _log.debug("Tracking live process <{}:{}>.".format(process["pid"], process["name"]))
+                return
+
+        _log.warning("Process <{}> not found.".format(pid))
+
+    def track_processes(self, processes):
+        """
+        .. py:function:: track_processes(self, processes)
+
+        Parses process identifier(s) and registers every existing process for further processing.
+
+        :param self: current class instance
+        :type self: class
+
+        :param processes: list of process identifier(s)
+        :type processes: list
+        """
+
+        for pid in processes:
+            self.track_process(pid)

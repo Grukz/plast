@@ -43,7 +43,7 @@ class Checker:
     @staticmethod
     def number_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar"):
         """
-        .. py:function:: number_rulesets([directory=os.path.join(_meta.__root__, "rulesets")], [globbing_filter="*.yar"])
+        .. py:function:: number_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar")
 
         Returns the total number of YARA ruleset(s).
 
@@ -87,6 +87,9 @@ class Checker:
 
         :param model: reference module class handle
         :type model: class
+
+        :raises ProcessorNotFound: if no subclass of one of the reference models can be found in :code:`object`
+        :raises ProcessorNotInherited: if the class found in :code:`object` does not inherit from the reference model
         """
 
         if not hasattr(object, model.__name__):
@@ -98,7 +101,7 @@ class Checker:
     @staticmethod
     def check_mime_type(target, types=[]):
         """
-        .. py:function:: check_mime_type(target, [types=[]])
+        .. py:function:: check_mime_type(target, types=[])
 
         Checks wether the MIME-type of :code:`target` is included in :code:`types`.
 
@@ -107,6 +110,8 @@ class Checker:
 
         :param types: list of authorized MIME-types
         :type types: list
+
+        :raises InvalidMIMEType: if the MIME-type of :code:`target` is not present in :code:`types`
         """
 
         if not magic.from_file(target, mime=True) in types:

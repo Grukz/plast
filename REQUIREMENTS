@@ -1,3 +1,5 @@
 colorlog==3.1.0
 simplejson==3.13.2
 yara-python==3.7.0
+psutil==5.4.5
+python-magic==0.4.15

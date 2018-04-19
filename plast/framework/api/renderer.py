@@ -48,7 +48,7 @@ class Renderer:
     @staticmethod
     def to_json(data):
         """
-        .. py:function:: from_json(data)
+        .. py:function:: to_json(data)
 
         Renders a Python dictionary as JSON-encoded data.
 

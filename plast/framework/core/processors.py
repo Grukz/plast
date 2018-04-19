@@ -5,8 +5,6 @@ from framework.api.loader import Loader as _loader
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
 
-import framework.processors.callback as _callback
-
 import datetime
 import hashlib
 import os.path
@@ -20,8 +18,8 @@ except (
 
     _log.fault("Import error.", trace=True)
 
-class Processor:
-    """Core multiprocessed class that processes the evidence(s) asynchronously."""
+class File:
+    """Core multiprocessed class that processes the file-based evidence(s) asynchronously."""
 
     def __init__(self, algorithms, callbacks, queue):
         """
@@ -99,7 +97,7 @@ class Processor:
         """
         .. py:function:: _invoke_callbacks(self, data)
 
-        Invokes the selected :code:`models.Callback module(s)` with the matching data.
+        Invokes the selected :code:`models.Callback` module(s) with the matching data.
 
         :param self: current class instance
         :type self: class
@@ -159,7 +157,7 @@ class Processor:
         :param evidence: absolute path to the evidence file to process
         :type evidence: str
 
-        :param buffers: dictionary containing the precompiled YARA rule(s)
+        :param buffers: dictionary containing precompiled YARA rule(s)
         :type buffers: dict
         """
 
