@@ -64,12 +64,15 @@ class Engine:
             self.buffers[ruleset] = buffer
 
             _log.debug("Precompilated ruleset <{}> in memory.".format(name))
+            return True
 
         except (
             Exception,
             yara.Error):
 
             _log.exception("Failed to pre-compile ruleset <{}>.".format(ruleset))
+
+        return False
 
     def _dispatch_jobs(self):
         """
@@ -98,13 +101,21 @@ class Engine:
             _log.debug("Started reader subprocess to process queue result(s).")
 
             with _magic.Pool(processes=self.case.arguments.processes) as pool:
-                for evidence in self.case.resources["evidences"]["files"]:
+                for file in self.case.resources["evidences"]["files"]:
                     pool.starmap_async(
                         _processors.File(self.case.arguments.hash_algorithms, self.case.arguments.callbacks, queue).run, 
-                        [(evidence, self.buffers)], 
+                        [(file, self.buffers)], 
                         error_callback=_log.exception)
 
-                    _log.debug("Mapped concurrent job to process evidence <{}>.".format(evidence))
+                    _log.debug("Mapped concurrent job to process evidence <{}>.".format(file))
+
+                for process in self.case.resources["evidences"]["processes"]:
+                    pool.starmap_async(
+                        _processors.Process(self.case.arguments.callbacks, queue).run, 
+                        [(process, self.buffers)], 
+                        error_callback=_log.exception)
+
+                    _log.debug("Mapped concurrent job to process live process matching PID <{}>.".format(process))
 
             queue.put(_codes.DONE)
 
@@ -140,8 +151,14 @@ class Engine:
         :type self: class
         """
 
+        count = 0
+
         for name, ruleset in _loader.iterate_rulesets():
-            self._compile_ruleset(name, ruleset)
+            if self._compile_ruleset(name, ruleset):
+                count += 1
+
+        _log.info("Applying a total of <{}> YARA ruleset(s).".format(count))
+        del count
 
         if not self._dispatch_jobs():
             _log.warning("Skipping <{}> module(s) invocation.".format(_models.Post.__name__))

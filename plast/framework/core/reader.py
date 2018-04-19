@@ -52,10 +52,10 @@ class Reader:
             self.output.write("{}\n".format(_renderer.to_json(data)))
 
         except _errors.EncodingError:
-            _log.error("Cannot decode data from <{}>.".format(data["target"]["absolute"]))
+            _log.error("Cannot decode data from <{}>.".format(data["target"]["identifier"]))
 
         except InvalidObject:
-            _log.exception("Exception raised while retrieving matching data from <{}>.".format(data["target"]["absolute"]))
+            _log.exception("Exception raised while retrieving matching data from <{}>.".format(data["target"]["identifier"]))
 
     def _open_output_file(self, mode="a", character_encoding="utf-8"):
         """
@@ -106,7 +106,7 @@ class Reader:
             with self.results[0]:
                 self.results[1].value += 1
 
-            _log.debug("Matching signature from rule <{}> on evidence <{}>.".format(item["rule"], item["target"]["absolute"]))
+            _log.debug("Matching signature from rule <{}> on evidence <{}>.".format(item["rule"], item["target"]["identifier"]))
 
     def run(self):
         """

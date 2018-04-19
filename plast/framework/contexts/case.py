@@ -34,8 +34,7 @@ class Case:
             "matches": os.path.join(self.arguments.output, "matches.{}".format(self.arguments.format.lower())),
             "evidences": {
                 "files": [],
-                "streams": {},
-                "processes": {}
+                "processes": []
             },
             "temporary": []
         }
@@ -257,26 +256,7 @@ class Case:
         for evidence in _magic._iterate_files(evidences):
             self.track_file(evidence)
 
-    def track_stream(self, name, data):
-        """
-        .. py:function:: track_stream(self, name, data)
-
-        Checks and registers a raw data stream for processing.
-
-        :param self: current class instance
-        :type self: class
-
-        :param name: designation of the stream
-        :type name: str
-
-        :param data: raw data stream to process
-        :type data: str
-        """
-
-        self.resources["evidences"]["streams"][name] = data
-        _log.debug("Tracking stream <{}>.".format(name))
-
-    def track_process(self, pid, reference=[process.info for process in psutil.process_iter(attrs=["name", "pid"])]):
+    def track_process(self, pid, reference=[process.info for process in psutil.process_iter(attrs=["pid"])]):
         """
         .. py:function:: track_process(self, pid, reference=[process.info for process in psutil.process_iter(attrs=["name", "pid"])])
 
@@ -297,9 +277,9 @@ class Case:
             return
 
         for process in reference:
-            if process["pid"] == pid:
-                self.resources["evidences"]["processes"].update(process)
-                _log.debug("Tracking live process <{}:{}>.".format(process["pid"], process["name"]))
+            if int(process["pid"]) == pid:
+                self.resources["evidences"]["processes"].append(pid)
+                _log.debug("Tracking live process matching PID <{}>.".format(pid))
                 return
 
         _log.warning("Process <{}> not found.".format(pid))

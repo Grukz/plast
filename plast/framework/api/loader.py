@@ -11,6 +11,15 @@ import importlib
 import os.path
 import pkgutil
 
+try:
+    import yara
+
+except (
+    ImportError,
+    Exception):
+
+    _log.fault("Import error.", trace=True)
+
 class Loader:
     """Assists modules load."""
 
@@ -111,3 +120,18 @@ class Loader:
             _log.fault("Invalid package <{}>.".format(package), trace=True)
 
         return [os.path.splitext(name)[0] for name, _ in Loader.iterate_processors(package, model)]
+
+    @staticmethod
+    def _load_memory_buffers(buffers):
+        """
+        .. py:function:: _load_memory_buffers(self)
+
+        Parses memory buffers to retrieve the content of the YARA rules to apply.
+
+        :param buffers: dictionary containing key/value associations of rule(s) to load
+        :type buffers: dict
+        """
+
+        for ruleset, buffer in buffers.items():
+            buffer.seek(0)
+            buffers[ruleset] = yara.load(file=buffer)

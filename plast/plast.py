@@ -117,10 +117,10 @@ def main(container):
 
     del Preprocessor
 
-    if not case.resources["evidences"]["files"] or case.resources["evidences"]["streams"] or case.resources["evidences"]["processes"]:
+    if not (case.resources["evidences"]["files"] or case.resources["evidences"]["processes"]):
         _log.fault("No evidence(s) to process. Quitting.")
 
-    _log.info("Currently tracking <{}> file(s), <{}> data stream(s) and <{}> live process(es).".format(len(case.resources["evidences"]["files"]), len(case.resources["evidences"]["streams"]), len(case.resources["evidences"]["processes"])))
+    _log.info("Currently tracking <{}> file(s) and <{}> live process(es).".format(len(case.resources["evidences"]["files"]), len(case.resources["evidences"]["processes"])))
 
     _engine.Engine(case).run()
 

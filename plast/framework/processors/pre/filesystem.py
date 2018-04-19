@@ -77,6 +77,8 @@ class Pre(_models.Pre):
             else:
                 _log.warning("Unknown inode type for object <{}>.".format(item))
 
+        self.case.track_process(39559)
+
     def run(self):
         """
         .. py:function:: run(self)
