@@ -106,7 +106,7 @@ class Reader:
             with self.results[0]:
                 self.results[1].value += 1
 
-            _log.debug("Matching signature from rule <{}> on evidence <{}>.".format(item["rule"], item["target"]["identifier"]))
+            _log.debug("Matching signature from rule <{}> on evidence <{}>.".format(item["match"]["rule"], item["target"]["identifier"]))
 
     def run(self):
         """

@@ -27,12 +27,16 @@ class Pre(_models.Pre):
         """
 
         parser.add_argument(
-            "--filter", default="*", metavar="FILTER", 
-            help="custom globbing filter")
+            "-a", "--attach", nargs="+", type=int, metavar="PID", 
+            help="input process identifier(s)")
 
         parser.add_argument(
-            "-i", "--input", required=True, nargs="+", action=_parser.MultipleAbsolutePath, metavar="PATH", 
-            help="input test file(s) or directory(ies)")
+            "-i", "--input", nargs="+", action=_parser.MultipleAbsolutePath, metavar="PATH", 
+            help="input file(s) or directory(ies)")
+
+        parser.add_argument(
+            "--filter", default="*", metavar="FILTER", 
+            help="custom globbing filter")
 
     def _enumerate_files(self, directory):
         """
@@ -53,17 +57,15 @@ class Pre(_models.Pre):
         for file in glob.iglob(os.path.join(directory, "**", self.case.arguments.filter), recursive=True):
             yield file
 
-    def _track_evidences(self):
+    def _track_files(self):
         """
-        .. py:function:: _track_evidences(self)
+        .. py:function:: _track_files(self)
 
         Iterates through file(s) and directory(ies) to track valid evidence(s).
 
         :param self: current class instance
         :type self: class
         """
-
-        evidences = []
 
         for item in self.case.arguments.input:
             if os.path.isfile(item):
@@ -77,7 +79,18 @@ class Pre(_models.Pre):
             else:
                 _log.warning("Unknown inode type for object <{}>.".format(item))
 
-        self.case.track_process(39559)
+    def _track_processes(self):
+        """
+        .. py:function:: _track_processes(self)
+
+        Tracks valid process(es) to analyze.
+
+        :param self: current class instance
+        :type self: class
+        """
+
+        for item in self.case.arguments.attach:
+            self.case.track_process(item)
 
     def run(self):
         """
@@ -89,4 +102,8 @@ class Pre(_models.Pre):
         :type self: class
         """
 
-        self._track_evidences()
+        if self.case.arguments.attach:
+            self._track_processes()
+
+        if self.case.arguments.input:
+            self._track_files()

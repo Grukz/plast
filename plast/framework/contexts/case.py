@@ -256,9 +256,9 @@ class Case:
         for evidence in _magic._iterate_files(evidences):
             self.track_file(evidence)
 
-    def track_process(self, pid, reference=[process.info for process in psutil.process_iter(attrs=["pid"])]):
+    def track_process(self, pid):
         """
-        .. py:function:: track_process(self, pid, reference=[process.info for process in psutil.process_iter(attrs=["name", "pid"])])
+        .. py:function:: track_process(self, pid)
 
         Checks wether a process exists on the local machine and registers it for processing.
 
@@ -267,22 +267,18 @@ class Case:
 
         :param pid: process identifier
         :type pid: int
-
-        :param reference: list of dictionaries containing processes key/value associations
-        :type reference: list
         """
 
         if not isinstance(pid, int):
             _log.error("Invalid PID format <{}>.".format(pid))
             return
 
-        for process in reference:
-            if int(process["pid"]) == pid:
-                self.resources["evidences"]["processes"].append(pid)
-                _log.debug("Tracking live process matching PID <{}>.".format(pid))
-                return
+        if psutil.pid_exists(pid):
+            self.resources["evidences"]["processes"].append(pid)
+            _log.debug("Tracking live process matching PID <{}>.".format(pid))
 
-        _log.warning("Process <{}> not found.".format(pid))
+        else:
+            _log.warning("Process <{}> not found.".format(pid))
 
     def track_processes(self, processes):
         """

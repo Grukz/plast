@@ -4,6 +4,7 @@ from framework.api.loader import Loader as _loader
 
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
+from framework.contexts.meta import Meta as _meta
 
 import datetime
 import hashlib
@@ -106,20 +107,23 @@ class File:
 
                 for action in [self.queue.put, self._invoke_callbacks]:
                     action({
-                        "rule": match.rule,
-                        "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+                        "origin": _meta.__package__,
                         "target": {
                             "type": "file",
                             "identifier": self.evidence
                         },
-                        "meta": match.meta,
-                        "namespace": match.namespace,
-                        "hashes": hashes,
-                        "tags": match.tags,
-                        "strings": [{
-                            "offset": string[0],
-                            "reference": string[1], 
-                            "litteral": string[2].decode("utf-8", "backslashreplace")} for string in match.strings]
+                        "match": {
+                            "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+                            "rule": match.rule,
+                            "meta": match.meta,
+                            "namespace": match.namespace,
+                            "tags": match.tags,
+                            "hashes": hashes,
+                            "strings": [{
+                                "offset": string[0],
+                                "reference": string[1], 
+                                "litteral": string[2].decode("utf-8", "backslashreplace")} for string in match.strings]
+                        }
                     })
 
     def run(self, evidence, buffers):
@@ -197,19 +201,23 @@ class Process:
             for match in buffer.match(pid=self.evidence):
                 for action in [self.queue.put, self._invoke_callbacks]:
                     action({
-                        "rule": match.rule,
-                        "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+                        "origin": _meta.__package__,
                         "target": {
                             "type": "process",
                             "identifier": self.evidence
                         },
-                        "meta": match.meta,
-                        "namespace": match.namespace,
-                        "tags": match.tags,
-                        "strings": [{
-                            "offset": string[0],
-                            "reference": string[1], 
-                            "litteral": string[2].decode("utf-8", "backslashreplace")} for string in match.strings]
+                        "match": {
+                            "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+                            "rule": match.rule,
+                            "meta": match.meta,
+                            "namespace": match.namespace,
+                            "tags": match.tags,
+                            "hashes": [],
+                            "strings": [{
+                                "offset": string[0],
+                                "reference": string[1], 
+                                "litteral": string[2].decode("utf-8", "backslashreplace")} for string in match.strings]
+                        }
                     })
 
     def run(self, evidence, buffers):
