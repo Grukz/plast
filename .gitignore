@@ -5,11 +5,5 @@ __pycache__/
 .vscode/
 .env/
 
-preprocessors/*
-!preprocessors/.empty
-
-postprocessors/*
-!postprocessors/.empty
-
 rulesets/*
 !rulesets/.empty

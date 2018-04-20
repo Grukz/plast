@@ -1,4 +1,4 @@
-= plast – Threat Hunting Tool & Framework
+= plast — Threat Hunting Tool & Framework
 Nelson "sk4la" Cornet <https://github.com/sk4la>
 :caution-caption: :fire:
 :uri-org: https://github.com/sk4la
@@ -12,11 +12,11 @@ image:https://img.shields.io/badge/python-3.7-blue.svg[link={uri-python}] image:
 
 `plast` is an open-source modular command-line threat hunting tool & framework. It comes with several modules that allow to process multiple data formats, trigger automatic actions upon detection and produce customized output.
 
-Under the hood, `plast` uses {uri-yara}[YARA] through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IoC] detection on multiple types of input.
+Under the hood, `plast` uses {uri-yara}[YARA] through `multiprocessing` tasks to perform rule-based https://en.wikipedia.org/wiki/Indicator_of_compromise[IOC] detection on multiple types of input.
 
-The main goal of the `plast` project is to provide an efficient & effortless way to detect indicators of compromission during incident-response operations.
+The main goal of the `plast` project is to provide an *efficient & effortless* way to detect indicators of compromission during incident-response operations.
 
-If provides a comprehensive framework that easily allows processing of multiple data types. It also embeds all modules in one single tool, allowing `plast` to be used on the field as a standalone utility.
+It provides a comprehensive framework that easily allows processing of multiple data types. It also embeds all modules in one single tool, allowing `plast` to be used on the field as a standalone utility.
 
 `plast` is entirely written in `python3` which makes it compatible with almost all GNU/Linux and macOS distributions. Nevertheless, some minimal dependencies are required.
 
@@ -34,11 +34,11 @@ Install the required package(s):
 
 [source,sh]
 ----
-apt install -y make libpst
+apt install -y make
 apt install -y python3 python3-pip python3-venv
 ----
 
-CAUTION: `Pre`, `Post` and `Callback` modules have their own dependencies which may not be listed here.
+`Pre`, `Post` and `Callback` modules have their own dependencies which may not be listed here.
 
 And the latest `python3` environment:
 
@@ -109,11 +109,12 @@ plast -o out --callbacks=example --post=example filesystem -i case
 
 The `plast` project can only be useful if there are modules helping to process custom data formats.
 
-Following this goal, the framework allows to easily integrate new module(s) by creating custom class(es) and simply placing them in the `framework/processors/...` directory. That's it.
+Following this goal, the framework allows to easily integrate new modules by creating custom classes and simply dropping them in the `framework/processors/*` directories. That's it.
 
 === Custom modules
 
 The core process is handled by three main classes defined in the `framework.contexts.models` module. This module defines:
+
 * The `Pre` reference class;
 * The `Post` reference class;
 * And the `Callback` reference class.
