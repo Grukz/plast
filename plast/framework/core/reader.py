@@ -3,6 +3,7 @@
 from framework.api.renderer import Renderer as _renderer
 
 from framework.contexts.logger import Logger as _log
+from framework.contexts.meta import Configuration as _conf
 from framework.contexts.types import Codes as _codes
 
 class Reader:
@@ -57,9 +58,9 @@ class Reader:
         except InvalidObject:
             _log.exception("Exception raised while retrieving matching data from <{}>.".format(data["target"]["identifier"]))
 
-    def _open_output_file(self, mode="a", character_encoding="utf-8"):
+    def _open_output_file(self, mode=_conf.OUTPUT_STREAM_MODE, character_encoding=_conf.OUTPUT_CHARACTER_ENCODING):
         """
-        .. py:function:: _open_output_file(self, mode="a", character_encoding="utf-8")
+        .. py:function:: _open_output_file(self, mode=_conf.OUTPUT_STREAM_MODE, character_encoding=conf.OUTPUT_CHARACTER_ENCODING)
 
         Opens the output stream.
 

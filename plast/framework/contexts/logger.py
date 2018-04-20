@@ -207,6 +207,21 @@ class Logger:
         Logger.console.exception(message)
 
     @staticmethod
+    @_synchronize
+    def inner_exception(message):
+        """
+        .. py:function:: inner_exception(message)
+
+        Prints the last exception traceback along with an error message.
+
+        :param message: data to print
+        :type message: str
+        """
+
+        Logger.core.exception("InnerException: {}".format(message))
+        Logger.console.exception("InnerException: {}".format(message))
+
+    @staticmethod
     def fault(message, trace=False):
         """
         .. py:function:: fault(message, trace=False)

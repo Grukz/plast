@@ -105,7 +105,7 @@ class Engine:
                     pool.starmap_async(
                         _processors.File(self.case.arguments.hash_algorithms, self.case.arguments.callbacks, queue).run, 
                         [(file, self.buffers)], 
-                        error_callback=_log.exception)
+                        error_callback=_log.inner_exception)
 
                     _log.debug("Mapped concurrent job to process evidence <{}>.".format(file))
 
@@ -113,7 +113,7 @@ class Engine:
                     pool.starmap_async(
                         _processors.Process(self.case.arguments.callbacks, queue).run, 
                         [(process, self.buffers)], 
-                        error_callback=_log.exception)
+                        error_callback=_log.inner_exception)
 
                     _log.debug("Mapped concurrent job to process live process matching PID <{}>.".format(process))
 

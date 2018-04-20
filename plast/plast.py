@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from framework.contexts.meta import Configuration as _conf
 from framework.contexts.meta import Meta as _meta
+
 _meta.set_package(__file__)
+_conf._load_configuration(_meta.__conf__)
 
 from framework.api import magic as _magic
 from framework.api import parser as _parser
@@ -52,7 +55,7 @@ def _argparser(parser, modules={}):
 
     parser.add_argument(
         "--hash-algorithms", nargs="+", action=_parser.Unique, metavar="NAME",
-        choices=["md5", "sha1", "sha224", "sha256", "sha384", "sha512", "blake2b", "blake2s", "sha3_224", "sha3_256", "sha3_384", "sha3_512"], default=["md5", "sha1", "sha256"], 
+        choices=["md5", "sha1", "sha224", "sha256", "sha384", "sha512", "blake2b", "blake2s", "sha3_224", "sha3_256", "sha3_384", "sha3_512"], default=_conf.HASH_ALGORITHMS, 
         help="output format for detection(s), see hashlib API reference for supported algorithm(s) [md5,sha1,sha256]")
 
     parser.add_argument(
@@ -68,8 +71,8 @@ def _argparser(parser, modules={}):
         help="select the postprocessor(s) that will handle the resulting data [*]")
 
     parser.add_argument(
-        "--processes", type=int, choices=range(1, 100), default=(multiprocessing.cpu_count() or 4), metavar="NUMBER",
-        help="override the number of concurrent processe(s) [{}]".format(multiprocessing.cpu_count() or 4))
+        "--processes", type=int, choices=range(1, 100), default=(multiprocessing.cpu_count() or _conf.FALLBACK_PROCESSES), metavar="NUMBER",
+        help="override the number of concurrent processe(s) [{}]".format(multiprocessing.cpu_count() or _conf.FALLBACK_PROCESSES))
 
     for name, Processor in _loader.iterate_processors(_pre, _models.Pre):
         subparser = parser.subparsers.add_parser(name, description=Processor.__description__ if hasattr(Processor, "__description__") else None, add_help=False)
@@ -101,7 +104,7 @@ def main(container):
     _log.set_console_level(container["arguments"].logging.upper())
 
     if not container["arguments"]._subparser:
-        return
+        _log.fault("Nothing to be done.")
 
     if not _checker.number_rulesets():
         _log.fault("No YARA rulesets found. Nothing to be done.")

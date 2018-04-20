@@ -4,6 +4,7 @@ from framework.api.loader import Loader as _loader
 
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
+from framework.contexts.meta import Configuration as _conf
 from framework.contexts.meta import Meta as _meta
 
 import datetime
@@ -99,7 +100,7 @@ class File:
         """
 
         for _, buffer in self.buffers.items():
-            for match in buffer.match(self.evidence):
+            for match in buffer.match(self.evidence, timeout=_conf.YARA_MATCH_TIMEOUT):
                 hashes = {}
 
                 for algorithm in self.algorithms:
@@ -198,7 +199,7 @@ class Process:
         """
 
         for _, buffer in self.buffers.items():
-            for match in buffer.match(pid=self.evidence):
+            for match in buffer.match(pid=self.evidence, timeout=_conf.YARA_MATCH_TIMEOUT):
                 for action in [self.queue.put, self._invoke_callbacks]:
                     action({
                         "origin": _meta.__package__,

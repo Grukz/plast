@@ -4,6 +4,7 @@ from framework.api.renderer import Renderer as _renderer
 
 from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log
+from framework.contexts.meta import Configuration as _conf
 
 import multiprocessing
 import os.path
@@ -72,9 +73,9 @@ class Hole:
 class Pool:
     """Wrapper around :code:`multiprocessing.Pool` that automatically sets the :code:`SIGINT` signal handler and cleans up on error."""
 
-    def __init__(self, processes=(multiprocessing.cpu_count() or 4)):
+    def __init__(self, processes=(multiprocessing.cpu_count() or _conf.FALLBACK_PROCESSES)):
         """
-        .. py:function:: __init__(self, processes=(multiprocessing.cpu_count() or 4))
+        .. py:function:: __init__(self, processes=(multiprocessing.cpu_count() or _conf.FALLBACK_PROCESSES))
 
         Initialization method for the class.
 

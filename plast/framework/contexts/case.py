@@ -4,6 +4,7 @@ from framework.api.checker import Checker as _checker
 
 from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log
+from framework.contexts.meta import Configuration as _conf
 
 import os
 import psutil
@@ -51,6 +52,10 @@ class Case:
         :type self: class
         """
 
+        if _conf.KEEP_TEMPORARY_ARTIFACTS:
+            _log.warning("Skipped temporary artifact(s) cleanup.")
+            return
+
         self._tear_down()
 
     def _tear_down(self):
@@ -77,9 +82,9 @@ class Case:
 
                 _log.exception("Failed to remove temporary artifact <{}>.".format(artifact))
 
-    def _prompt(self, message, rounds=3, harsh_escape=True):
+    def _prompt(self, message, rounds=_conf.PROMPT_ROUNDS, harsh_escape=_conf.PROMPT_HARSH_ESCAPE):
         """
-        .. py:function:: _prompt(self, message, rounds=3, harsh_escape=True)
+        .. py:function:: _prompt(self, message, rounds=_conf.PROMPT_ROUNDS, harsh_escape=_conf.PROMPT_HARSH_ESCAPE)
 
         Prompts the user with a yes/no question and wait for a valid answer.
 
