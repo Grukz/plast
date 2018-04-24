@@ -35,16 +35,22 @@ Install the required package(s):
 [source,sh]
 ----
 apt install -y make
-apt install -y python3 python3-pip python3-venv
 ----
-
-`Pre`, `Post` and `Callback` modules have their own dependencies which may not be listed here.
 
 And the latest `python3` environment:
 
 [source,sh]
 ----
 apt install -y python3 python3-pip python3-venv
+----
+
+`Pre`, `Post` and `Callback` modules have their own dependencies which may not be listed here.
+
+Also, if you plan on compiling hash-based YARA ruleset(s), you may need to install the OpenSSL library:
+
+[source,sh]
+----
+apt install -y libssl-dev
 ----
 
 === Installation
