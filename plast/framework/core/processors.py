@@ -11,6 +11,15 @@ import datetime
 import hashlib
 import os.path
 
+try:
+    import yara
+
+except (
+    ImportError,
+    Exception):
+
+    _log.fault("Import error.", trace=True)
+
 class File:
     """Core multiprocessed class that processes the file-based evidence(s) asynchronously."""
 
@@ -100,32 +109,45 @@ class File:
         """
 
         for _, buffer in self.buffers.items():
-            for match in buffer.match(self.evidence, timeout=_conf.YARA_MATCH_TIMEOUT):
-                hashes = {}
+            try:
+                for match in buffer.match(self.evidence, timeout=_conf.YARA_MATCH_TIMEOUT):
+                    hashes = {}
 
-                for algorithm in self.algorithms:
-                    hashes[algorithm] = self._compute_hash(self.evidence, algorithm=algorithm)
+                    for algorithm in self.algorithms:
+                        hashes[algorithm] = self._compute_hash(self.evidence, algorithm=algorithm)
 
-                for action in [self.queue.put, self._invoke_callbacks]:
-                    action({
-                        "origin": _meta.__package__,
-                        "target": {
-                            "type": "file",
-                            "identifier": self.evidence
-                        },
-                        "match": {
-                            "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
-                            "rule": match.rule,
-                            "meta": match.meta,
-                            "namespace": match.namespace,
-                            "tags": match.tags,
-                            "hashes": hashes,
-                            "strings": [{
-                                "offset": string[0],
-                                "reference": string[1], 
-                                "litteral": string[2].decode("utf-8", "backslashreplace")} for string in match.strings]
-                        }
-                    })
+                    for action in [self.queue.put, self._invoke_callbacks]:
+                        action({
+                            "origin": _meta.__package__,
+                            "target": {
+                                "type": "file",
+                                "identifier": self.evidence
+                            },
+                            "match": {
+                                "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+                                "rule": match.rule,
+                                "meta": match.meta,
+                                "namespace": match.namespace,
+                                "tags": match.tags,
+                                "hashes": hashes,
+                                "strings": [{
+                                    "offset": string[0],
+                                    "reference": string[1], 
+                                    "litteral": string[2].decode("utf-8", "backslashreplace")} for string in match.strings]
+                            }
+                        })
+
+            except yara.TimeoutError:
+                _log.warning("Timeout exceeded for file-based evidence <{}>.".format(self.evidence))
+                continue
+
+            except yara.Error:
+                _log.exception("YARA exception raised during processing of file-based evidence <{}>.".format(self.evidence))
+                continue
+
+            except Exception:
+                _log.exception("YARA exception raised during processing of file-based evidence <{}>.".format(self.evidence))
+                continue
 
     def run(self, evidence, buffers):
         """
@@ -199,27 +221,40 @@ class Process:
         """
 
         for _, buffer in self.buffers.items():
-            for match in buffer.match(pid=self.evidence, timeout=_conf.YARA_MATCH_TIMEOUT):
-                for action in [self.queue.put, self._invoke_callbacks]:
-                    action({
-                        "origin": _meta.__package__,
-                        "target": {
-                            "type": "process",
-                            "identifier": self.evidence
-                        },
-                        "match": {
-                            "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
-                            "rule": match.rule,
-                            "meta": match.meta,
-                            "namespace": match.namespace,
-                            "tags": match.tags,
-                            "hashes": [],
-                            "strings": [{
-                                "offset": string[0],
-                                "reference": string[1], 
-                                "litteral": string[2].decode("utf-8", "backslashreplace")} for string in match.strings]
-                        }
-                    })
+            try:
+                for match in buffer.match(pid=self.evidence, timeout=_conf.YARA_MATCH_TIMEOUT):
+                    for action in [self.queue.put, self._invoke_callbacks]:
+                        action({
+                            "origin": _meta.__package__,
+                            "target": {
+                                "type": "process",
+                                "identifier": self.evidence
+                            },
+                            "match": {
+                                "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+                                "rule": match.rule,
+                                "meta": match.meta,
+                                "namespace": match.namespace,
+                                "tags": match.tags,
+                                "hashes": [],
+                                "strings": [{
+                                    "offset": string[0],
+                                    "reference": string[1], 
+                                    "litteral": string[2].decode("utf-8", "backslashreplace")} for string in match.strings]
+                            }
+                        })
+
+            except yara.TimeoutError:
+                _log.warning("Timeout exceeded for live process matching PID <{}>.".format(self.evidence))
+                continue
+
+            except yara.Error:
+                _log.exception("YARA exception raised during processing of live process matching PID <{}>.".format(self.evidence))
+                continue
+
+            except Exception:
+                _log.exception("YARA exception raised during processing of live process matching PID <{}>.".format(self.evidence))
+                continue
 
     def run(self, evidence, buffers):
         """

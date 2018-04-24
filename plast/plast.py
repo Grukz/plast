@@ -50,17 +50,17 @@ def _argparser(parser, modules={}):
         help="select the callback(s) that will handle the resulting data [*]")
 
     parser.add_argument(
-        "--format", choices=["json"], default="json",
-        help="output format for detection(s) [json]")
+        "--format", choices=["json"], default=_conf.OUTPUT_FORMAT,
+        help="output format for detection(s) {}".format(_conf.OUTPUT_FORMAT))
 
     parser.add_argument(
         "--hash-algorithms", nargs="+", action=_parser.Unique, metavar="NAME",
         choices=["md5", "sha1", "sha224", "sha256", "sha384", "sha512", "blake2b", "blake2s", "sha3_224", "sha3_256", "sha3_384", "sha3_512"], default=_conf.HASH_ALGORITHMS, 
-        help="output format for detection(s), see hashlib API reference for supported algorithm(s) [md5,sha1,sha256]")
+        help="output format for detection(s), see hashlib API reference for supported algorithm(s) {}".format(_conf.HASH_ALGORITHMS))
 
     parser.add_argument(
-        "--logging", choices=["debug", "info", "warning", "error", "critical", "suppress"], default="info",
-        help="override the default console logging level [info]")
+        "--logging", choices=["debug", "info", "warning", "error", "critical", "suppress"], default=_conf.LOGGING_LEVEL,
+        help="override the default console logging level [{}]".format(_conf.LOGGING_LEVEL))
 
     parser.add_argument(
         "--overwrite", action="store_true",
@@ -71,7 +71,7 @@ def _argparser(parser, modules={}):
         help="select the postprocessor(s) that will handle the resulting data [*]")
 
     parser.add_argument(
-        "--processes", type=int, choices=range(1, 100), default=(multiprocessing.cpu_count() or _conf.FALLBACK_PROCESSES), metavar="NUMBER",
+        "--processes", type=int, choices=range(1, 1001), default=(multiprocessing.cpu_count() or _conf.FALLBACK_PROCESSES), metavar="NUMBER",
         help="override the number of concurrent processe(s) [{}]".format(multiprocessing.cpu_count() or _conf.FALLBACK_PROCESSES))
 
     for name, Processor in _loader.iterate_processors(_pre, _models.Pre):

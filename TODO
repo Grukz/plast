@@ -1,3 +1,6 @@
 <TODO>Spawn pool-based processes for dynamically-loaded models.Post module(s).</TODO>
 <TODO>Complete the API documentation in README.adoc.</TODO>
-<TODO>JSON configuration file.</TODO>
+<TODO>super() in modules init() method.</TODO>
+<TODO>Display number of rule(s) in rulesets.</TODO>
+<TODO>YARA file extensions in configuration.</TODO>
+<TODO>YARA OpenSSL dependency in README.adoc.</TODO>

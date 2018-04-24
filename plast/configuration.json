@@ -1,4 +1,5 @@
 {
+    "LOGGING_LEVEL": "info",
     "FALLBACK_PROCESSES": 4,
     "SYNTAX_HIGHLIGHTING": true,
     "HASH_ALGORITHMS": [
@@ -8,8 +9,9 @@
     ],
     "OUTPUT_STREAM_MODE": "a",
     "OUTPUT_CHARACTER_ENCODING": "utf-8",
+    "OUTPUT_FORMAT": "json",
     "PROMPT_ROUNDS": 3,
     "PROMPT_HARSH_ESCAPE": true,
     "KEEP_TEMPORARY_ARTIFACTS": false,
-    "YARA_MATCH_TIMEOUT": null
+    "YARA_MATCH_TIMEOUT": -1
 }

@@ -123,9 +123,9 @@ The core process is handled by three main classes defined in the `framework.cont
 
 ==== Preprocessing
 
-Preprocessing is handled by the `framework.contexts.models.Pre` reference class. To create a preprocessing module, one needs to create a module containing a subclass of `framework.contexts.models.Pre` named `Pre`.
+Preprocessing is handled by the `Pre` reference class from the `framework.contexts.models` module. To create a preprocessing module, one needs to create a module containing a subclass of `framework.contexts.models.Pre` named `Pre`.
 
-Following is a basic example of a preprocessing module that yields the path `infected.pdf`:
+Following is a basic example of a preprocessing module that registers the file-based evidence `infected.pdf` for tracking:
 
 [source,python]
 ----
@@ -133,16 +133,17 @@ from framework.contexts import models as _models
 
 class Pre(_models.Pre):
     def run(self):
-        return ["/tmp/infected.pdf"]
+        self.case.track_file("/tmp/infected.pdf")
 ----
 
-`Pre` modules must have a `run` method that returns a list of file(s) to analyze.
+`Pre` modules must have a `run` method to be invocated by the core engine.
 
 Each `Pre` module corresponds to a positional argument in `plast`. One can add command-line argument(s) in the module by overriding the `__init__` method like this:
 
 [source,python]
 ----
 from framework.contexts import models as _models
+from framework.contexts.logger import Logger as _log
 
 class Pre(_models.Pre):
     def __init__(self, parser):
@@ -158,7 +159,10 @@ class Pre(_models.Pre):
             help="run in debug mode")
 
     def run(self):
-        return ["/tmp/infected.pdf"]
+        self.case.track_file("/tmp/infected.pdf")
+
+        if self.case.arguments.debug:
+            _log.debug("Registering file {}.".format("/tmp/infected.pdf"))
 ----
 
 The syntax is based on the `argparse` module syntax.
