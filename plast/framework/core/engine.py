@@ -60,10 +60,13 @@ class Engine:
 
         try:
             buffer = io.BytesIO()
-            yara.compile(ruleset, includes=True).save(file=buffer)
+
+            rules = yara.compile(ruleset, includes=True)
+            rules.save(file=buffer)
+
             self.buffers[ruleset] = buffer
 
-            _log.debug("Precompilated ruleset <{}> in memory.".format(name))
+            _log.debug("Precompilated YARA ruleset <{}> in memory with a total of <{}> valid rule(s).".format(name, sum(1 for _ in rules)))
             return True
 
         except (
@@ -135,11 +138,11 @@ class Engine:
         """
 
         for postprocessor in self.case.arguments.post:
-            Postprocessor = _loader.load_processor(postprocessor, _models.Post)(self.case)
+            Postprocessor = _loader.load_processor(postprocessor, _models.Post)()
             Postprocessor.__name__ = postprocessor
 
             with _magic.Invocator(Postprocessor):
-                Postprocessor.run()
+                Postprocessor.run(self.case)
 
     def run(self):
         """

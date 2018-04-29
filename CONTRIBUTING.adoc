@@ -1,0 +1,85 @@
+= **plast** — Threat Hunting Framework & Utility
+Nelson "sk4la" Cornet <https://github.com/sk4la>
+:caution-caption: :fire:
+:uri-org: https://github.com/sk4la
+:uri-repo: {uri-org}/plast
+:uri-raw: https://raw.githubusercontent.com/sk4la/plast
+:uri-readme: {uri-raw}/master/README.adoc
+
+image:https://img.shields.io/badge/python-3.7-blue.svg[link={uri-python}] image:https://img.shields.io/badge/license-MIT-green.svg[link={uri-license}]
+
+`TODO`.
+
+== Getting Started
+
+Please refer to the instructions in {uri-license}[README.adoc] to install the latest version of the `plast` project.
+
+== Contributing
+
+The `plast` project can only be useful if there are modules helping to process custom data formats.
+
+Following this goal, the framework allows to easily integrate new modules by creating custom classes and simply dropping them in the `framework/processors/*` directories. That's it.
+
+=== Custom modules
+
+The core process is handled by three main classes defined in the `framework.contexts.models` module. This module defines:
+
+* The `Pre` reference class;
+* The `Post` reference class;
+* And the `Callback` reference class.
+
+*A module must be a subclass of one of these reference classes.*
+
+==== Preprocessing
+
+Preprocessing is handled by the `Pre` reference class from the `framework.contexts.models` module. To create a preprocessing module, one needs to create a module containing a subclass of `framework.contexts.models.Pre` named `Pre`.
+
+Following is a basic example of a preprocessing module that registers the file-based evidence `infected.pdf` for tracking:
+
+[source,python]
+----
+from framework.contexts import models as _models
+
+class Pre(_models.Pre):
+    def run(self):
+        self.case.track_file("/tmp/infected.pdf")
+----
+
+`Pre` modules must have a `run` method to be invocated by the core engine.
+
+Each `Pre` module corresponds to a positional argument in `plast`. One can add command-line argument(s) in the module by overriding the `__init__` method like this:
+
+[source,python]
+----
+from framework.contexts import models as _models
+from framework.contexts.logger import Logger as _log
+
+class Pre(_models.Pre):
+    def __init__(self, parser):
+        parser.add_argument(
+            "-j", "--jobs",
+            type=int, 
+            default=4, 
+            help="number of concurrent job(s)")
+        
+        parser.add_argument(
+            "--debug", 
+            default="False", 
+            help="run in debug mode")
+
+    def run(self):
+        self.case.track_file("/tmp/infected.pdf")
+
+        if self.case.arguments.debug:
+            _log.debug("Registering file {}.".format("/tmp/infected.pdf"))
+----
+
+The syntax is based on the `argparse` module syntax.
+
+==== Postprocessing
+
+`TODO`
+
+==== Callback
+
+`TODO`

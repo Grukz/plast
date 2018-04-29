@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from framework.api import magic as _magic
 from framework.api.checker import Checker as _checker
 
 from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log
+from framework.contexts.meta import Configuration as _conf
 from framework.contexts.meta import Meta as _meta
 
-import glob
 import importlib
 import os.path
 import pkgutil
@@ -57,23 +58,23 @@ class Loader:
         return getattr(processor, model.__name__)
 
     @staticmethod
-    def iterate_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar"):
+    def iterate_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filters=_conf.YARA_EXTENSION_FILTERS):
         """
-        .. py:function:: iterate_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar")
+        .. py:function:: iterate_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filters=_conf.YARA_EXTENSION_FILTERS)
 
         Iterates through the available YARA ruleset(s).
 
         :param directory: absolute path to the rulesets directory
         :type directory: str
 
-        :param globbing_filter: globbing filter to apply for the search
-        :type globbing_filter: str
+        :param globbing_filters: list of globbing filter to apply for the search
+        :type globbing_filters: list
 
         :return: basename and absolute path to the current ruleset
         :rtype: tuple
         """
 
-        for file in glob.iglob(os.path.join(directory, "**", globbing_filter), recursive=True):
+        for file in _magic.enumerate_matching_files(directory, globbing_filters, recursive=True):
             yield os.path.splitext(os.path.basename(file))[0], file
 
     @staticmethod

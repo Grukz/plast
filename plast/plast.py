@@ -75,7 +75,7 @@ def _argparser(parser, modules={}):
         help="override the number of concurrent processe(s) [{}]".format(multiprocessing.cpu_count() or _conf.FALLBACK_PROCESSES))
 
     for name, Processor in _loader.iterate_processors(_pre, _models.Pre):
-        subparser = parser.subparsers.add_parser(name, description=Processor.__description__ if hasattr(Processor, "__description__") else None, add_help=False)
+        subparser = parser.subparsers.add_parser(name, description=getattr(Processor, "__description__", None), add_help=False)
 
         modules[name] = Processor(subparser)
         modules[name].__name__ = name
@@ -83,7 +83,7 @@ def _argparser(parser, modules={}):
         with _magic.Hole(argparse.ArgumentError):
             parser.register_help(subparser)
 
-            if hasattr(modules[name], "__version__"):
+            if getattr(modules[name], "__version__", None):
                 parser.register_version(subparser, modules[name].__name__, modules[name].__version__)
 
     return {

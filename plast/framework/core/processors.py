@@ -7,11 +7,11 @@ from framework.contexts.logger import Logger as _log
 from framework.contexts.meta import Configuration as _conf
 from framework.contexts.meta import Meta as _meta
 
-import datetime
 import hashlib
 import os.path
 
 try:
+    import pendulum
     import yara
 
 except (
@@ -95,7 +95,7 @@ class File:
         """
 
         for name in self.callbacks:
-            _loader.load_processor(name, _models.Callback)(data).run()
+            _loader.load_processor(name, _models.Callback)().run(data)
             _log.debug("Invoked callback <{}>.".format(name))
 
     def _process_evidence(self):
@@ -124,7 +124,7 @@ class File:
                                 "identifier": self.evidence
                             },
                             "match": {
-                                "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+                                "timestamp": pendulum.now().to_datetime_string(),
                                 "rule": match.rule,
                                 "meta": match.meta,
                                 "namespace": match.namespace,
@@ -207,7 +207,7 @@ class Process:
         """
 
         for name in self.callbacks:
-            _loader.load_processor(name, _models.Callback)(data).run()
+            _loader.load_processor(name, _models.Callback)().run(data)
             _log.debug("Invoked callback <{}>.".format(name))
 
     def _process_evidence(self):
@@ -231,7 +231,7 @@ class Process:
                                 "identifier": self.evidence
                             },
                             "match": {
-                                "timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+                                "timestamp": pendulum.now().to_datetime_string(),
                                 "rule": match.rule,
                                 "meta": match.meta,
                                 "namespace": match.namespace,

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from framework.api import magic as _magic
 from framework.api import parser as _parser
 
 from framework.contexts import models as _models
@@ -9,8 +10,11 @@ import glob
 import os.path
 
 class Pre(_models.Pre):
-    __description__ = "Simple filesystem-based preprocessor."
     __author__ = "sk4la"
+    __description__ = "Simple filesystem-based preprocessor."
+    __license__ = "MIT <https://raw.githubusercontent.com/sk4la/plast/master/LICENSE>"
+    __maintainer__ = ["sk4la"]
+    __system__ = ["Darwin", "Linux", "Windows"]
     __version__ = "0.1"
 
     def __init__(self, parser):
@@ -35,27 +39,12 @@ class Pre(_models.Pre):
             help="input file(s) or directory(ies)")
 
         parser.add_argument(
-            "--filter", default="*", metavar="FILTER", 
-            help="custom globbing filter")
+            "-r", "--recursive", action="store_true", 
+            help="walk through directory(ies) recursively")
 
-    def _enumerate_files(self, directory):
-        """
-        .. py:function:: _enumerate_files(self, directory)
-
-        Recursively iterates through the file(s) in a directory.
-
-        :param self: current class instance
-        :type self: class
-
-        :param directory: path to the directory to walk through
-        :type directory: str
-
-        :return: path to the matching file(s)
-        :rtype: str
-        """
-
-        for file in glob.iglob(os.path.join(directory, "**", self.case.arguments.filter), recursive=True):
-            yield file
+        parser.add_argument(
+            "--filters", nargs="+", default=["*"], metavar="FILTER", 
+            help="custom shell-like globbing filter(s)")
 
     def _track_files(self):
         """
@@ -72,7 +61,7 @@ class Pre(_models.Pre):
                 self.case.track_file(file)
 
             elif os.path.isdir(item):
-                for file in self._enumerate_files(item):
+                for file in _magic.enumerate_matching_files(item, self.case.arguments.filters, recursive=self.case.arguments.recursive):
                     if os.path.isfile(file):
                         self.case.track_file(file)
 

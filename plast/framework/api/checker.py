@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from framework.api import magic as _magic
+
 from framework.contexts import errors as _errors
+from framework.contexts.meta import Configuration as _conf
 from framework.contexts.meta import Meta as _meta
 
-import glob
 import magic
 import os.path
 import types
@@ -41,23 +43,23 @@ class Checker:
             raise _errors.MalformatedData
 
     @staticmethod
-    def number_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar"):
+    def number_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filters=_conf.YARA_EXTENSION_FILTERS):
         """
-        .. py:function:: number_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filter="*.yar")
+        .. py:function:: number_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filters=_conf.YARA_EXTENSION_FILTERS)
 
         Returns the total number of YARA ruleset(s).
 
         :param directory: absolute path to the rulesets directory
         :type directory: str
 
-        :param globbing_filter: globbing filter to apply for the search
-        :type globbing_filter: str
+        :param globbing_filters: list of globbing filter(s) to apply for the search
+        :type globbing_filters: list
 
         :return: number of YARA ruleset(s) in :code:`directory`
         :rtype: int
         """
 
-        return len(glob.glob(os.path.join(directory, "**", globbing_filter), recursive=True))
+        return sum(1 for _ in _magic.enumerate_matching_files(directory, globbing_filters, recursive=True))
 
     @staticmethod
     def check_package(package):

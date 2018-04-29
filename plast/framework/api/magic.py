@@ -6,6 +6,8 @@ from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log
 from framework.contexts.meta import Configuration as _conf
 
+import glob
+import itertools
 import multiprocessing
 import os.path
 import signal
@@ -240,3 +242,24 @@ def _iterate_matches(target):
                 _errors.InvalidObject):
 
                 _log.error("Failed to interpret match <{}>.".format(match))
+
+def enumerate_matching_files(reference, patterns, recursive=False):
+    """
+    .. py:function:: enumerate_matching_files(reference, patterns)
+
+    Returns an iterator pointing to the matching file(s) based on shell-like pattern(s).
+
+    :param reference: absolute path to the rulesets directory
+    :type reference: str
+
+    :param patterns: list of globbing filter(s) to apply for the search
+    :type patterns: list
+
+    :param recursive: set to True to walk directory(ies) recursively
+    :type recursive: bool
+
+    :return: iterator pointing to the matching file(s)
+    :rtype: class
+    """
+
+    return itertools.chain.from_iterable(glob.iglob(os.path.join(reference, ("**" if recursive else ""), pattern), recursive=recursive) for pattern in patterns)

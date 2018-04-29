@@ -13,5 +13,9 @@
     "PROMPT_ROUNDS": 3,
     "PROMPT_HARSH_ESCAPE": true,
     "KEEP_TEMPORARY_ARTIFACTS": false,
-    "YARA_MATCH_TIMEOUT": -1
+    "YARA_MATCH_TIMEOUT": -1,
+    "YARA_EXTENSION_FILTERS": [
+        "*.yar",
+        "*.txt"
+    ]
 }

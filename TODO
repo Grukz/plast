@@ -1,5 +1,4 @@
-<TODO>Spawn pool-based processes for dynamically-loaded models.Post module(s).</TODO>
-<TODO>Complete the API documentation in README.adoc.</TODO>
-<TODO>super() in modules init() method.</TODO>
-<TODO>Display number of rule(s) in rulesets.</TODO>
-<TODO>YARA file extensions in configuration.</TODO>
+Spawn pool-based processes for dynamically-loaded models.Post module(s).
+Complete the API documentation in CONTRIBUTING.adoc.
+Separate --attach option from the `filesystem` preprocessor (create a `process` preprocessor).
+Create ttygifs for basic usage case(s).
