@@ -1,11 +1,10 @@
-= **plast** — Threat Hunting Framework & Utility
+= +plast+ — Threat Hunting Framework & Utility
 Nelson "sk4la" Cornet <https://github.com/sk4la>
 :caution-caption: :fire:
 :uri-org: https://github.com/sk4la
 :uri-repo: {uri-org}/plast
-:uri-raw: https://raw.githubusercontent.com/sk4la/plast
-:uri-license: {uri-raw}/master/LICENSE
-:uri-contrib: {uri-raw}/master/CONTRIBUTING.adoc
+:uri-license: {uri-repo}/blob/master/LICENSE.adoc
+:uri-contrib: {uri-repo}/blob/master/CONTRIBUTING.adoc
 :uri-python: https://www.python.org
 :uri-yara: https://github.com/VirusTotal/yara
 
@@ -124,4 +123,4 @@ Refer to the `git` repository to retrieve the latest version.
 
 Copyright (c) 2018 Nelson "sk4la" Cornet. Free use of this software is granted under the terms of the MIT license.
 
-See the {uri-license}[LICENSE] file for details.
+See the {uri-license}[LICENSE.adoc] file for details.

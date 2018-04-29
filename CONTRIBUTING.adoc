@@ -1,4 +1,4 @@
-= **plast** — Threat Hunting Framework & Utility
+= +plast+ — Threat Hunting Framework & Utility
 Nelson "sk4la" Cornet <https://github.com/sk4la>
 :caution-caption: :fire:
 :uri-org: https://github.com/sk4la
