@@ -1,33 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from framework.contexts import errors as _errors
-from framework.contexts.logger import Logger as _log
 
 import glob
 import itertools
 import magic
 import os.path
-import types
-
-def iterate_files(files):
-    """
-    .. py:function:: iterate_files(files)
-
-    Iterates over file(s) and yields the corresponding path if existing.
-
-    :param files: list of file(s) path(s)
-    :type files: list
-    
-    :return: path to the existing file(s)
-    :rtype: str
-    """
-
-    for item in files:
-        if not os.path.isfile(item):
-            _log.error("File not found <{}>.".format(item))
-            continue
-
-        yield item
 
 def enumerate_matching_files(reference, patterns, recursive=False):
     """

@@ -19,7 +19,7 @@ except (
 class Post(_models.Post):
     __author__ = "sk4la"
     __description__ = "AsciiDoc postprocessing module."
-    __license__ = "MIT <https://raw.githubusercontent.com/sk4la/plast/master/LICENSE>"
+    __license__ = "MIT <https://github.com/sk4la/plast/blob/master/LICENSE.adoc>"
     __maintainer__ = ["sk4la"]
     __system__ = ["Darwin", "Linux", "Windows"]
     __version__ = "0.1"

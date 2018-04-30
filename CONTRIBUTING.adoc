@@ -3,8 +3,7 @@ Nelson "sk4la" Cornet <https://github.com/sk4la>
 :caution-caption: :fire:
 :uri-org: https://github.com/sk4la
 :uri-repo: {uri-org}/plast
-:uri-raw: https://raw.githubusercontent.com/sk4la/plast
-:uri-readme: {uri-raw}/master/README.adoc
+:uri-readme: {uri-repo}/blob/master/README.adoc
 
 image:https://img.shields.io/badge/python-3.7-blue.svg[link={uri-python}] image:https://img.shields.io/badge/license-MIT-green.svg[link={uri-license}]
 
@@ -20,7 +19,7 @@ The `plast` project can only be useful if there are modules helping to process c
 
 Following this goal, the framework allows to easily integrate new modules by creating custom classes and simply dropping them in the `framework/modules/*` directories. That's it.
 
-=== Custom modules
+=== Writing custom modules
 
 The core process is handled by three main classes defined in the `framework.contexts.models` module. This module defines:
 
@@ -30,7 +29,7 @@ The core process is handled by three main classes defined in the `framework.cont
 
 *A module must be a subclass of one of these reference classes.*
 
-==== Preprocessing
+==== Preprocessing (`Pre`) modules
 
 Preprocessing is handled by the `Pre` reference class from the `framework.contexts.models` module. To create a preprocessing module, one needs to create a module containing a subclass of `framework.contexts.models.Pre` named `Pre`.
 
@@ -76,10 +75,20 @@ class Pre(_models.Pre):
 
 The syntax is based on the `argparse` module syntax.
 
-==== Postprocessing
+==== Postprocessing (`Post`) modules
 
 `TODO`
 
-==== Callback
+==== Callback (`Callback`) modules
 
 `TODO`
+
+=== Interacting with the application
+
+==== Logger
+
+TODO.
+
+==== API
+
+TODO.

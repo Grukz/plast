@@ -37,8 +37,8 @@ def _argparser(parser, modules={}):
     :param modules: dictionary containing loaded modules
     :type modules: dict
 
-    :param parser: dictionary containing loaded module(s) and the processed command-line argument(s)
-    :rtype: dict 
+    :param parser: tuple containing the loaded module(s) and the processed command-line argument(s)
+    :rtype: tuple
     """
 
     parser.add_argument(
@@ -90,10 +90,7 @@ def _argparser(parser, modules={}):
             if getattr(modules[name], "__version__", None):
                 parser.register_version(subparser, modules[name].__name__, modules[name].__version__)
 
-    return {
-        "modules": modules,
-        "arguments": parser.parse_args()
-    }
+    return modules, parser.parse_args()
 
 def main(container):
     """
@@ -101,22 +98,22 @@ def main(container):
 
     Main entry point for the program.
 
-    :param self: dictionary containing loaded module(s) and processed command-line argument(s)
-    :type self: dict
+    :param self: tuple containing the loaded module(s) and processed command-line argument(s)
+    :type self: tuple
     """
 
-    _log.set_console_level(container["arguments"].logging.upper())
+    _log.set_console_level(container[1].logging.upper())
 
-    if not container["arguments"]._subparser:
+    if not container[1]._subparser:
         _log.fault("Nothing to be done.")
 
     if not _checker.number_rulesets():
         _log.fault("No YARA rulesets found. Nothing to be done.")
 
-    case = _case.Case(container["arguments"])
+    case = _case.Case(container[1])
     case.create_arborescence()
 
-    Module = container["modules"][container["arguments"]._subparser]
+    Module = container[0][container[1]._subparser]
     Module.case = case
 
     with _magic.Hole(Exception, action=lambda:_log.fault("Fatal exception raised within preprocessing module <{}>.".format(Module.__class__.__name__), trace=True)), _magic.Invocator(Module):

@@ -225,6 +225,29 @@ class Case:
 
         return directory
 
+    def _iterate_existing_files(self, evidences):
+        """
+        .. py:function:: _iterate_existing_files(self, evidences)
+
+        Iterates over file(s) and yields the corresponding path if existing.
+
+        :param self: current class instance
+        :type self: class
+
+        :param files: list of file(s) path(s)
+        :type files: list
+
+        :return: path to the existing file(s)
+        :rtype: str
+        """
+
+        for file in evidences:
+            if not os.path.isfile(file):
+                _log.error("File not found <{}>.".format(file))
+                continue
+
+            yield file
+
     def track_file(self, evidence):
         """
         .. py:function:: track_file(self, evidence)
@@ -258,7 +281,7 @@ class Case:
         :type evidence: list
         """
 
-        for evidence in _magic._iterate_files(evidences):
+        for evidence in self._iterate_existing_files(evidences):
             self.track_file(evidence)
 
     def track_process(self, pid):
