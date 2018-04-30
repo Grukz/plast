@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from framework.api import magic as _magic
-from framework.api.checker import Checker as _checker
+from framework.api.external import filesystem as _fs
+from framework.api.internal.checker import Checker as _checker
 
 from framework.contexts import errors as _errors
+from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
 from framework.contexts.meta import Configuration as _conf
 from framework.contexts.meta import Meta as _meta
@@ -26,9 +27,9 @@ class Loader:
     """Assists modules load."""
 
     @staticmethod
-    def load_processor(name, model):
+    def load_module(name, model, silent=False):
         """
-        .. py:function:: load_processor(name, model)
+        .. py:function:: load_module(name, model)
 
         Dynamically loads a registered module.
 
@@ -38,25 +39,33 @@ class Loader:
         :param model: reference class handle
         :type model: class
 
+        :param silent: suppress the warning message
+        :type silent: bool
+
         :return: module class handle
         :rtype: class
         """
 
-        processor = importlib.import_module("framework.processors.{}.{}".format(model.__name__.lower(), name))
+        module = importlib.import_module("framework.modules.{}.{}".format(model.__name__.lower(), name))
 
         try:
-            _checker.check_processor(processor, model)
+            _checker.check_module(module, model)
 
         except _errors.NotFoundError:
-            _log.fault("No subclass found in module <{}.{}>. Quitting.".format(model.__name__, name), trace=True)
+            _log.fault("No subclass found in module <{}.{}>. Quitting.".format(model.__name__.lower(), name), trace=True)
 
         except _errors.ModuleInheritanceError:
-            _log.fault("Processor <{}.{}> not inheriting from the base class. Quitting.".format(model.__name__, name), trace=True)
+            _log.fault("Module <{}.{}> not inheriting from the base class. Quitting.".format(model.__name__.lower(), name), trace=True)
 
         except _errors.SystemNotSupportedError:
-            _log.fault("Processor <{}.{}> does not support the current system <{}>. Quitting.".format(model.__name__, name, platform.system()))
+            if model.__name__ == _models.Pre.__name__:
+                _log.fault("Module <{}.{}> does not support the current system <{}>. Quitting.".format(model.__name__.lower(), name, platform.system()))  
 
-        return getattr(processor, model.__name__)
+            elif not silent:
+                _log.warning("Module <{}.{}> incompatible with the current system <{}>. Ignoring.".format(model.__name__.lower(), name, platform.system()))
+                return None
+
+        return getattr(module, model.__name__)
 
     @staticmethod
     def iterate_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filters=_conf.YARA_EXTENSION_FILTERS):
@@ -75,13 +84,13 @@ class Loader:
         :rtype: tuple
         """
 
-        for file in _magic.enumerate_matching_files(directory, globbing_filters, recursive=True):
+        for file in _fs.enumerate_matching_files(directory, globbing_filters, recursive=True):
             yield os.path.splitext(os.path.basename(file))[0], file
 
     @staticmethod
-    def iterate_processors(package, model):
+    def iterate_modules(package, model, silent=False):
         """
-        .. py:function:: iterate_processors(package, model)
+        .. py:function:: iterate_modules(package, model)
 
         Iterates through the available YARA ruleset(s).
 
@@ -91,19 +100,20 @@ class Loader:
         :param model: reference module class handle
         :type model: class
 
+        :param silent: suppress the warning message
+        :type silent: bool
+
         :return: name of the current module and its handle
         :rtype: tuple
         """
 
         for _, name, __ in pkgutil.iter_modules(package.__path__):
-            module = Loader.load_processor(name, model)
-
-            yield name, module
+            yield name, Loader.load_module(name, model, silent=silent)
 
     @staticmethod
-    def render_processors(package, model):
+    def render_modules(package, model):
         """
-        .. py:function:: render_processors(package, model)
+        .. py:function:: render_modules(package, model)
 
         Renders available module(s) name(s) as a list.
 
@@ -123,7 +133,7 @@ class Loader:
         except _errors.InvalidPackageError:
             _log.fault("Invalid package <{}>.".format(package), trace=True)
 
-        return [os.path.splitext(name)[0] for name, _ in Loader.iterate_processors(package, model)]
+        return [os.path.splitext(name)[0] for name, _ in Loader.iterate_modules(package, model, silent=True)]
 
     @staticmethod
     def _load_memory_buffers(buffers):

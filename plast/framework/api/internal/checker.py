@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from framework.api import magic as _magic
+from framework.api.external import filesystem as _fs
 
 from framework.contexts import errors as _errors
 from framework.contexts.meta import Configuration as _conf
@@ -60,7 +60,7 @@ class Checker:
         :rtype: int
         """
 
-        return sum(1 for _ in _magic.enumerate_matching_files(directory, globbing_filters, recursive=True))
+        return sum(1 for _ in _fs.enumerate_matching_files(directory, globbing_filters, recursive=True))
 
     @staticmethod
     def check_package(package):
@@ -79,9 +79,9 @@ class Checker:
             raise _errors.InvalidPackageError
 
     @staticmethod
-    def check_processor(object, model):
+    def check_module(object, model):
         """
-        .. py:function:: check_processor(object, model)
+        .. py:function:: check_module(object, model)
 
         Checks wether :code:`object` is a valid module.
 
@@ -102,24 +102,5 @@ class Checker:
         if not issubclass(getattr(object, model.__name__), model):
             raise _errors.ModuleInheritanceError
 
-        if not platform.system() in getattr(object, "__system__", []):
+        if platform.system() not in getattr(getattr(object, model.__name__, None), "__system__", []):
             raise _errors.SystemNotSupportedError
-
-    @staticmethod
-    def check_mime_type(target, types=[]):
-        """
-        .. py:function:: check_mime_type(target, types=[])
-
-        Checks wether the MIME-type of :code:`target` is included in :code:`types`.
-
-        :param target: absolute path to the file to check
-        :type target: str
-
-        :param types: list of authorized MIME-types
-        :type types: list
-
-        :raises InvalidMIMETypeError: if the MIME-type of :code:`target` is not present in :code:`types`
-        """
-
-        if not magic.from_file(target, mime=True) in types:
-            raise _errors.InvalidMIMETypeError

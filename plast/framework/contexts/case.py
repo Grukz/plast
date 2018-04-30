@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from framework.api.checker import Checker as _checker
+from framework.api.internal.checker import Checker as _checker
 
 from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log

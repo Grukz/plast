@@ -1,4 +1,2 @@
-Spawn pool-based processes for dynamically-loaded models.Post module(s).
 Complete the API documentation in CONTRIBUTING.adoc.
-Separate --attach option from the `filesystem` preprocessor (create a `process` preprocessor).
 Create ttygifs for basic usage case(s).

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from framework.api import magic as _magic
-from framework.api.loader import Loader as _loader
+from framework.api.internal import magic as _magic
+from framework.api.internal.loader import Loader as _loader
 
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
@@ -127,9 +127,9 @@ class Engine:
 
             return results[1].value
 
-    def _invoke_postprocessors(self):
+    def _invoke_post_modules(self):
         """
-        .. py:function:: _invoke_postprocessors(self)
+        .. py:function:: _invoke_post_modules(self)
 
         Invoke the selected :code:`models.Post` module(s).
 
@@ -137,12 +137,15 @@ class Engine:
         :type self: class
         """
 
-        for postprocessor in self.case.arguments.post:
-            Postprocessor = _loader.load_processor(postprocessor, _models.Post)()
-            Postprocessor.__name__ = postprocessor
+        for name in self.case.arguments.post:
+            Module = _loader.load_module(name, _models.Post)
 
-            with _magic.Invocator(Postprocessor):
-                Postprocessor.run(self.case)
+            if Module:
+                module = Module()
+                module.__name__ = name
+
+                with _magic.Invocator(module):
+                    module.run(self.case)
 
     def run(self):
         """
@@ -167,4 +170,4 @@ class Engine:
             _log.warning("Skipping <{}> module(s) invocation.".format(_models.Post.__name__))
             return
 
-        self._invoke_postprocessors()
+        self._invoke_post_modules()

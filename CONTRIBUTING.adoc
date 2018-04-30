@@ -18,7 +18,7 @@ Please refer to the instructions in {uri-license}[README.adoc] to install the la
 
 The `plast` project can only be useful if there are modules helping to process custom data formats.
 
-Following this goal, the framework allows to easily integrate new modules by creating custom classes and simply dropping them in the `framework/processors/*` directories. That's it.
+Following this goal, the framework allows to easily integrate new modules by creating custom classes and simply dropping them in the `framework/modules/*` directories. That's it.
 
 === Custom modules
 

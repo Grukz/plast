@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from framework.api import magic as _magic
-from framework.api import parser as _parser
+from framework.api.external import filesystem as _fs
+from framework.api.internal import parser as _parser
 
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
@@ -10,7 +10,7 @@ import os.path
 
 class Pre(_models.Pre):
     __author__ = "sk4la"
-    __description__ = "Simple preprocessor that feeds file(s) to the engine."
+    __description__ = "Simple preprocessing module that feeds file(s) to the engine."
     __license__ = "MIT <https://raw.githubusercontent.com/sk4la/plast/master/LICENSE>"
     __maintainer__ = ["sk4la"]
     __system__ = ["Darwin", "Linux", "Windows"]
@@ -38,7 +38,7 @@ class Pre(_models.Pre):
             help="walk through directory(ies) recursively")
 
         parser.add_argument(
-            "--filter", nargs="+", default=["*"], metavar="FILTER", 
+            "--filters", nargs="+", default=["*"], metavar="FILTER", 
             help="custom shell-like globbing filter(s)")
 
     def _track_files(self):
@@ -56,7 +56,7 @@ class Pre(_models.Pre):
                 self.case.track_file(file)
 
             elif os.path.isdir(item):
-                for file in _magic.enumerate_matching_files(item, self.case.arguments.filters, recursive=self.case.arguments.recursive):
+                for file in _fs.enumerate_matching_files(item, self.case.arguments.filters, recursive=self.case.arguments.recursive):
                     if os.path.isfile(file):
                         self.case.track_file(file)
 

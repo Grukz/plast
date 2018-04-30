@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from framework.api.renderer import Renderer as _renderer
+from framework.api.internal.renderer import Renderer as _renderer
 
 from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log
@@ -198,68 +198,3 @@ class Invocator:
         """
 
         _log.debug("Ended <{}> session <{}>.".format(self.module.__class__.__name__, self.module.__name__))
-
-def _iterate_files(files):
-    """
-    .. py:function:: _iterate_files(files)
-
-    Iterates over file(s) and yields the corresponding path if existing.
-
-    :param files: list of file(s) path(s)
-    :type files: list
-    
-    :return: path to the existing file(s)
-    :rtype: str
-    """
-
-    for item in files:
-        if not os.path.isfile(item):
-            _log.error("File not found <{}>.".format(item))
-            continue
-
-        yield item
-
-def _iterate_matches(target):
-    """
-    .. py:function:: _iterate_matches(target)
-
-    Iterates over match(es) and yields a Python dictionary representation of each.
-
-    :param target: path to the file containing the match(es)
-    :type target: str
-    
-    :return: dictionary representation of the match
-    :rtype: dict
-    """
-
-    with open(target) as matches:
-        for match in matches:
-            try:
-                yield _renderer.from_json(match)
-
-            except (
-                _errors.CharacterEncodingError,
-                _errors.InvalidObjectError):
-
-                _log.error("Failed to interpret match <{}>.".format(match))
-
-def enumerate_matching_files(reference, patterns, recursive=False):
-    """
-    .. py:function:: enumerate_matching_files(reference, patterns)
-
-    Returns an iterator pointing to the matching file(s) based on shell-like pattern(s).
-
-    :param reference: absolute path to the rulesets directory
-    :type reference: str
-
-    :param patterns: list of globbing filter(s) to apply for the search
-    :type patterns: list
-
-    :param recursive: set to True to walk directory(ies) recursively
-    :type recursive: bool
-
-    :return: set containing the absolute path(s) of the matching file(s)
-    :rtype: set
-    """
-
-    return set(itertools.chain.from_iterable(glob.iglob(os.path.join(reference, ("**" if recursive else ""), pattern), recursive=recursive) for pattern in patterns))

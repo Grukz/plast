@@ -3,7 +3,7 @@
 from framework.contexts.logger import Logger as _log
 
 class Pre:
-    """Base preprocessor class."""
+    """Base preprocessing module class."""
 
     __slots__ = [
         "__author__", 
@@ -21,7 +21,7 @@ class Pre:
         _log.warning("Unimplemented <{}> module.".format(self.__class__.__name__))
 
 class Post:
-    """Base postprocessor class."""
+    """Base postprocessing module class."""
 
     __slots__ = [
         "__author__", 
@@ -36,7 +36,7 @@ class Post:
         _log.warning("Unimplemented <{}> module.".format(self.__class__.__name__))
 
 class Callback:
-    """Base callback class."""
+    """Base callback module class."""
 
     __slots__ = [
         "__author__", 

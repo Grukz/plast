@@ -113,7 +113,9 @@ plast -o out --callbacks=example --post=example filesystem -i case
 
 == Contributing
 
-Please refer to the instructions provided in {uri-contrib}[CONTRIBUTING.adoc] to get started.
+Everyone is welcome to contribute to the project. I'll be happy to include community modules to the public repository.
+
+Please refer to the instructions provided in {uri-contrib}[CONTRIBUTING.adoc] before submitting pull request(s).
 
 == Versioning
 

@@ -7,10 +7,10 @@ from framework.contexts.meta import Meta as _meta
 _meta.set_package(__file__)
 _conf._load_configuration(_meta.__conf__)
 
-from framework.api import magic as _magic
-from framework.api import parser as _parser
-from framework.api.checker import Checker as _checker
-from framework.api.loader import Loader as _loader
+from framework.api.internal import magic as _magic
+from framework.api.internal import parser as _parser
+from framework.api.internal.checker import Checker as _checker
+from framework.api.internal.loader import Loader as _loader
 
 from framework.contexts import models as _models
 from framework.contexts import case as _case
@@ -18,9 +18,9 @@ from framework.contexts.logger import Logger as _log
 
 from framework.core import engine as _engine
 
-import framework.processors.callback as _callback
-import framework.processors.pre as _pre
-import framework.processors.post as _post
+import framework.modules.callback as _callback
+import framework.modules.pre as _pre
+import framework.modules.post as _post
 
 import argparse
 import multiprocessing
@@ -46,8 +46,12 @@ def _argparser(parser, modules={}):
         help="path to the output directory to be created for the current case")
 
     parser.add_argument(
-        "--callbacks", nargs="*", choices=_loader.render_processors(_callback, _models.Callback), default=_loader.render_processors(_callback, _models.Callback), action=_parser.Unique,
+        "--callbacks", nargs="*", choices=_loader.render_modules(_callback, _models.Callback), default=_loader.render_modules(_callback, _models.Callback), action=_parser.Unique,
         help="select the callback(s) that will handle the resulting data [*]")
+
+    parser.add_argument(
+        "--fast", action="store_true",
+        help="enable YARA's fast matching mode")
 
     parser.add_argument(
         "--format", choices=["json"], default=_conf.OUTPUT_FORMAT,
@@ -67,17 +71,17 @@ def _argparser(parser, modules={}):
         help="force the overwriting of an existing output directory")
 
     parser.add_argument(
-        "--post", nargs="*", choices=_loader.render_processors(_post, _models.Post), default=_loader.render_processors(_post, _models.Post), action=_parser.Unique,
-        help="select the postprocessor(s) that will handle the resulting data [*]")
+        "--post", nargs="*", choices=_loader.render_modules(_post, _models.Post), default=_loader.render_modules(_post, _models.Post), action=_parser.Unique,
+        help="select the postprocessing module(s) that will handle the resulting data [*]")
 
     parser.add_argument(
         "--processes", type=int, choices=range(1, 1001), default=(multiprocessing.cpu_count() or _conf.FALLBACK_PROCESSES), metavar="NUMBER",
         help="override the number of concurrent processe(s) [{}]".format(multiprocessing.cpu_count() or _conf.FALLBACK_PROCESSES))
 
-    for name, Processor in _loader.iterate_processors(_pre, _models.Pre):
-        subparser = parser.subparsers.add_parser(name, description=getattr(Processor, "__description__", None), add_help=False)
+    for name, Module in _loader.iterate_modules(_pre, _models.Pre):
+        subparser = parser.subparsers.add_parser(name, description=getattr(Module, "__description__", None), add_help=False)
 
-        modules[name] = Processor(subparser)
+        modules[name] = Module(subparser)
         modules[name].__name__ = name
 
         with _magic.Hole(argparse.ArgumentError):
@@ -112,18 +116,21 @@ def main(container):
     case = _case.Case(container["arguments"])
     case.create_arborescence()
 
-    Preprocessor = container["modules"][container["arguments"]._subparser]
-    Preprocessor.case = case
+    Module = container["modules"][container["arguments"]._subparser]
+    Module.case = case
 
-    with _magic.Hole(Exception, action=lambda:_log.fault("Fatal exception raised within preprocessor <{}>.".format(Preprocessor.__class__.__name__), trace=True)), _magic.Invocator(Preprocessor):
-        Preprocessor.run()
+    with _magic.Hole(Exception, action=lambda:_log.fault("Fatal exception raised within preprocessing module <{}>.".format(Module.__class__.__name__), trace=True)), _magic.Invocator(Module):
+        Module.run()
 
-    del Preprocessor
+    del Module
 
     if not (case.resources["evidences"]["files"] or case.resources["evidences"]["processes"]):
         _log.fault("No evidence(s) to process. Quitting.")
 
     _log.info("Currently tracking <{}> file(s) and <{}> live process(es).".format(len(case.resources["evidences"]["files"]), len(case.resources["evidences"]["processes"])))
+
+    if case.arguments.fast:
+        _log.warning("Fast mode is enabled. Some occurences may be ommited, be careful.")
 
     _engine.Engine(case).run()
 

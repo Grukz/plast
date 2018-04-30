@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from framework.api.renderer import Renderer as _renderer
+from framework.api.internal.renderer import Renderer as _renderer
 
 from framework.contexts.logger import Logger as _log
 from framework.contexts.meta import Configuration as _conf

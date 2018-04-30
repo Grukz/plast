@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from framework.api.loader import Loader as _loader
+from framework.api.internal import magic as _magic
+from framework.api.internal.loader import Loader as _loader
 
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
@@ -23,7 +24,7 @@ except (
 class File:
     """Core multiprocessed class that processes the file-based evidence(s) asynchronously."""
 
-    def __init__(self, algorithms, callbacks, queue):
+    def __init__(self, algorithms, callbacks, queue, fast=False):
         """
         .. py:function:: __init__(self, algorithms, callbacks, queue)
 
@@ -37,14 +38,18 @@ class File:
 
         :param callbacks: list containing the name of the :code:`models.Callback` modules to invoke
         :type callbacks: list
-        
+
+        :param fast: flag specifying wether YARA must be performing a fast scan
+        :type fast: bool
+
         :param queue: :code:`multiprocessing.Manager.Queue` instance
         :type queue: class
         """
 
         self.algorithms = algorithms
-        self.queue = queue
         self.callbacks = callbacks
+        self.queue = queue
+        self.fast = fast
 
     def _compute_hash(self, evidence, algorithm="sha256", buffer_size=65536):
         """
@@ -95,8 +100,14 @@ class File:
         """
 
         for name in self.callbacks:
-            _loader.load_processor(name, _models.Callback)().run(data)
-            _log.debug("Invoked callback <{}>.".format(name))
+            Module = _loader.load_module(name, _models.Callback)
+
+            if Module:
+                module = Module()
+                module.__name__ = name
+
+                with _magic.Invocator(module):
+                    module.run(data)
 
     def _process_evidence(self):
         """
@@ -110,7 +121,7 @@ class File:
 
         for _, buffer in self.buffers.items():
             try:
-                for match in buffer.match(self.evidence, timeout=_conf.YARA_MATCH_TIMEOUT):
+                for match in buffer.match(self.evidence, timeout=_conf.YARA_MATCH_TIMEOUT, fast=self.fast):
                     hashes = {}
 
                     for algorithm in self.algorithms:
@@ -174,7 +185,7 @@ class File:
 class Process:
     """Core multiprocessed class that processes the process-based evidence(s) asynchronously."""
 
-    def __init__(self, callbacks, queue):
+    def __init__(self, callbacks, queue, fast=False):
         """
         .. py:function:: __init__(self, callbacks, queue)
 
@@ -185,13 +196,17 @@ class Process:
 
         :param callbacks: list containing the name of the :code:`models.Callback` modules to invoke
         :type callbacks: list
-        
+
+        :param fast: flag specifying wether YARA must be performing a fast scan
+        :type fast: bool
+
         :param queue: :code:`multiprocessing.Manager.Queue` instance
         :type queue: class
         """
 
-        self.queue = queue
         self.callbacks = callbacks
+        self.queue = queue
+        self.fast = fast
 
     def _invoke_callbacks(self, data):
         """
@@ -207,8 +222,14 @@ class Process:
         """
 
         for name in self.callbacks:
-            _loader.load_processor(name, _models.Callback)().run(data)
-            _log.debug("Invoked callback <{}>.".format(name))
+            Module = _loader.load_module(name, _models.Callback)
+
+            if Module:
+                module = Module()
+                module.__name__ = name
+
+                with _magic.Invocator(module):
+                    module.run(data)
 
     def _process_evidence(self):
         """
@@ -222,7 +243,7 @@ class Process:
 
         for _, buffer in self.buffers.items():
             try:
-                for match in buffer.match(pid=self.evidence, timeout=_conf.YARA_MATCH_TIMEOUT):
+                for match in buffer.match(pid=self.evidence, timeout=_conf.YARA_MATCH_TIMEOUT, fast=self.fast):
                     for action in [self.queue.put, self._invoke_callbacks]:
                         action({
                             "origin": _meta.__package__,

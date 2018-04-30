@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from framework.api.renderer import Renderer as _renderer
+from framework.api.internal.renderer import Renderer as _renderer
 
 import pathlib
 

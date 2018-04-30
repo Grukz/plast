@@ -4,7 +4,7 @@ from framework.contexts import models as _models
 
 class Pre(_models.Pre):
     __author__ = "sk4la"
-    __description__ = "Simple preprocessor that feeds live process(es) to the engine."
+    __description__ = "Simple preprocessing module that feeds live process(es) to the engine."
     __license__ = "MIT <https://raw.githubusercontent.com/sk4la/plast/master/LICENSE>"
     __maintainer__ = ["sk4la"]
     __system__ = ["Darwin", "Linux", "Windows"]
