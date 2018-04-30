@@ -6,12 +6,11 @@ from framework.api import parser as _parser
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
 
-import glob
 import os.path
 
 class Pre(_models.Pre):
     __author__ = "sk4la"
-    __description__ = "Simple filesystem-based preprocessor."
+    __description__ = "Simple preprocessor that feeds file(s) to the engine."
     __license__ = "MIT <https://raw.githubusercontent.com/sk4la/plast/master/LICENSE>"
     __maintainer__ = ["sk4la"]
     __system__ = ["Darwin", "Linux", "Windows"]
@@ -31,11 +30,7 @@ class Pre(_models.Pre):
         """
 
         parser.add_argument(
-            "-a", "--attach", nargs="+", type=int, metavar="PID", 
-            help="input process identifier(s)")
-
-        parser.add_argument(
-            "-i", "--input", nargs="+", action=_parser.MultipleAbsolutePath, metavar="PATH", 
+            "-i", "--input", nargs="+", action=_parser.MultipleAbsolutePath, required=True, metavar="PATH", 
             help="input file(s) or directory(ies)")
 
         parser.add_argument(
@@ -43,7 +38,7 @@ class Pre(_models.Pre):
             help="walk through directory(ies) recursively")
 
         parser.add_argument(
-            "--filters", nargs="+", default=["*"], metavar="FILTER", 
+            "--filter", nargs="+", default=["*"], metavar="FILTER", 
             help="custom shell-like globbing filter(s)")
 
     def _track_files(self):
@@ -68,19 +63,6 @@ class Pre(_models.Pre):
             else:
                 _log.warning("Unknown inode type for object <{}>.".format(item))
 
-    def _track_processes(self):
-        """
-        .. py:function:: _track_processes(self)
-
-        Tracks valid process(es) to analyze.
-
-        :param self: current class instance
-        :type self: class
-        """
-
-        for item in self.case.arguments.attach:
-            self.case.track_process(item)
-
     def run(self):
         """
         .. py:function:: run(self)
@@ -90,9 +72,6 @@ class Pre(_models.Pre):
         :param self: current class instance
         :type self: class
         """
-
-        if self.case.arguments.attach:
-            self._track_processes()
 
         if self.case.arguments.input:
             self._track_files()

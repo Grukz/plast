@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 
-class InvalidPackage(Exception):
+class InvalidPackageError(Exception):
     pass
 
-class InvalidObject(Exception):
+class InvalidObjectError(Exception):
     pass
 
-class EncodingError(Exception):
+class CharacterEncodingError(Exception):
     pass
 
-class MalformatedData(Exception):
+class MalformatedDataError(Exception):
     pass
 
-class ProcessorNotFound(Exception):
+class NotFoundError(Exception):
     pass
 
-class ProcessorNotInherited(Exception):
+class ModuleInheritanceError(Exception):
     pass
 
-class InvalidMIMEType(Exception):
+class SystemNotSupportedError(Exception):
+    pass
+
+class InvalidMIMETypeError(Exception):
     pass

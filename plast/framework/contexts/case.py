@@ -105,7 +105,7 @@ class Case:
             try:
                 answer = _checker.sanitize_data(input(message))
 
-            except _errors.MalformatedData:
+            except _errors.MalformatedDataError:
                 _log.fault("Malformated input.")
 
             except KeyboardInterrupt:

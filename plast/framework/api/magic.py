@@ -238,8 +238,8 @@ def _iterate_matches(target):
                 yield _renderer.from_json(match)
 
             except (
-                _errors.EncodingError,
-                _errors.InvalidObject):
+                _errors.CharacterEncodingError,
+                _errors.InvalidObjectError):
 
                 _log.error("Failed to interpret match <{}>.".format(match))
 
@@ -258,8 +258,8 @@ def enumerate_matching_files(reference, patterns, recursive=False):
     :param recursive: set to True to walk directory(ies) recursively
     :type recursive: bool
 
-    :return: iterator pointing to the matching file(s)
-    :rtype: class
+    :return: set containing the absolute path(s) of the matching file(s)
+    :rtype: set
     """
 
-    return itertools.chain.from_iterable(glob.iglob(os.path.join(reference, ("**" if recursive else ""), pattern), recursive=recursive) for pattern in patterns)
+    return set(itertools.chain.from_iterable(glob.iglob(os.path.join(reference, ("**" if recursive else ""), pattern), recursive=recursive) for pattern in patterns))

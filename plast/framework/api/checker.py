@@ -8,6 +8,7 @@ from framework.contexts.meta import Meta as _meta
 
 import magic
 import os.path
+import platform
 import types
 
 class Checker:
@@ -37,10 +38,10 @@ class Checker:
                 return (str().join(_ for _ in data.strip() if _.isalnum())).strip()
 
             except Exception:
-                raise _errors.MalformatedData
+                raise _errors.MalformatedDataError
 
         except Exception:
-            raise _errors.MalformatedData
+            raise _errors.MalformatedDataError
 
     @staticmethod
     def number_rulesets(directory=os.path.join(_meta.__root__, "rulesets"), globbing_filters=_conf.YARA_EXTENSION_FILTERS):
@@ -71,11 +72,11 @@ class Checker:
         :param package: handle to a Python package
         :type package: class
 
-        :raises InvalidPackage: if the package is not a valid Python package
+        :raises InvalidPackageError: if the package is not a valid Python package
         """
 
         if not isinstance(package, types.ModuleType):
-            raise _errors.InvalidPackage
+            raise _errors.InvalidPackageError
 
     @staticmethod
     def check_processor(object, model):
@@ -90,15 +91,19 @@ class Checker:
         :param model: reference module class handle
         :type model: class
 
-        :raises ProcessorNotFound: if no subclass of one of the reference models can be found in :code:`object`
-        :raises ProcessorNotInherited: if the class found in :code:`object` does not inherit from the reference model
+        :raises NotFoundError: if no subclass of one of the reference models can be found in :code:`object`
+        :raises ModuleInheritanceError: if the class found in :code:`object` does not inherit from the reference model
+        :raises SystemNotSupportedError: if the module does not support the current system
         """
 
         if not hasattr(object, model.__name__):
-            raise _errors.ProcessorNotFound
+            raise _errors.NotFoundError
 
         if not issubclass(getattr(object, model.__name__), model):
-            raise _errors.ProcessorNotInherited
+            raise _errors.ModuleInheritanceError
+
+        if not platform.system() in getattr(object, "__system__", []):
+            raise _errors.SystemNotSupportedError
 
     @staticmethod
     def check_mime_type(target, types=[]):
@@ -113,8 +118,8 @@ class Checker:
         :param types: list of authorized MIME-types
         :type types: list
 
-        :raises InvalidMIMEType: if the MIME-type of :code:`target` is not present in :code:`types`
+        :raises InvalidMIMETypeError: if the MIME-type of :code:`target` is not present in :code:`types`
         """
 
         if not magic.from_file(target, mime=True) in types:
-            raise _errors.InvalidMIMEType
+            raise _errors.InvalidMIMETypeError

@@ -11,6 +11,7 @@ from framework.contexts.meta import Meta as _meta
 import importlib
 import os.path
 import pkgutil
+import platform
 
 try:
     import yara
@@ -39,9 +40,6 @@ class Loader:
 
         :return: module class handle
         :rtype: class
-
-        :raises ProcessorNotFound: if no subclass of one of the reference models can be found in :code:`name`
-        :raises ProcessorNotInherited: if the class found in :code:`name` does not inherit from the reference class :code:`model`
         """
 
         processor = importlib.import_module("framework.processors.{}.{}".format(model.__name__.lower(), name))
@@ -49,11 +47,14 @@ class Loader:
         try:
             _checker.check_processor(processor, model)
 
-        except _errors.ProcessorNotFound:
-            _log.fault("No subclass found in module <{}>.".format(name), trace=True)
+        except _errors.NotFoundError:
+            _log.fault("No subclass found in module <{}.{}>. Quitting.".format(model.__name__, name), trace=True)
 
-        except _errors.ProcessorNotInherited:
-            _log.fault("Processor <{}.{}> not inheriting from the base class.".format(name, model.__name__), trace=True)
+        except _errors.ModuleInheritanceError:
+            _log.fault("Processor <{}.{}> not inheriting from the base class. Quitting.".format(model.__name__, name), trace=True)
+
+        except _errors.SystemNotSupportedError:
+            _log.fault("Processor <{}.{}> does not support the current system <{}>. Quitting.".format(model.__name__, name, platform.system()))
 
         return getattr(processor, model.__name__)
 
@@ -95,7 +96,9 @@ class Loader:
         """
 
         for _, name, __ in pkgutil.iter_modules(package.__path__):
-            yield name, Loader.load_processor(name, model)
+            module = Loader.load_processor(name, model)
+
+            yield name, module
 
     @staticmethod
     def render_processors(package, model):
@@ -117,7 +120,7 @@ class Loader:
         try:
             _checker.check_package(package)
 
-        except _errors.InvalidPackage:
+        except _errors.InvalidPackageError:
             _log.fault("Invalid package <{}>.".format(package), trace=True)
 
         return [os.path.splitext(name)[0] for name, _ in Loader.iterate_processors(package, model)]

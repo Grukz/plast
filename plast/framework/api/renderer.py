@@ -27,15 +27,15 @@ class Renderer:
         :return: dictionary translation of :code:`data`
         :rtype: dict
 
-        :raises EncodingError: if :code:`data` cannot be decoded
-        :raises InvalidObject: if :code:`data` is malformated
+        :raises CharacterEncodingError: if :code:`data` cannot be decoded
+        :raises InvalidObjectError: if :code:`data` is malformated
         """
 
         try:
             return json.loads(data)
 
         except UnicodeDecodeError:
-            raise _errors.EncodingError
+            raise _errors.CharacterEncodingError
 
         except (
             OverflowError,
@@ -43,7 +43,7 @@ class Renderer:
             ValueError,
             Exception):
 
-            raise _errors.InvalidObject
+            raise _errors.InvalidObjectError
 
     @staticmethod
     def to_json(data):
@@ -58,15 +58,15 @@ class Renderer:
         :return: JSON-encoded translation of :code:`data`
         :rtype: str
 
-        :raises EncodingError: if :code:`data` cannot be encoded
-        :raises InvalidObject: if :code:`data` is malformated
+        :raises CharacterEncodingError: if :code:`data` cannot be encoded
+        :raises InvalidObjectError: if :code:`data` is malformated
         """
 
         try:
             return json.dumps(data)
 
         except UnicodeDecodeError:
-            raise _errors.EncodingError
+            raise _errors.CharacterEncodingError
 
         except (
             OverflowError,
@@ -74,4 +74,4 @@ class Renderer:
             ValueError,
             Exception):
 
-            raise _errors.InvalidObject
+            raise _errors.InvalidObjectError
