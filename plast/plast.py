@@ -50,7 +50,7 @@ def _argparser(parser, modules={}):
         help="select the callback(s) that will handle the resulting data [*]")
 
     parser.add_argument(
-        "--fast", action="store_true",
+        "--fast", action="store_true", default=_conf.YARA_FAST_MODE,
         help="enable YARA's fast matching mode")
 
     parser.add_argument(
@@ -127,7 +127,7 @@ def main(container):
     _log.info("Currently tracking <{}> file(s) and <{}> live process(es).".format(len(case.resources["evidences"]["files"]), len(case.resources["evidences"]["processes"])))
 
     if case.arguments.fast:
-        _log.warning("Fast mode is enabled. Some occurences may be ommited, be careful.")
+        _log.warning("Fast mode is enabled. Some strings occurences may be ommited.")
 
     _engine.Engine(case).run()
 

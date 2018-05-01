@@ -1,15 +1,14 @@
-= +plast+ — Threat Hunting Framework & Utility
+= +plast+ — Modular Threat Hunting Tool & Framework
 Nelson "sk4la" Cornet <https://github.com/sk4la>
-:caution-caption: :fire:
-:uri-org: https://github.com/sk4la
-:uri-repo: {uri-org}/plast
+:uri-repo: https://github.com/sk4la/plast
+:uri-license: {uri-repo}/blob/master/LICENSE.adoc
 :uri-readme: {uri-repo}/blob/master/README.adoc
 
 image:https://img.shields.io/badge/python-3.7-blue.svg[link={uri-python}] image:https://img.shields.io/badge/license-MIT-green.svg[link={uri-license}]
 
-`TODO`.
-
 == Getting Started
+
+I'm sorry, {uri-readme}[what's `plast` again?].
 
 Please refer to the instructions in {uri-license}[README.adoc] to install the latest version of the `plast` project.
 
@@ -17,19 +16,19 @@ Please refer to the instructions in {uri-license}[README.adoc] to install the la
 
 The `plast` project can only be useful if there are modules helping to process custom data formats.
 
-Following this goal, the framework allows to easily integrate new modules by creating custom classes and simply dropping them in the `framework/modules/*` directories. That's it.
+Following this direction, the framework allows to easily integrate new modules by creating custom classes and simply dropping them in the `framework/modules/*` directories. That's it.
 
 === Writing custom modules
 
-The core process is handled by three main classes defined in the `framework.contexts.models` module. This module defines:
+The core process is handled by three main classes defined in the `framework.contexts.models` module. This module defines the three `Pre`, `Post` and `Callback` reference classes.
 
-* The `Pre` reference class;
-* The `Post` reference class;
-* And the `Callback` reference class.
+Modules *must* inherit from one of these reference classes.
 
-*A module must be a subclass of one of these reference classes.*
+- `Pre` (or _preprocessing_) modules are meant to handle the data *before* the engine starts matching on YARA rule(s). Only one `Pre` module can be invoked _per_ `plast` instance since this type of module corresponds to a positional CLI argument (eg. `plast file -i sample.pdf`).
+- `Post` (or _postprocessing_) modules are designed to process the match(es) yielded by the YARA engine. Multiple `Post` modules can be called using the `--post` argument on the command-line (eg. `plast --post banana apple orange file -i sample.pdf`). These modules are invoked one after the other so these can be chained at will. The invocation respects the order of the modules given from the `--post` argument.
+- `Callback` modules define the second way to handle the match(es) issued by the YARA engine. Sometimes, during large matching campaigns, postprocessing the match(es) as a whole can be too resource-consuming for the hosting hardware. Therefore, the `Callback` modules allow to manipulate each single match _on the fly_.
 
-==== Preprocessing (`Pre`) modules
+==== `Pre` (or _preprocessing_) modules
 
 Preprocessing is handled by the `Pre` reference class from the `framework.contexts.models` module. To create a preprocessing module, one needs to create a module containing a subclass of `framework.contexts.models.Pre` named `Pre`.
 
@@ -75,17 +74,19 @@ class Pre(_models.Pre):
 
 The syntax is based on the `argparse` module syntax.
 
-==== Postprocessing (`Post`) modules
+==== `Post` (or _postprocessing_) modules
 
 `TODO`
 
-==== Callback (`Callback`) modules
+==== `Callback` modules
 
 `TODO`
 
 === Interacting with the application
 
 ==== Logger
+
+The logger is the main way to interact with the application.
 
 TODO.
 

@@ -106,7 +106,7 @@ class Engine:
             with _magic.Pool(processes=self.case.arguments.processes) as pool:
                 for file in self.case.resources["evidences"]["files"]:
                     pool.starmap_async(
-                        _processors.File(self.case.arguments.hash_algorithms, self.case.arguments.callbacks, queue).run, 
+                        _processors.File(self.case.arguments.hash_algorithms, self.case.arguments.callbacks, queue, self.case.arguments.fast).run, 
                         [(file, self.buffers)], 
                         error_callback=_log.inner_exception)
 
@@ -114,7 +114,7 @@ class Engine:
 
                 for process in self.case.resources["evidences"]["processes"]:
                     pool.starmap_async(
-                        _processors.Process(self.case.arguments.callbacks, queue).run, 
+                        _processors.Process(self.case.arguments.callbacks, queue, self.case.arguments.fast).run, 
                         [(process, self.buffers)], 
                         error_callback=_log.inner_exception)
 
