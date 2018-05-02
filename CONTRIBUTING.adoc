@@ -8,9 +8,9 @@ image:https://img.shields.io/badge/python-3.7-blue.svg[link={uri-python}] image:
 
 == Getting Started
 
-I'm sorry, {uri-readme}[what's `plast` again?].
+Hmmm, {uri-readme}[what's this project about?].
 
-Please refer to the instructions in {uri-license}[README.adoc] to install the latest version of the `plast` project.
+Please refer to the instructions in {uri-license}[README.adoc] to install the latest version of the project.
 
 == Contributing
 
@@ -22,30 +22,37 @@ Following this direction, the framework allows to easily integrate new modules b
 
 The core process is handled by three main classes defined in the `framework.contexts.models` module. This module defines the three `Pre`, `Post` and `Callback` reference classes.
 
-Modules *must* inherit from one of these reference classes.
+Modules *must* inherit from one of these reference classes:
 
-- `Pre` (or _preprocessing_) modules are meant to handle the data *before* the engine starts matching on YARA rule(s). Only one `Pre` module can be invoked _per_ `plast` instance since this type of module corresponds to a positional CLI argument (eg. `plast file -i sample.pdf`).
-- `Post` (or _postprocessing_) modules are designed to process the match(es) yielded by the YARA engine. Multiple `Post` modules can be called using the `--post` argument on the command-line (eg. `plast --post banana apple orange file -i sample.pdf`). These modules are invoked one after the other so these can be chained at will. The invocation respects the order of the modules given from the `--post` argument.
-- `Callback` modules define the second way to handle the match(es) issued by the YARA engine. Sometimes, during large matching campaigns, postprocessing the match(es) as a whole can be too resource-consuming for the hosting hardware. Therefore, the `Callback` modules allow to manipulate each single match _on the fly_.
+* `Pre` (or _preprocessing_) modules are meant to handle the data *before* the engine starts scanning evidence(s). Only one `Pre` module can be invoked _per_ `plast` instance since this type of module corresponds to a positional command-line argument (e.g. `plast -o out file -i sample.pdf`).
+* `Post` (or _postprocessing_) modules are designed to process the match(es) yielded by the engine. Multiple `Post` modules can be called using the `--post` argument (e.g. `plast -o out --post banana apple orange file -i sample.pdf`). These modules are invoked one after the other so these can be chained at will. The invocation sequence respects the order given by the `--post` argument.
+* `Callback` modules are a second way to handle the match(es) issued by the engine. Sometimes, during large matching campaigns, postprocessing the matches as a whole can be too resource-consuming for the hosting hardware. In these kind of situations, `Callback` modules allow to manipulate each single match _on the fly_.
 
 ==== `Pre` (or _preprocessing_) modules
 
-Preprocessing is handled by the `Pre` reference class from the `framework.contexts.models` module. To create a preprocessing module, one needs to create a module containing a subclass of `framework.contexts.models.Pre` named `Pre`.
+Preprocessing is handled by the `Pre` reference class from the `framework.contexts.models` module. To create a `Pre` module, one needs to create a module containing a subclass of `framework.contexts.models.Pre` named `Pre`.
 
-Following is a basic example of a preprocessing module that registers the file-based evidence `infected.pdf` for tracking:
+Following is a basic example of a `Pre` module that simply registers the file-based evidence `infected.pdf` for tracking:
 
 [source,python]
 ----
 from framework.contexts import models as _models
 
 class Pre(_models.Pre):
+    __author__ = "sk4la"
+    __description__ = "Example preprocessing module."
+    __license__ = "MIT <https://github.com/sk4la/plast/blob/master/LICENSE.adoc>"
+    __maintainer__ = ["sk4la"]
+    __system__ = ["Darwin", "Linux", "Windows"]
+    __version__ = "0.1"
+
     def run(self):
         self.case.track_file("/tmp/infected.pdf")
 ----
 
-`Pre` modules must have a `run` method to be invocated by the core engine.
+`Pre` modules must present a `run` method that will be used as the entry point.
 
-Each `Pre` module corresponds to a positional argument in `plast`. One can add command-line argument(s) in the module by overriding the `__init__` method like this:
+Each `Pre` module corresponds to a positional argument in `plast`. One can add module-wide command-line argument(s) by overriding the `__init__` method like this:
 
 [source,python]
 ----
@@ -53,6 +60,13 @@ from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
 
 class Pre(_models.Pre):
+    __author__ = "sk4la"
+    __description__ = "Example preprocessing module."
+    __license__ = "MIT <https://github.com/sk4la/plast/blob/master/LICENSE.adoc>"
+    __maintainer__ = ["sk4la"]
+    __system__ = ["Darwin", "Linux", "Windows"]
+    __version__ = "0.1"
+
     def __init__(self, parser):
         parser.add_argument(
             "-j", "--jobs",
@@ -72,7 +86,9 @@ class Pre(_models.Pre):
             _log.debug("Registering file {}.".format("/tmp/infected.pdf"))
 ----
 
-The syntax is based on the `argparse` module syntax.
+The syntax to register command-line arguments is based on the one from the `argparse` module.
+
+Command-line argument(s) are then accessed through the current `Case` instance (see the chapter below to get a grasp on the `Case` class).
 
 ==== `Post` (or _postprocessing_) modules
 
@@ -83,6 +99,10 @@ The syntax is based on the `argparse` module syntax.
 `TODO`
 
 === Interacting with the application
+
+==== Case
+
+TODO.
 
 ==== Logger
 

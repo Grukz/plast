@@ -69,6 +69,9 @@ class Engine:
             _log.debug("Precompilated YARA ruleset <{}> in memory with a total of <{}> valid rule(s).".format(name, sum(1 for _ in rules)))
             return True
 
+        except yara.SyntaxError:
+            _log.exception("Syntax error in YARA ruleset <{}>.".format(ruleset))
+
         except (
             Exception,
             yara.Error):
@@ -162,6 +165,9 @@ class Engine:
         for name, ruleset in _loader.iterate_rulesets():
             if self._compile_ruleset(name, ruleset):
                 count += 1
+
+        if not count:
+            _log.fault("No YARA rulesets loaded. Quitting.")
 
         _log.info("Applying a total of <{}> YARA ruleset(s).".format(count))
         del count

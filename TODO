@@ -1,5 +1,4 @@
 Complete the API documentation in CONTRIBUTING.adoc.
 Create ttygifs for basic usage case(s).
-Handle YARA rules compilation errors.
 Schema to provide a graphical understanding of the `plast` project.
 Archive `Pre` module.

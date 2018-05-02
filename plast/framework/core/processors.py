@@ -135,7 +135,7 @@ class File:
                                 "identifier": self.evidence
                             },
                             "match": {
-                                "timestamp": pendulum.now().to_datetime_string(),
+                                "timestamp": pendulum.now().format(_conf.TIMESTAMP_FORMAT, formatter="alternative"),
                                 "rule": match.rule,
                                 "meta": match.meta,
                                 "namespace": match.namespace,
@@ -252,7 +252,7 @@ class Process:
                                 "identifier": self.evidence
                             },
                             "match": {
-                                "timestamp": pendulum.now().to_datetime_string(),
+                                "timestamp": pendulum.now().format(_conf.TIMESTAMP_FORMAT, formatter="alternative"),
                                 "rule": match.rule,
                                 "meta": match.meta,
                                 "namespace": match.namespace,
