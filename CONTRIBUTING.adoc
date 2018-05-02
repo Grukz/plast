@@ -92,6 +92,10 @@ Command-line argument(s) are then accessed through the current `Case` instance (
 
 ==== `Post` (or _postprocessing_) modules
 
+Same as `Pre`, `Post` modules must present themselves as subclasses of the reference `framework.contexts.models.Post` class.
+
+Following is a basic example of a `Post` module that simply prints to the console screen the absolute paths to the matching file-based evidences:
+
 `TODO`
 
 ==== `Callback` modules

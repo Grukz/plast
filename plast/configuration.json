@@ -1,5 +1,6 @@
 {
     "LOGGING_LEVEL": "info",
+    "MATCHES_FILE_BASENAME": "matches",
     "FALLBACK_PROCESSES": 4,
     "SYNTAX_HIGHLIGHTING": true,
     "HASH_ALGORITHMS": [
