@@ -63,6 +63,10 @@ def _argparser(parser, modules={}):
         help="output format for detection(s), see hashlib API reference for supported algorithm(s) {}".format(_conf.HASH_ALGORITHMS))
 
     parser.add_argument(
+        "--ignore-warnings", action="store_true", default=_conf.YARA_ERROR_ON_WARNING,
+        help="ignore YARA compilation warning(s)")
+
+    parser.add_argument(
         "--logging", choices=["debug", "info", "warning", "error", "critical", "suppress"], default=_conf.LOGGING_LEVEL,
         help="override the default console logging level [{}]".format(_conf.LOGGING_LEVEL))
 

@@ -5,6 +5,7 @@ from framework.api.internal.loader import Loader as _loader
 
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
+from framework.contexts.meta import Configuration as _conf
 from framework.contexts.types import Codes as _codes
 
 from framework.core import reader as _reader
@@ -61,7 +62,8 @@ class Engine:
         try:
             buffer = io.BytesIO()
 
-            rules = yara.compile(ruleset, includes=True)
+            print("ignoring: {}".format(str(not self.case.arguments.ignore_warnings)))
+            rules = yara.compile(ruleset, includes=_conf.YARA_INCLUDES, error_on_warning=(not self.case.arguments.ignore_warnings))
             rules.save(file=buffer)
 
             self.buffers[ruleset] = buffer

@@ -16,6 +16,8 @@
     "TIMESTAMP_FORMAT": "YYYY-MM-DD HH:mm:ss",
     "YARA_MATCH_TIMEOUT": -1,
     "YARA_FAST_MODE": false,
+    "YARA_INCLUDES": true,
+    "YARA_ERROR_ON_WARNING": true,
     "YARA_EXTENSION_FILTERS": [
         "*.yar",
         "*.txt"
