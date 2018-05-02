@@ -62,7 +62,6 @@ class Engine:
         try:
             buffer = io.BytesIO()
 
-            print("ignoring: {}".format(str(not self.case.arguments.ignore_warnings)))
             rules = yara.compile(ruleset, includes=_conf.YARA_INCLUDES, error_on_warning=(not self.case.arguments.ignore_warnings))
             rules.save(file=buffer)
 
