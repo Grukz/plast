@@ -8,8 +8,14 @@ from framework.contexts.meta import Configuration as _conf
 
 import os
 import psutil
+import random
 import shutil
+import string
 import sys
+
+__all__ = [
+    "Case"
+]
 
 class Case:
     """Centralizes the current case's data."""
@@ -215,10 +221,10 @@ class Case:
 
         seed = self._generate_nonce()
 
-        while os.path.isdir(os.path.join(self.case.resources["case"], seed)):
+        while os.path.isdir(os.path.join(self.resources["case"], seed)):
             seed = self._generate_nonce()
 
-        directory = os.path.join(self.case.resources["case"], seed)
+        directory = os.path.join(self.resources["case"], seed)
 
         self._create_local_directory(directory)
         self.resources["temporary"].append(directory)

@@ -2,6 +2,10 @@
 
 from framework.contexts import models as _models
 
+__all__ = [
+    "Pre"
+]
+
 class Pre(_models.Pre):
     __author__ = "sk4la"
     __description__ = "Simple preprocessing module that feeds live process(es) to the engine."

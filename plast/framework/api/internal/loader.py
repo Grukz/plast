@@ -23,6 +23,10 @@ except (
 
     _log.fault("Import error.", trace=True)
 
+__all__ = [
+    "Loader"
+]
+
 class Loader:
     """Assists modules load."""
 

@@ -21,6 +21,11 @@ except (
 
     _log.fault("Import error.", trace=True)
 
+__all__ = [
+    "File",
+    "Process"
+]
+
 class File:
     """Core multiprocessed class that processes the file-based evidence(s) asynchronously."""
 

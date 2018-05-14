@@ -16,6 +16,10 @@ except (
 
     _log.fault("Import error.", trace=True)
 
+__all__ = [
+    "Post"
+]
+
 class Post(_models.Post):
     __author__ = "sk4la"
     __description__ = "AsciiDoc postprocessing module."

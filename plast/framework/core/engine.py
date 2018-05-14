@@ -24,6 +24,10 @@ except (
 
     _log.fault("Import error.", trace=True)
 
+__all__ = [
+    "Engine"
+]
+
 class Engine:
     """Dispatches the processing to asynchronous jobs."""
 

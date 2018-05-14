@@ -8,6 +8,10 @@ import logging.config
 import multiprocessing
 import sys
 
+__all__ = [
+    "Logger"
+]
+
 class Logger:
     """Main logger class."""
 

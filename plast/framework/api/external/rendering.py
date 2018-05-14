@@ -5,6 +5,10 @@ from framework.api.internal.renderer import Renderer as _renderer
 from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log
 
+__all__ = [
+    "iterate_matches"
+]
+
 def iterate_matches(target):
     """
     .. py:function:: iterate_matches(target)

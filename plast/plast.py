@@ -25,6 +25,8 @@ import framework.modules.post as _post
 import argparse
 import multiprocessing
 
+__all__ = []
+
 def _argparser(parser, modules={}):
     """
     .. py:function:: _argparser(parser, modules={})
@@ -42,7 +44,7 @@ def _argparser(parser, modules={}):
     """
 
     parser.add_argument(
-        "-o", "--output", required=True, action=_parser.SingleAbsolutePath, metavar="PATH",
+        "-o", "--output", required=True, action=_parser.AbsolutePath, metavar="PATH",
         help="path to the output directory to be created for the current case")
 
     parser.add_argument(
@@ -109,7 +111,7 @@ def main(container):
     _log.set_console_level(container[1].logging.upper())
 
     if not container[1]._subparser:
-        _log.fault("Nothing to be done.")
+        _log.fault("Nothing to be done. Try --help.")
 
     if not _checker.number_rulesets():
         _log.fault("No YARA rulesets found. Nothing to be done.")
@@ -136,4 +138,4 @@ def main(container):
     _engine.Engine(case).run()
 
 if __name__ == "__main__":
-    main(_argparser(_parser.CustomParser()))
+    main(_argparser(_parser.Parser()))

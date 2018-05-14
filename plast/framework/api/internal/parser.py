@@ -5,7 +5,14 @@ from framework.contexts.meta import Meta as _meta
 import argparse
 import os.path
 
-class CustomParser:
+__all__ = [
+    "Parser",
+    "AbsolutePath",
+    "AbsolutePathMultiple",
+    "Unique"
+]
+
+class Parser:
     """Custom CLI arguments parser."""
 
     def __init__(self):
@@ -128,7 +135,7 @@ class CustomParser:
 
         return self.parser.parse_args()
 
-class SingleAbsolutePath(argparse.Action):
+class AbsolutePath(argparse.Action):
     """Custom :code:`argparse` action that calls the :code:`os.path.abspath` method on the target."""
 
     def __call__(self, parser, namespace, values, option=None):
@@ -155,7 +162,7 @@ class SingleAbsolutePath(argparse.Action):
 
         setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
 
-class MultipleAbsolutePath(argparse._AppendAction):
+class AbsolutePathMultiple(argparse._AppendAction):
     """Custom :code:`argparse` action that calls the :code:`os.path.abspath` method on every item."""
 
     def __call__(self, parser, namespace, values, option=None):

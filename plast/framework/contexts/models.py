@@ -2,8 +2,14 @@
 
 from framework.contexts.logger import Logger as _log
 
-class Pre:
-    """Base preprocessing module class."""
+__all__ = [
+    "Callback",
+    "Post",
+    "Pre"
+]
+
+class Callback:
+    """Base callback module class."""
 
     __slots__ = [
         "__author__", 
@@ -14,10 +20,7 @@ class Pre:
         "__version__"
     ]
 
-    def __init__(self, parser):
-        pass
-
-    def run(self):
+    def run(self, data):
         _log.warning("Unimplemented <{}> module.".format(self.__class__.__name__))
 
 class Post:
@@ -35,8 +38,8 @@ class Post:
     def run(self, case):
         _log.warning("Unimplemented <{}> module.".format(self.__class__.__name__))
 
-class Callback:
-    """Base callback module class."""
+class Pre:
+    """Base preprocessing module class."""
 
     __slots__ = [
         "__author__", 
@@ -47,5 +50,8 @@ class Callback:
         "__version__"
     ]
 
-    def run(self, data):
+    def __init__(self, parser):
+        pass
+
+    def run(self):
         _log.warning("Unimplemented <{}> module.".format(self.__class__.__name__))

@@ -6,6 +6,10 @@ from framework.contexts.logger import Logger as _log
 from framework.contexts.meta import Configuration as _conf
 from framework.contexts.types import Codes as _codes
 
+__all__ = [
+    "Reader"
+]
+
 class Reader:
     """Processes the content from the :code:`multiprocessing.Queue` instance."""
 

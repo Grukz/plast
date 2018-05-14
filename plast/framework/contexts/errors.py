@@ -1,25 +1,36 @@
 # -*- coding: utf-8 -*-
 
-class InvalidPackageError(Exception):
+__all__ = [
+    "CharacterEncodingError",
+    "InvalidMIMETypeError",
+    "InvalidObjectError",
+    "InvalidPackageError",
+    "MalformatedDataError",
+    "ModuleInheritanceError",
+    "NotFoundError",
+    "SystemNotSupportedError",
+]
+
+class CharacterEncodingError(Exception):
+    pass
+
+class InvalidMIMETypeError(Exception):
     pass
 
 class InvalidObjectError(Exception):
     pass
 
-class CharacterEncodingError(Exception):
+class InvalidPackageError(Exception):
     pass
 
 class MalformatedDataError(Exception):
     pass
 
-class NotFoundError(Exception):
-    pass
-
 class ModuleInheritanceError(Exception):
     pass
 
-class SystemNotSupportedError(Exception):
+class NotFoundError(Exception):
     pass
 
-class InvalidMIMETypeError(Exception):
+class SystemNotSupportedError(Exception):
     pass

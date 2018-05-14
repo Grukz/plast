@@ -18,6 +18,10 @@ except (
 
     _log.fault("Import error.", trace=True)
 
+__all__ = [
+    "Callback"
+]
+
 class Callback(_models.Callback):
     __author__ = "sk4la"
     __description__ = "Simple callback tailing and beautifying match(es)."

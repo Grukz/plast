@@ -7,6 +7,29 @@ import itertools
 import magic
 import os.path
 
+__all__ = [
+    "check_mime_type",
+    "enumerate_matching_files"
+]
+
+def check_mime_type(target, types=[]):
+    """
+    .. py:function:: check_mime_type(target, types=[])
+
+    Checks wether the MIME-type of :code:`target` is included in :code:`types`.
+
+    :param target: absolute path to the file to check
+    :type target: str
+
+    :param types: list of authorized MIME-types
+    :type types: list
+
+    :raises InvalidMIMETypeError: if the MIME-type of :code:`target` is not present in :code:`types`
+    """
+
+    if not magic.from_file(target, mime=True) in types:
+        raise _errors.InvalidMIMETypeError
+
 def enumerate_matching_files(reference, patterns, recursive=False):
     """
     .. py:function:: enumerate_matching_files(reference, patterns)
@@ -27,21 +50,3 @@ def enumerate_matching_files(reference, patterns, recursive=False):
     """
 
     return set(itertools.chain.from_iterable(glob.iglob(os.path.join(reference, ("**" if recursive else ""), pattern), recursive=recursive) for pattern in patterns))
-
-def check_mime_type(target, types=[]):
-    """
-    .. py:function:: check_mime_type(target, types=[])
-
-    Checks wether the MIME-type of :code:`target` is included in :code:`types`.
-
-    :param target: absolute path to the file to check
-    :type target: str
-
-    :param types: list of authorized MIME-types
-    :type types: list
-
-    :raises InvalidMIMETypeError: if the MIME-type of :code:`target` is not present in :code:`types`
-    """
-
-    if not magic.from_file(target, mime=True) in types:
-        raise _errors.InvalidMIMETypeError

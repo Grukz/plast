@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from framework.api.external import filesystem as _fs
 from framework.api.internal import parser as _parser
 
 from framework.contexts import models as _models
@@ -8,13 +7,22 @@ from framework.contexts.logger import Logger as _log
 
 import os.path
 
+# try:
+#     import patoolib
+
+# except (
+#     ImportError,
+#     Exception):
+
+#     _log.fault("Import error.", trace=True)
+
 __all__ = [
     "Pre"
 ]
 
 class Pre(_models.Pre):
     __author__ = "sk4la"
-    __description__ = "Simple preprocessing module that feeds file(s) to the engine."
+    __description__ = "Simple preprocessing module that unpacks archive(s) and feeds resulting evidence(s) to the engine."
     __license__ = "MIT <https://github.com/sk4la/plast/blob/master/LICENSE.adoc>"
     __maintainer__ = ["sk4la"]
     __system__ = ["Darwin", "Linux", "Windows"]
@@ -35,37 +43,17 @@ class Pre(_models.Pre):
 
         parser.add_argument(
             "-i", "--input", nargs="+", action=_parser.AbsolutePathMultiple, required=True, metavar="PATH", 
-            help="input file(s) or directory(ies)")
+            help="input archive(s)")
 
-        parser.add_argument(
-            "-r", "--recursive", action="store_true", 
-            help="walk through directory(ies) recursively")
-
-        parser.add_argument(
-            "--filters", nargs="+", default=["*"], metavar="FILTER", 
-            help="custom shell-like globbing filter(s)")
-
-    def _track_files(self):
-        """
-        .. py:function:: _track_files(self)
-
-        Iterates through file(s) and directory(ies) to track valid evidence(s).
-
-        :param self: current class instance
-        :type self: class
-        """
-
-        for item in self.case.arguments.input:
-            if os.path.isfile(item):
-                self.case.track_file(file)
-
-            elif os.path.isdir(item):
-                for file in _fs.enumerate_matching_files(item, self.case.arguments.filters, recursive=self.case.arguments.recursive):
-                    if os.path.isfile(file):
-                        self.case.track_file(file)
-
-            else:
-                _log.warning("Unknown inode type for object <{}>.".format(item))
+    def _unpack_file(self, file):
+        # patoolib.extract_archive("archive.zip", outdir="/tmp")
+        # patoolib.test_archive("dist.tar.gz", verbosity=1)
+        # patoolib.list_archive("package.deb")
+        # patoolib.create_archive("/path/to/myfiles.zip", ("file1.txt", "dir/"))
+        # patoolib.diff_archives("release1.0.tar.gz", "release2.0.zip")
+        # patoolib.search_archive("def urlopen", "python3.3.tar.gz")
+        # patoolib.repack_archive("linux-2.6.33.tar.gz", "linux-2.6.33.tar.bz2")
+        pass
 
     def run(self):
         """
@@ -77,5 +65,14 @@ class Pre(_models.Pre):
         :type self: class
         """
 
-        if self.case.arguments.input:
-            self._track_files()
+        tmp = self.case.require_temporary_directory()
+
+        for item in self.case.arguments.input:
+            if os.path.isfile(item):
+                _log.debug("Tracking file <{}> to <{}>.".format(file, tmp))
+
+            elif os.path.isdir(item):
+                _log.warning("Directory <{}> is not an archive. Ignoring.".format(item))
+
+            else:
+                _log.warning("Unknown inode type for object <{}>.".format(item))

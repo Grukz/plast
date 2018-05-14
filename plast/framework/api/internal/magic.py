@@ -12,6 +12,12 @@ import multiprocessing
 import os.path
 import signal
 
+__all__ = [
+    "Hole",
+    "Invocator",
+    "Pool"
+]
+
 class Hole:
     """Swallows the given exception(s) by type."""
 
@@ -71,6 +77,53 @@ class Hole:
 
             return True
         return False
+
+class Invocator:
+    """Wraps modules invocation by displaying debug messages."""
+
+    def __init__(self, module):
+        """
+        .. py:function:: __init__(self, module)
+
+        Initialization method for the class.
+
+        :param self: current class instance
+        :type self: class
+
+        :param module: class inherited from the :code:`models` reference classes
+        :type module: class
+        """
+
+        self.module = module
+
+        _log.debug("Started <{}> session <{}>.".format(self.module.__class__.__name__, self.module.__name__))
+
+    def __enter__(self):
+        """
+        .. py:function:: __enter__(self)
+
+        Callback method called when the context manager is invoked.
+
+        :param self: current class instance
+        :type self: class
+        """
+
+        pass
+
+    def __exit__(self, *args):
+        """
+        .. py:function:: __exit__(self, *args)
+
+        Exit method raised when leaving the context manager.
+
+        :param self: current class instance
+        :type self: class
+
+        :param *args: list of argument(s)
+        :type *args: class
+        """
+
+        _log.debug("Ended <{}> session <{}>.".format(self.module.__class__.__name__, self.module.__name__))
 
 class Pool:
     """Wrapper around :code:`multiprocessing.Pool` that automatically sets the :code:`SIGINT` signal handler and cleans up on error."""
@@ -151,50 +204,3 @@ class Pool:
         """
 
         signal.signal(signal.SIGINT, signal.SIG_IGN)
-
-class Invocator:
-    """Wraps modules invocation by displaying debug messages."""
-
-    def __init__(self, module):
-        """
-        .. py:function:: __init__(self, module)
-
-        Initialization method for the class.
-
-        :param self: current class instance
-        :type self: class
-
-        :param module: class inherited from the :code:`models` reference classes
-        :type module: class
-        """
-
-        self.module = module
-
-        _log.debug("Started <{}> session <{}>.".format(self.module.__class__.__name__, self.module.__name__))
-
-    def __enter__(self):
-        """
-        .. py:function:: __enter__(self)
-
-        Callback method called when the context manager is invoked.
-
-        :param self: current class instance
-        :type self: class
-        """
-
-        pass
-
-    def __exit__(self, *args):
-        """
-        .. py:function:: __exit__(self, *args)
-
-        Exit method raised when leaving the context manager.
-
-        :param self: current class instance
-        :type self: class
-
-        :param *args: list of argument(s)
-        :type *args: class
-        """
-
-        _log.debug("Ended <{}> session <{}>.".format(self.module.__class__.__name__, self.module.__name__))

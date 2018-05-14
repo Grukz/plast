@@ -11,6 +11,10 @@ import os.path
 import platform
 import types
 
+__all__ = [
+    "Checker"
+]
+
 class Checker:
     """Assists data check."""
 

@@ -19,7 +19,7 @@ It provides a comprehensive framework that easily allows to add functionalities 
 
 `plast` is entirely written in `python3` which makes it compatible with almost all GNU/Linux and macOS distributions. Nevertheless, some minimal dependencies are required.
 
-image::flow.svg[Flow, width=600, align="center"]
+image::flow.svg[Flow, align="center"]
 
 *Example GIF.*
 
