@@ -5,7 +5,7 @@ from framework.contexts.meta import Configuration as _conf
 from framework.contexts.meta import Meta as _meta
 
 _meta.set_package(__file__)
-_conf._load_configuration(_meta.__conf__)
+_conf._load_configuration(_meta.__config__)
 
 from framework.api.internal import magic as _magic
 from framework.api.internal import parser as _parser
@@ -25,7 +25,9 @@ import framework.modules.post as _post
 import argparse
 import multiprocessing
 
-__all__ = []
+__all__ = [
+    "wrapper"
+]
 
 def _argparser(parser, modules={}):
     """
@@ -98,9 +100,9 @@ def _argparser(parser, modules={}):
 
     return modules, parser.parse_args()
 
-def main(container):
+def _initialize(container):
     """
-    .. py:function:: main(container)
+    .. py:function:: _initialize(container)
 
     Main entry point for the program.
 
@@ -137,5 +139,8 @@ def main(container):
 
     _engine.Engine(case).run()
 
+def wrapper():
+    _initialize(_argparser(_parser.Parser()))
+
 if __name__ == "__main__":
-    main(_argparser(_parser.Parser()))
+    wrapper()

@@ -20,10 +20,11 @@ class Configuration:
 class Meta:
     """Contains the metadata for the program."""
 
-    __root__ = pathlib.Path(__file__).parents[2]
-    __conf__ = __root__ / "configuration.json"
-    __description__ = "Modular threat hunting CLI tool."
     __author__ = "sk4la"
+    __description__ = "Modular threat hunting CLI tool."
+    __package__ = "plast"
+    __root__ = pathlib.Path(__file__).parents[2]
+    __config__ = __root__ / "configuration.json"
     __version__ = "0.1"
 
     def set_package(target):
