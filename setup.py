@@ -24,7 +24,7 @@ setuptools.setup(
     ],
     entry_points = {
         "console_scripts": [
-            "plast = plast.plast:wrapper",
+            "plast = plast:wrapper",
         ],
     }
 )

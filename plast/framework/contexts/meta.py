@@ -1,21 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from framework.api.internal.renderer import Renderer as _renderer
-
 import pathlib
 
 __all__ = [
-    "Configuration",
     "Meta"
 ]
-
-class Configuration:
-    """Container for the local configuration."""
-
-    def _load_configuration(configuration):
-        with open(configuration) as conf:
-            for key, value in _renderer.from_json(conf.read()).items():
-                setattr(Configuration, key, value)
 
 class Meta:
     """Contains the metadata for the program."""

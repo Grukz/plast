@@ -3,7 +3,7 @@
 from framework.api.internal.renderer import Renderer as _renderer
 
 from framework.contexts.logger import Logger as _log
-from framework.contexts.meta import Configuration as _conf
+from framework.contexts.configuration import Configuration as _conf
 from framework.contexts.types import Codes as _codes
 
 __all__ = [

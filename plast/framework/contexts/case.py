@@ -4,7 +4,7 @@ from framework.api.internal.checker import Checker as _checker
 
 from framework.contexts import errors as _errors
 from framework.contexts.logger import Logger as _log
-from framework.contexts.meta import Configuration as _conf
+from framework.contexts.configuration import Configuration as _conf
 
 import os
 import psutil

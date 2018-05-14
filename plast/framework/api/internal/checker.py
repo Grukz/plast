@@ -3,7 +3,7 @@
 from framework.api.external import filesystem as _fs
 
 from framework.contexts import errors as _errors
-from framework.contexts.meta import Configuration as _conf
+from framework.contexts.configuration import Configuration as _conf
 from framework.contexts.meta import Meta as _meta
 
 import magic

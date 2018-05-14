@@ -5,7 +5,7 @@ from framework.api.internal.loader import Loader as _loader
 
 from framework.contexts import models as _models
 from framework.contexts.logger import Logger as _log
-from framework.contexts.meta import Configuration as _conf
+from framework.contexts.configuration import Configuration as _conf
 from framework.contexts.types import Codes as _codes
 
 from framework.core import reader as _reader

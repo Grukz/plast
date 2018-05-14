@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from framework.contexts.meta import Configuration as _conf
+from framework.contexts.configuration import Configuration as _conf
 from framework.contexts.meta import Meta as _meta
 
 _meta.set_package(__file__)

@@ -5,5 +5,4 @@ Test the `setup.py` file.
 In `archive.py` module: unpack recursively while checking MIME-type, and add `--level` argument to specify the maximum recursivity level.
 In `file.py` module: add --exclude argument to exclude file(s) based on wildcard pattern(s) (ex: *.pdf, *.adoc).
 
-[OK] Fill the `MANIFEST.in` file.
-[OK] Fill the `setup.py` file (http://sametmax.com/creer-un-setup-py-et-mettre-sa-bibliotheque-python-en-ligne-sur-pypi/).
+[OK] Deleted the old `Makefile` file.
